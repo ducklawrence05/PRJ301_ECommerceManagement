@@ -106,5 +106,6 @@ CREATE TABLE tblCustomerCares (
     subject NVARCHAR(100) NOT NULL,
     content NVARCHAR(MAX) NOT NULL,
     status VARCHAR(50) NOT NULL,
-    reply NVARCHAR(MAX) DEFAULT ''
+    reply NVARCHAR(MAX) DEFAULT '',
+	FOREIGN KEY (userID) REFERENCES tblUsers(userID)
 );
