@@ -5,6 +5,7 @@
 package services;
 
 import constants.Message;
+import constants.Regex;
 import constants.Role;
 import daos.UserDAO;
 import dtos.User;
@@ -21,12 +22,17 @@ public class UserService {
     private UserDAO userDAO = new UserDAO();
     
     public ServiceResponse<User> register(String userID, String fullName,
-            String password, String confirmPassword) throws SQLException{
+            String password, String confirmPassword, String phone) throws SQLException{
         if(isNullOrEmptyString(userID) 
                 || isNullOrEmptyString(fullName)
                 || isNullOrEmptyString(password)
-                || isNullOrEmptyString(confirmPassword)){
+                || isNullOrEmptyString(confirmPassword)
+                || isNullOrEmptyString(phone)){
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
+        }
+        
+        if(!checkPhone(phone)){
+            return ServiceResponse.failure(Message.INVALID_PHONE_FORMAT);
         }
         
         if(userDAO.checkUserExists(userID)){
@@ -38,7 +44,7 @@ public class UserService {
         }
         
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        if(userDAO.insertUser(userID, fullName, Role.BUYER, hashedPassword) == 0){
+        if(userDAO.insertUser(userID, fullName, Role.BUYER, hashedPassword, phone) == 0){
             return ServiceResponse.failure(Message.REGISTER_USER_FAILED);
         }
         
@@ -75,13 +81,18 @@ public class UserService {
     }
     
     public String createUser(String userID, String fullName, Role role,
-            String password, String confirmPassword) throws SQLException{
+            String password, String confirmPassword, String phone) throws SQLException{
         if(isNullOrEmptyString(userID) 
                 || isNullOrEmptyString(fullName)
                 || role == null
                 || isNullOrEmptyString(password)
-                || isNullOrEmptyString(confirmPassword)){
+                || isNullOrEmptyString(confirmPassword)
+                || isNullOrEmptyString(phone)){
             return Message.ALL_FIELDS_ARE_REQUIRED;
+        }
+        
+        if(!checkPhone(phone)){
+            return Message.INVALID_PHONE_FORMAT;
         }
         
         if(userDAO.checkUserExists(userID)){
@@ -92,7 +103,8 @@ public class UserService {
             return Message.PASSWORD_NOT_MATCH_CONFIRM_PASSWORD;
         }
         
-        if(userDAO.insertUser(userID, fullName, role, password) == 0){
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        if(userDAO.insertUser(userID, fullName, role, hashedPassword, phone) == 0){
             return Message.CREATE_USER_FAILED;
         }
         
@@ -100,7 +112,7 @@ public class UserService {
     }
     
     public String updateUser(String userID, String fullName, Role role,
-            String oldPassword, String password, String confirmPassword) 
+            String oldPassword, String password, String confirmPassword, String phone) 
             throws SQLException{
         if(!userDAO.checkUserExists(userID)){
             return Message.USER_NOT_FOUND;
@@ -136,9 +148,17 @@ public class UserService {
         
         if(isNullOrEmptyString(password)){
             password = user.getPassword();
+        } else {
+            password = BCrypt.hashpw(password, BCrypt.gensalt());
         }
         
-        if(userDAO.updateUser(userID, fullName, role, password) == 0){
+        if(isNullOrEmptyString(phone)){
+            phone = user.getPhone();
+        } else if (!checkPhone(phone)){
+            return Message.INVALID_PHONE_FORMAT;
+        }
+        
+        if(userDAO.updateUser(userID, fullName, role, password, phone) == 0){
             return Message.UPDATE_USER_FAILED;
         }
         
@@ -155,6 +175,10 @@ public class UserService {
     
     private boolean isNullOrEmptyString(String str){
         return str == null || str.isEmpty();
+    }
+    
+    private boolean checkPhone(String phone){
+        return phone.matches(Regex.USER_PHONE);
     }
     
     private boolean checkConfirmPassword(String pwd, String confirmPwd) {

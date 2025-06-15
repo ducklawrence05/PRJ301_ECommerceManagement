@@ -9,5 +9,5 @@ package constants;
  * @author Admin
  */
 public class Regex {
-    public static final String CUSTOMER_PHONE = "^0[35789]\\d{8}$";
+    public static final String USER_PHONE = "^0[35789]\\d{8}$";
 }

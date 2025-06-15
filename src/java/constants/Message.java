@@ -20,6 +20,7 @@ public class Message {
     public static final String PASSWORD_NOT_MATCH_CONFIRM_PASSWORD = "Password not match confirm password!";
     public static final String PASSWORD_AND_CONFIRM_PASSWORD_ARE_REQUIRED = "Password and confirm password are required";
     public static final String OLD_PASSWORD_ARE_REQUIRED = "Old password is required";
+    public static final String INVALID_PHONE_FORMAT = "Invalid phone format";
     public static final String ROLE_ID_NOT_FOUND = "Role ID not found";
     public static final String REGISTER_USER_SUCCESSFULLY = "Register user successfully";
     public static final String REGISTER_USER_FAILED = "Register user failed";

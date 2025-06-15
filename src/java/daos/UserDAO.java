@@ -17,9 +17,9 @@ public class UserDAO {
     private final String GET_USER_BY_NAME = "SELECT * FROM tblUsers WHERE fullName LIKE ?";
     private final String LOGIN_USER = "SELECT * FROM tblUsers WHERE userID LIKE ?";
     private final String INSERT_USER = "INSERT INTO tblUsers "
-            + "(userID, fullName, roleID, password)"
-            + "VALUES (?, ?, ?, ?)";
-    private final String UPDATE_USER = "UPDATE tblUsers SET fullName = ?, roleID = ?, password = ? "
+            + "(userID, fullName, roleID, password, phone)"
+            + "VALUES (?, ?, ?, ?, ?)";
+    private final String UPDATE_USER = "UPDATE tblUsers SET fullName = ?, roleID = ?, password = ?, phone = ?"
             + "WHERE userID LIKE ?";
     private final String DELETE_USER = "DELETE FROM tblUsers WHERE userID LIKE ?";
 
@@ -29,7 +29,7 @@ public class UserDAO {
             stm.setString(1, userID);
             try ( ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
-                String password = isHidePassword ? "***" : rs.getString("password");
+                String password = isHidePassword ? "*****" : rs.getString("password");
                     return mapRow(rs, password);
                 }
             }
@@ -91,24 +91,26 @@ public class UserDAO {
     }
 
     public int insertUser(String userID, String fullName,
-            Role role, String password) throws SQLException {
+            Role role, String password, String phone) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(INSERT_USER)) {
             stm.setString(1, userID);
             stm.setString(2, fullName);
             stm.setInt(3, role.getValue());
             stm.setString(4, password);
+            stm.setString(5, phone);
             return stm.executeUpdate();
         }
     }
 
     public int updateUser(String userID, String fullName,
-            Role role, String password) throws SQLException {
+            Role role, String password, String phone) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  
                 PreparedStatement stm = conn.prepareStatement(UPDATE_USER)) {
             stm.setString(1, fullName);
             stm.setInt(2, role.getValue());
             stm.setString(3, password);
-            stm.setString(4, userID);
+            stm.setString(4, phone);
+            stm.setString(5, userID);
             return stm.executeUpdate();
         }
     }
@@ -126,8 +128,8 @@ public class UserDAO {
                 rs.getString("userID"),
                 rs.getString("fullName"),
                 Role.fromValue(rs.getInt("roleID")),
-                rs.getString("phone"),
-                password
+                password,
+                rs.getString("phone")
         );
     }
 }

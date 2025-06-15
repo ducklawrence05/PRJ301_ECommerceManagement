@@ -63,7 +63,7 @@ public class AuthController extends HttpServlet {
         String message;
         String url = Url.ERROR_PAGE;
         try{
-            ServiceResponse<User> serRes = userService.register(userID, fullName, password, confirmPassword);
+            ServiceResponse<User> serRes = userService.register(userID, fullName, password, confirmPassword, phone);
             url = serRes.isSuccess() ? Url.LOGIN_PAGE : Url.REGISTER_PAGE;
             message = serRes.getMessage();
         } catch (SQLException ex){
