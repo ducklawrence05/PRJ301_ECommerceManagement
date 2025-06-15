@@ -10,6 +10,7 @@ package constants;
  */
 public class Url {
     public static final String ERROR_PAGE = "/error.jsp";
+    public static final String REGISTER_PAGE = "/register.jsp";
     public static final String LOGIN_PAGE = "/login.jsp";
     public static final String WELCOME_PAGE = "/welcome.jsp";
     public static final String ADMIN_PAGE = "/admin.jsp";

@@ -17,7 +17,7 @@ public class ServiceResponse<T> {
         this.message = message;
         this.data = data;
     }
-
+    
     public static <T> ServiceResponse<T> success(String message, T data) {
         return new ServiceResponse<>(true, message, data);
     }

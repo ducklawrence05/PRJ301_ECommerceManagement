@@ -11,6 +11,7 @@ import dtos.User;
 import java.sql.SQLException;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
+import response.ServiceResponse;
 
 /**
  *
@@ -19,28 +20,29 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserService {
     private UserDAO userDAO = new UserDAO();
     
-    public boolean register(String userID, String fullName,
+    public ServiceResponse<User> register(String userID, String fullName,
             String password, String confirmPassword) throws SQLException{
         if(isNullOrEmptyString(userID) 
                 || isNullOrEmptyString(fullName)
                 || isNullOrEmptyString(password)
                 || isNullOrEmptyString(confirmPassword)){
-            return Message.ALL_FIELDS_ARE_REQUIRED;
+            return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
         if(userDAO.checkUserExists(userID)){
-            return Message.USER_ID_IS_EXISTED;
+            return ServiceResponse.failure(Message.USER_ID_IS_EXISTED);
         }
         
         if(!checkConfirmPassword(password, confirmPassword)){
-            return Message.PASSWORD_NOT_MATCH_CONFIRM_PASSWORD;
+            return ServiceResponse.failure(Message.PASSWORD_NOT_MATCH_CONFIRM_PASSWORD);
         }
         
-        if(userDAO.insertUser(userID, fullName, role, password) == 0){
-            return Message.CREATE_USER_FAILED;
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        if(userDAO.insertUser(userID, fullName, Role.BUYER, hashedPassword) == 0){
+            return ServiceResponse.failure(Message.REGISTER_USER_FAILED);
         }
         
-        return Message.CREATE_USER_SUCCESSFULLY;
+        return ServiceResponse.success(Message.REGISTER_USER_SUCCESSFULLY);
     }
     
     public User login(String userID, String password)

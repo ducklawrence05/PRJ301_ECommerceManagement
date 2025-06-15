@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import dtos.User;
+import response.ServiceResponse;
 import services.UserService;
 import utils.AuthUtils;
 
@@ -26,6 +27,8 @@ import utils.AuthUtils;
 @WebServlet(name="AuthController", urlPatterns={"/auth"})
 public class AuthController extends HttpServlet {
     private UserService userService = new UserService();
+    
+    private final String REGISTER = "register";
     private final String LOGIN = "login";
     private final String LOGOUT = "logout";
     
@@ -35,6 +38,10 @@ public class AuthController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) action = "";
         switch (action) {
+            case REGISTER: {
+                register(request, response);
+                break;
+            }
             case LOGIN: {
                 login(request, response);
                 break;
@@ -44,6 +51,26 @@ public class AuthController extends HttpServlet {
                 break;
             }
         }
+    }
+    
+    protected void register(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException{
+        String userID = request.getParameter("userID");
+        String fullName = request.getParameter("fullName");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String phone = request.getParameter("phone");
+        String message;
+        String url = Url.ERROR_PAGE;
+        try{
+            ServiceResponse<User> serRes = userService.register(userID, fullName, password, confirmPassword);
+            url = serRes.isSuccess() ? Url.LOGIN_PAGE : Url.REGISTER_PAGE;
+            message = serRes.getMessage();
+        } catch (SQLException ex){
+            message = Message.SYSTEM_ERROR;
+        }
+        request.setAttribute("MSG", message);
+        request.getRequestDispatcher(url).forward(request, response);
     }
     
     protected void login(HttpServletRequest request, HttpServletResponse response)
@@ -70,7 +97,6 @@ public class AuthController extends HttpServlet {
             String url = user.getRole() == Role.ADMIN ? Url.ADMIN_PAGE : Url.WELCOME_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
         } catch (SQLException ex){
-            ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
             request.getRequestDispatcher(Url.LOGIN_PAGE).forward(request, response);
         }
