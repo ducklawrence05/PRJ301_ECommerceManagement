@@ -11,7 +11,7 @@ import dtos.User;
 import java.sql.SQLException;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
-import response.ServiceResponse;
+import responses.ServiceResponse;
 
 /**
  *

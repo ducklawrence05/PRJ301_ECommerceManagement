@@ -1,4 +1,4 @@
-package response;
+package responses;
 
 public class ServiceResponse<T> {
     private boolean success;

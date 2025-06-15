@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import dtos.User;
-import response.ServiceResponse;
+import responses.ServiceResponse;
 import services.UserService;
 import utils.AuthUtils;
 
