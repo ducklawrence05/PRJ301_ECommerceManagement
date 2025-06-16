@@ -10,7 +10,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import utils.DBContext;
 
 /**
@@ -71,9 +73,29 @@ public class PromotionDAO {
         }
     }
     
+    //search by name
+    public Promotion searchByName(String name) throws SQLException{
+        try(Connection conn= DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_NAME);){
+                ps.setString(1, name);
+                ResultSet rs = ps.executeQuery();
+                return mapRow(rs);
+        }
+    }
     
+    public List<Promotion> getAll() throws SQLException{
+        try(Connection conn = DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(GET_ALL)){
+                ResultSet rs = ps.executeQuery();
+                List<Promotion> list = new ArrayList<>();
+                while(rs.next()){
+                    list.add(mapRow(rs));
+                }
+                return list;
+        }
+    }
     
     private Promotion mapRow(ResultSet rs) throws SQLException{
-        return null ;
+        return new Promotion(rs.getInt("promoID"), rs.getString("name"), rs.getFloat("discountPercent"), rs.getDate("startDate"), rs.getDate("endDate"), rs.getString("status")) ;
     }
 }
