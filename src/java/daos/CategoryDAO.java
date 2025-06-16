@@ -4,7 +4,7 @@
  */
 package daos;
 
-import dtos.Categories;
+import dtos.Category;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,14 +17,14 @@ import utils.DBContext;
  *
  * @author Huy
  */
-public class CategoriesDAO {
-    private final String CREATE = "INSERT INTO [dbo].[tblCategories] ([categoryName],[description]) VALUES (?,?) ";
-    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategories] WHERE categoryID = ?";
-    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategories] WHERE categoryName = ?";
-    private final String UPDATE = "UPDATE [dbo].[tblCategories] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
-    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategories] WHERE categoryID = ?";
-    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategories] WHERE categoryID = ?";
-    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategories]";
+public class CategoryDAO {
+    private final String CREATE = "INSERT INTO [dbo].[tblCategory] ([categoryName],[description]) VALUES (?,?) ";
+    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategory] WHERE categoryID = ?";
+    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
+    private final String UPDATE = "UPDATE [dbo].[tblCategory] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
+    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
+    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
+    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategory]";
     //create
     public int create(String name, String description) throws SQLException{
         try(Connection conn = DBContext.getConnection();
@@ -65,7 +65,7 @@ public class CategoriesDAO {
     }
     
     //search by id
-    public Categories searchByID(int id)  throws SQLException{
+    public Category searchByID(int id)  throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)){
                 ps.setInt(1, id);
@@ -75,7 +75,7 @@ public class CategoriesDAO {
     }
     
     //search by category
-    public Categories searchByCategory(String category)  throws SQLException{
+    public Category searchByCategory(String category)  throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)){
                 ps.setString(1, category);
@@ -85,10 +85,10 @@ public class CategoriesDAO {
     }
     
     //get all user
-    public List<Categories> getAll() throws SQLException{
+    public List<Category> getAll() throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(GET_ALL)){
-            List<Categories> list = new ArrayList<>();
+            List<Category> list = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 list.add(mapRow(rs));
@@ -97,7 +97,7 @@ public class CategoriesDAO {
         }
     }
     
-    private Categories mapRow(ResultSet rs) throws SQLException{
-        return new Categories(rs.getInt("categoryID"), rs.getString("categoryName"), rs.getString("description"));
+    private Category mapRow(ResultSet rs) throws SQLException{
+        return new Category(rs.getInt("categoryID"), rs.getString("categoryName"), rs.getString("description"));
     }
 }

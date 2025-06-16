@@ -12,7 +12,6 @@ import java.util.Date;
  */
 public class Promotion {
     int promoID ;
-    int productID;
     String name ;
     float discountPercent ;
     Date startDate ;
@@ -22,9 +21,8 @@ public class Promotion {
     public Promotion() {
     }
 
-    public Promotion(int promoID, int productID, String name, float discountPercent, Date startDate, Date endDate, String status) {
+    public Promotion(int promoID, String name, float discountPercent, Date startDate, Date endDate, String status) {
         this.promoID = promoID;
-        this.productID = productID;
         this.name = name;
         this.discountPercent = discountPercent;
         this.startDate = startDate;
@@ -38,14 +36,6 @@ public class Promotion {
 
     public void setPromoID(int promoID) {
         this.promoID = promoID;
-    }
-
-    public int getProductID() {
-        return productID;
-    }
-
-    public void setProductID(int productID) {
-        this.productID = productID;
     }
 
     public String getName() {
