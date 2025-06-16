@@ -8,15 +8,15 @@ package dtos;
  *
  * @author Huy
  */
-public class Categories {
+public class Category {
     int categoryID ;
     String categoryName ;
     String description ;
 
-    public Categories() {
+    public Category() {
     }
 
-    public Categories(int categoryID, String categoryName, String description) {
+    public Category(int categoryID, String categoryName, String description) {
         this.categoryID = categoryID;
         this.categoryName = categoryName;
         this.description = description;
