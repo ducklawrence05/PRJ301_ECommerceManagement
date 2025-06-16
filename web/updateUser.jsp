@@ -29,7 +29,7 @@
                 <label for="phone">Phone</label>
                 <input type="text" id="phone" name="phone" value="${user.phone}" required class="form-control" />
 
-                <c:if test="${user.role.toString() == 'ADMIN'}">
+                <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <label for="roleID">Role</label>
                     <select id="roleID" name="roleID" required class="form-select">
                         <c:forEach var="r" items="${roleList}">
@@ -37,7 +37,7 @@
                         </c:forEach>
                     </select>
                 </c:if>
-                <c:if test="${user.role.toString() != 'ADMIN'}">
+                <c:if test="${sessionScope.currentUser.role != 'ADMIN'}">
                     <input type="hidden" name="roleID" value="${user.role.value}" readonly/>
                 </c:if>
 
@@ -52,10 +52,10 @@
 
                 <button type="submit" class="btn btn-primary w-100">Update</button>
             </form>
-            <c:if test="${user.role.toString() == 'ADMIN'}">
+            <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                 <a href="${pageContext.request.contextPath}/main/user" class="back-link">Back to user CRUD</a>
             </c:if>
-            <c:if test="${user.role.toString() != 'ADMIN'}">
+            <c:if test="${sessionScope.currentUser.role != 'ADMIN'}">
                 <a href="${pageContext.request.contextPath}/main/product" class="back-link">Back to product page</a>
             </c:if>
         </div>
