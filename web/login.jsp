@@ -23,9 +23,7 @@
         <div class="login-container">
             <h2 class="login-title">Login</h2>
 
-            <c:if test="${not empty MSG}">
-                <p class="error-msg">${MSG}</p>
-            </c:if>
+            <p class="message">${requestScope.MSG}</p>
 
             <form action="${pageContext.request.contextPath}/main/auth/login" method="POST">
                 <div class="mb-3">
@@ -47,6 +45,8 @@
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
+
+            <a href="${pageContext.request.contextPath}/register.jsp" class="back-link">Register</a>
         </div>
     </body>
 </html>

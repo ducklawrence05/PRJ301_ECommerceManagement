@@ -20,6 +20,9 @@ public class Url {
     public static final String CREATE_USER_PAGE = "/createUser.jsp";
     public static final String UPDATE_USER_PAGE = "/updateUser.jsp";
     
+    // Product
+    public static final String PRODUCT_PAGE = "/productList.jsp";
+    
     // Controller
     public static final String AUTH_CONTROLLER = "/auth";
     public static final String USER_CONTROLLER = "/user";
