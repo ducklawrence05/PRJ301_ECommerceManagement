@@ -23,7 +23,7 @@ public class CategoryDAO {
     private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
     private final String UPDATE = "UPDATE [dbo].[tblCategory] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
-    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
+    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryName = ?";
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCategory]";
     //create
     public int create(String name, String description) throws SQLException{
@@ -77,7 +77,7 @@ public class CategoryDAO {
     //search by category
     public Category searchByCategory(String category)  throws SQLException{
         try(Connection conn = DBContext.getConnection();
-            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)){
+            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
                 ps.setString(1, category);
                 ResultSet rs = ps.executeQuery();
                 return mapRow(rs);
