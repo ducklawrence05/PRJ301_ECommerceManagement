@@ -16,6 +16,7 @@ public class CustomerCareDAO {
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCustomerCare] WHERE ticketID = ?";
     private final String SEARCH_BY_SUBJECT = "SELECT * FROM [dbo].[tblCustomerCare] WHERE subject = ?";
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCustomerCare]";
+    private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblCustomerCare] WHERE userID = ? AND subject = ?";
 
     public int create(CustomerCare care) throws SQLException {
         try (Connection conn = DBContext.getConnection();
@@ -89,5 +90,15 @@ public class CustomerCareDAO {
                 rs.getString("status"),
                 rs.getString("reply")
         );
+    }
+    
+    public boolean isExist(String userID, String subject) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CHECK_EXIST)) {
+            ps.setString(1, userID);
+            ps.setString(2, subject);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
     }
 }

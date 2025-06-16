@@ -26,6 +26,7 @@ public class PromotionDAO {
     private final String SEARCH_BY_ID = "SELECT * FROM Categories WHERE promoID =?";
     private final String SEARCH_BY_NAME = "SELECT * FROM Categories WHERE [name] =?";
     private final String GET_ALL ="SELECT * FROM [dbo].[tblPromotions]";
+    private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblPromotions] WHERE [name] = ?";
     
     //create
     public int create(String name,float discount, Date startDate,Date endDate,String status) throws SQLException{
@@ -39,6 +40,17 @@ public class PromotionDAO {
                 return ps.executeUpdate();
         }
     }
+    
+    //is exit
+    public boolean isExist(String name) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CHECK_EXIST)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+    }
+
     
     //update
     public int update(int id,String name,float discount, Date startDate,Date endDate,String status) throws SQLException{

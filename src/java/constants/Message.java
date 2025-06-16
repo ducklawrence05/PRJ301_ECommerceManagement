@@ -32,4 +32,14 @@ public class Message {
     public static final String DELETE_USER_SUCCESSFULLY = "Delete user successfully";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
+    
+    //Category
+    public static final String IS_EXIT = "Category is exited";
+    public static final String CREATE_CATEGORY_SUCCESSFULLY = "Create category successfully";
+    public static final String CREATE_CATEGORY_FAILED = "Create category failed";
+    public static final String CATEGORY_NOT_FOUND = "Category not found";
+    public static final String UPDATE_CATEGORY_SUCCESSFULLY = "Update category successfully";
+    public static final String UPDATE_CATEGORY_FAILED = "Update category failed";
+    public static final String DELETE_CATEGORY_SUCCESSFULLY = "Delete category successfully";
+    public static final String RONGE_FOMAT ="invalid or emty string";
 }
