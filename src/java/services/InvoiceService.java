@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import constants.Message;
 import daos.InvoiceDAO;
 import daos.ProductDAO;
+import daos.UserDAO;
 import dtos.InvoiceDetailViewModel;
 import dtos.InvoiceViewModel;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import java.util.List;
 public class InvoiceService {
     InvoiceDAO invoiceDao = new InvoiceDAO();
     ProductDAO productDao = new ProductDAO();
+    UserDAO userDao = new UserDAO();
     public boolean isNullOrEmptyString(String check){
         return check == null || check.isEmpty();
     }
@@ -29,6 +31,10 @@ public class InvoiceService {
     public ServiceResponse<Invoice> createInvoice(String userID, float totalAmount, String status, LocalDate createDate) throws SQLException{
         ServiceResponse sr = new ServiceResponse();
         sr.setSuccess(false);
+        if(!isExistUser(userID)){
+            sr.setMessage(Message.USER_NOT_EXIST);
+            return sr;
+        }
         if(isNullOrEmptyString(userID) || isNullOrEmptyString(status)){
             sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
             return sr;
@@ -68,7 +74,13 @@ public class InvoiceService {
     
     public ServiceResponse<Invoice> updateInvoice(int invoiceID, String userID, float totalAmount, String status, LocalDate createDate) throws SQLException{
         ServiceResponse sr = new ServiceResponse();
+        
+        sr = getInvoiceByID(invoiceID);
+        if(sr.isSuccess() == false){
+            return sr;
+        }
         sr.setSuccess(false);
+
         if(isNullOrEmptyString(userID) || isNullOrEmptyString(status)){
             sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
             return sr;
@@ -87,10 +99,13 @@ public class InvoiceService {
     }
     
     public ServiceResponse<InvoiceDetail> updateInvoiceDetail(int invoiceID, int productID, int quantity, float price) throws SQLException{
-        ServiceResponse sr = new ServiceResponse();
+        ServiceResponse sr = new ServiceResponse(); 
+        sr = getInvoiceDetailByIDAndProductID(invoiceID, productID);
+        if(sr.isSuccess() == false){
+            return sr;
+        }
         sr.setSuccess(false);
-
-         if(productID < 0 || quantity < 0 || price < 0){
+        if(productID < 0 || quantity < 0 || price < 0){
             sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
             return sr;
         }
@@ -135,8 +150,16 @@ public class InvoiceService {
          return invoiceDao.getAllInvoiceDetail();
      }  
      
-     public InvoiceViewModel getInvoiceByID(int invoiceID) throws SQLException {
-         return invoiceDao.getInvoiceByID(invoiceID);
+     public ServiceResponse<InvoiceViewModel> getInvoiceByID(int invoiceID) throws SQLException {
+          ServiceResponse<InvoiceViewModel> sr = null;
+          sr.setSuccess(false);
+          sr.setData(invoiceDao.getInvoiceByID(invoiceID));
+          if(sr.getData() == null){
+              sr.setMessage(Message.INVOICE_NOT_FOUND);
+              return sr;
+          }
+          sr.setSuccess(true);
+          return sr;
      }
      
      public List<InvoiceViewModel> getInvoiceByUserID(String userID) throws SQLException {
@@ -150,8 +173,16 @@ public class InvoiceService {
          return invoiceDao.getInvoiceDetailByID(invoiceID);
      }
      
-     public InvoiceDetailViewModel getInvoiceDetailByIDAndProductID(int invoiceID, int productID) throws SQLException{
-         return invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID);
+     public ServiceResponse<InvoiceDetailViewModel> getInvoiceDetailByIDAndProductID(int invoiceID, int productID) throws SQLException{
+         ServiceResponse<InvoiceDetailViewModel> sr = null;
+         sr.setSuccess(false);
+         sr.setData(invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID));
+         if(sr.getData() == null){
+             sr.setMessage(Message.INVOICE_DETAIL_NOT_FOUND);
+             return sr;
+         }
+         sr.setSuccess(true);
+         return sr;
      }
      
      public boolean isExistProduct(int productID)throws SQLException{
@@ -159,6 +190,13 @@ public class InvoiceService {
              return false;
          }
          return true;
-     }
+    }
+     
+     public boolean isExistUser(String userID)throws SQLException{
+         if(userDao.getUsersByID(userID) == null){
+             return false;
+         }
+         return true;
+    }
      
 }
