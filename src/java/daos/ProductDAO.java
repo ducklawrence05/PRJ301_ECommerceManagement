@@ -79,6 +79,9 @@ public class ProductDAO {
             "UPDATE tblProducts SET name = ?, categoryID = ?, price = ?, quantity = ?, status = ? "
             + "WHERE productID = ?";
     
+    private final String UPDATE_PRODUCT_STATUS_BY_ID = 
+            "UPDATE tblProducts SET status = ? WHERE productID = ?";
+    
     private final String DELETE_PRODUCT_BY_ID = "DELETE FROM tblProducts WHERE productID = ?";
 
     //
@@ -109,7 +112,7 @@ public class ProductDAO {
         return resultList;
     }
 
-    public ProductViewModel getProductsByID(int productID) throws SQLException {
+    public ProductViewModel getProductByID(int productID) throws SQLException {
         List<ProductViewModel> products = getProductsByInteger(GET_PRODUCT_BY_ID, productID);
         return products.isEmpty() ? null : products.get(0);
     }
@@ -160,6 +163,15 @@ public class ProductDAO {
         }
     }
 
+    public int updateProductStatus(int productID, String status) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  
+                PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_STATUS_BY_ID)) {
+            stm.setString(1, status);
+            stm.setInt(2, productID);
+            return stm.executeUpdate();
+        }
+    }
+    
     public int deleteProduct(int productID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  
                 PreparedStatement stm = conn.prepareStatement(DELETE_PRODUCT_BY_ID)) {
