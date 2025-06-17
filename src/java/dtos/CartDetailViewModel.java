@@ -8,7 +8,7 @@ package dtos;
  *
  * @author Admin
  */
-class CartDetailViewModel {
+public class CartDetailViewModel {
     private int productID;
     private String productName;
     private int quantity;

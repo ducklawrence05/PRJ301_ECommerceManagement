@@ -2,7 +2,7 @@ Update:
 
 tblUsers: fName, role (admin only), pass, phone
 tblCategories: name, des
-tblProducts: name, cateID, price, quantity, sellerID (admin only), status
+tblProducts: name, cateID, price, quantity, status
 tblPromotions: name, discountPercent, endDate, status
 tblCarts: none
 tblCartDetails: quantity (if == 0 -> delete)

@@ -8,28 +8,22 @@ package dtos;
  *
  * @author Huy
  */
-public class CustomerCare {
+public class CustomerCareViewModel {
     int ticketID ;
     String userID ;
+    String fullName;
     String subject ;
     String content ;
     String status ;
     String reply ;
 
-    public CustomerCare() {
+    public CustomerCareViewModel() {
     }
 
-    public CustomerCare(int ticketID, String userID, String subject, String content, String status, String reply) {
+    public CustomerCareViewModel(int ticketID, String userID, String fullName, String subject, String content, String status, String reply) {
         this.ticketID = ticketID;
         this.userID = userID;
-        this.subject = subject;
-        this.content = content;
-        this.status = status;
-        this.reply = reply;
-    }
-    
-    public CustomerCare(String userID, String subject, String content, String status, String reply) {
-        this.userID = userID;
+        this.fullName = fullName;
         this.subject = subject;
         this.content = content;
         this.status = status;
@@ -50,6 +44,14 @@ public class CustomerCare {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getSubject() {

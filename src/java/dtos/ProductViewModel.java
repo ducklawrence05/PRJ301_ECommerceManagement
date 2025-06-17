@@ -16,13 +16,13 @@ public class ProductViewModel {
     private double price;
     private int quantity;
     private String sellerID;
-    private String sellerName;
+    private String sellerFullName;
     private String status;
 
     public ProductViewModel() {
     }
 
-    public ProductViewModel(int productID, String name, int categoryID, String categoryName, double price, int quantity, String sellerID, String sellerName, String status) {
+    public ProductViewModel(int productID, String name, int categoryID, String categoryName, double price, int quantity, String sellerID, String sellerFullName, String status) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
@@ -30,7 +30,7 @@ public class ProductViewModel {
         this.price = price;
         this.quantity = quantity;
         this.sellerID = sellerID;
-        this.sellerName = sellerName;
+        this.sellerFullName = sellerFullName;
         this.status = status;
     }
 
@@ -90,12 +90,12 @@ public class ProductViewModel {
         this.sellerID = sellerID;
     }
 
-    public String getSellerName() {
-        return sellerName;
+    public String getSellerFullName() {
+        return sellerFullName;
     }
 
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
+    public void setSellerFullName(String sellerFullName) {
+        this.sellerFullName = sellerFullName;
     }
 
     public String getStatus() {
