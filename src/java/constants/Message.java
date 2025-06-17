@@ -42,6 +42,7 @@ public class Message {
     public static final String UPDATE_INVOICE_FAILED = "Update invoice failed";
     public static final String DELETE_INVOICE_SUCCESSFULLY = "Delete invoice successfully";
     public static final String INVOICE_NOT_FOUND = "Invoice not found";
+    public static final String PRODUCT_IS_NOT_EXIST = "Produc is not exist";
     ///////////////////////////
     public static final String CREATE_INVOICE_DETAIL_FAILED = "Create invoice detail failed";
     public static final String CREATE_INVOICE_DETAIL_SUCCESSFULLY = "Create invoice detail successfully";

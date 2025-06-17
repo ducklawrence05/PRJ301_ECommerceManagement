@@ -10,6 +10,7 @@ import dtos.InvoiceDetail;
 import java.time.LocalDate;
 import constants.Message;
 import daos.InvoiceDAO;
+import daos.ProductDAO;
 import dtos.InvoiceDetailViewModel;
 import dtos.InvoiceViewModel;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class InvoiceService {
     InvoiceDAO invoiceDao = new InvoiceDAO();
+    ProductDAO productDao = new ProductDAO();
     public boolean isNullOrEmptyString(String check){
         return check == null || check.isEmpty();
     }
@@ -47,7 +49,10 @@ public class InvoiceService {
     public ServiceResponse<InvoiceDetail> createInvoiceDetail(int productID, int quantity, float price) throws SQLException{
         ServiceResponse sr = new ServiceResponse();
         sr.setSuccess(false);
-        
+        if(!isExistProduct(productID)){
+            sr.setMessage(Message.PRODUCT_IS_NOT_EXIST);
+            return sr;
+        }
         if(productID < 0 || quantity < 0 || price < 0){
             sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
             return sr;
@@ -149,5 +154,11 @@ public class InvoiceService {
          return invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID);
      }
      
+     public boolean isExistProduct(int productID)throws SQLException{
+         if(productDao.getProductByID(productID) == null){
+             return false;
+         }
+         return true;
+     }
      
 }
