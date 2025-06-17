@@ -115,9 +115,9 @@ public class DeliveryDAO {
             stm.setString(1, address);
             
             if (deliveryDate != null) {
-                stm.setDate(3, java.sql.Date.valueOf(deliveryDate));
+                stm.setDate(2, java.sql.Date.valueOf(deliveryDate));
             } else {
-                stm.setNull(3, Types.DATE);
+                stm.setNull(2, Types.DATE);
             }
             
             stm.setString(3, status);
@@ -132,9 +132,9 @@ public class DeliveryDAO {
         }
     }
 
-    public boolean checkDelivertyExists(String deliveryID) throws SQLException {
+    public boolean checkDelivertyExists(Integer deliveryID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_ID)) {
-            stm.setString(1, deliveryID);
+            stm.setInt(1, deliveryID);
             return stm.executeQuery().next();
         }
     }

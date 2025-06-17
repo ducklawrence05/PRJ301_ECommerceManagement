@@ -80,9 +80,9 @@ public class ReturnDAO {
         }
     }
     
-    public boolean checkReturnExists(String deliveryID) throws SQLException {
+    public boolean checkReturnExists(Integer returnID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_RETURN_BY_ID)) {
-            stm.setString(1, deliveryID);
+            stm.setInt(1, returnID);
             return stm.executeQuery().next();
         }
     }
