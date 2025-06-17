@@ -33,6 +33,37 @@ public class Message {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
 
+    //Category
+    public static final String IS_EXIT_CATAGORY = "Category is exited";
+    public static final String CREATE_CATEGORY_SUCCESSFULLY = "Create category successfully";
+    public static final String CREATE_CATEGORY_FAILED = "Create category failed";
+    public static final String CATEGORY_NOT_FOUND = "Category not found";
+    public static final String UPDATE_CATEGORY_SUCCESSFULLY = "Update category successfully";
+    public static final String UPDATE_CATEGORY_FAILED = "Update category failed";
+    public static final String DELETE_CATEGORY_SUCCESSFULLY = "Delete category successfully";
+    public static final String RONGE_FOMAT_CATEGORY ="invalid or emty string";
+    
+    //Promotion
+    public static final String IS_EXIT_PROMOTION = "Promotion is exited";
+    public static final String CREATE_PROMOTION_SUCCESSFULLY = "Create Promotion successfully";
+    public static final String CREATE_PROMOTION_FAILED = "Create Promotion failed";
+    public static final String PROMOTION_NOT_FOUND = "Promotion not found";
+    public static final String UPDATE_PROMOTION_SUCCESSFULLY = "Update Promotion successfully";
+    public static final String UPDATE_PROMOTION_FAILED = "Update Promotion failed";
+    public static final String DELETE_PROMOTION_SUCCESSFULLY = "Delete Promotion successfully";
+    public static final String RONGE_FOMAT_PROMOTION ="invalid or emty string";
+    public static final String INVALID_DATE_PROMOTION = "start date higher than end date";
+    
+    //Customer care
+    public static final String IS_EXIT_CUSTOMERCARE = "Customer care is exited";
+    public static final String CREATE_CUSTOMERCARE_SUCCESSFULLY = "Create Customer care successfully";
+    public static final String CREATE_CUSTOMERCARE_FAILED = "Create Customer care failed";
+    public static final String CUSTOMERCARE_NOT_FOUND = "Customer care not found";
+    public static final String UPDATE_CUSTOMERCARE_SUCCESSFULLY = "Update Customer care successfully";
+    public static final String UPDATE_CUSTOMERCARE_FAILED = "Update Customer care failed";
+    public static final String DELETE_CUSTOMERCARE_SUCCESSFULLY = "Delete Customer care successfully";
+    public static final String RONGE_FOMAT_CUSTOMERCARE ="invalid or emty string";
+
     //Delivery
     public static final String CREATE_DELIVERY_SUCCESSFULLY = "Create Delivery successfully";
     public static final String UPDATE_DELIVERY_SUCCESSFULLY = "Update Delivery successfully";
