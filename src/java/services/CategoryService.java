@@ -21,10 +21,10 @@ public class CategoryService {
     //create
     public String create(String name,String description) throws SQLException{
         if(dAO.isExit(name)){
-            return Message.IS_EXIT;
+            return Message.IS_EXIT_CATAGORY;
         }
         if(isNullOrEmptyString(name) || isNullOrEmptyString(description)){
-            return Message.RONGE_FOMAT;
+            return Message.RONGE_FOMAT_CATEGORY;
         }
         if(dAO.create(name, description)==1){
             return Message.CREATE_CATEGORY_SUCCESSFULLY;
@@ -37,7 +37,7 @@ public class CategoryService {
     //update
     public String update(int id,String name, String description) throws SQLException{
         if(isNullOrEmptyString(name) || isNullOrEmptyString(description)){
-            return Message.RONGE_FOMAT;
+            return Message.RONGE_FOMAT_CATEGORY;
         }
         if(!dAO.isExit(name)){
             return Message.CATEGORY_NOT_FOUND;
