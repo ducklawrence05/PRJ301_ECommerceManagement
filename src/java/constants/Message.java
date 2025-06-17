@@ -15,6 +15,7 @@ public class Message {
     public static final String UNAUTHORIZED = "You do not have permission to access this function.";
     public static final String CONTROLLER_NOT_FOUND = "Controller not found.";
     public static final String ALL_FIELDS_ARE_REQUIRED = "All fields are required.";
+    public static final String SUCCESS = "Success";
     
     // User
     public static final String PASSWORD_NOT_MATCH_CONFIRM_PASSWORD = "Password not match confirm password!";
@@ -32,6 +33,10 @@ public class Message {
     public static final String DELETE_USER_SUCCESSFULLY = "Delete user successfully";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
+
+    // Product
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
+    public static final String NO_MATCHING_PRODUCTS_FOUND = "No matching products found!";
 
     //Category
     public static final String IS_EXIT_CATAGORY = "Category is exited";
