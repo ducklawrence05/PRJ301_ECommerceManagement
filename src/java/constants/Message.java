@@ -32,4 +32,18 @@ public class Message {
     public static final String DELETE_USER_SUCCESSFULLY = "Delete user successfully";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
+
+    //Delivery
+    public static final String CREATE_DELIVERY_SUCCESSFULLY = "Create Delivery successfully";
+    public static final String UPDATE_DELIVERY_SUCCESSFULLY = "Update Delivery successfully";
+    public static final String DELETE_DELIVERY_SUCCESSFULLY = "Delete Delivery successfully";
+    public static final String UPDATE_DELIVERY_FAILED = "Update Delivery failed";
+    public static final String DELIVERY_NOT_FOUND = "Delivery not found";
+    
+    //Return
+    public static final String CREATE_RETURN_SUCCESSFULLY = "Create Return successfully";
+    public static final String UPDATE_RETURN_SUCCESSFULLY = "Update Return successfully";
+    public static final String DELETE_RETURN_SUCCESSFULLY = "Delete Return successfully";
+    public static final String UPDATE_RETURN_FAILED = "Update Return failed";
+    public static final String RETURN_NOT_FOUND = "Return not found";
 }
