@@ -20,11 +20,25 @@ import utils.DBContext;
 public class CategoryDAO {
     private final String CREATE = "INSERT INTO [dbo].[tblCategory] ([categoryName],[description]) VALUES (?,?) ";
     private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategory] WHERE categoryID = ?";
-    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
+//    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
     private final String UPDATE = "UPDATE [dbo].[tblCategory] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
     private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryName = ?";
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCategory]";
+    
+    //check exit
+    public boolean isExit(String category)  throws SQLException{
+        try(Connection conn = DBContext.getConnection();
+            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
+                ps.setString(1, category);
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    return true;
+                }
+        }
+        return false;
+    }
+    
     //create
     public int create(String name, String description) throws SQLException{
         try(Connection conn = DBContext.getConnection();
@@ -44,14 +58,14 @@ public class CategoryDAO {
         }
     }
     
-    //delete by category
-    public int deleteByCategoy(String category) throws SQLException{
-        try(Connection conn = DBContext.getConnection();
-        PreparedStatement ps = conn.prepareStatement(DELETE_BY_CATEGORIES)){
-            ps.setString(1,category);
-            return ps.executeUpdate();
-        }
-    }
+//    //delete by category
+//    public int deleteByCategoy(String category) throws SQLException{
+//        try(Connection conn = DBContext.getConnection();
+//        PreparedStatement ps = conn.prepareStatement(DELETE_BY_CATEGORIES)){
+//            ps.setString(1,category);
+//            return ps.executeUpdate();
+//        }
+//    }
     
     //update
     public int update(int id,String name, String category) throws SQLException{
