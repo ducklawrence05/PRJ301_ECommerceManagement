@@ -53,4 +53,14 @@ public class Message {
     public static final String DELETE_PROMOTION_SUCCESSFULLY = "Delete Promotion successfully";
     public static final String RONGE_FOMAT_PROMOTION ="invalid or emty string";
     public static final String INVALID_DATE_PROMOTION = "start date higher than end date";
+    
+    //Customer care
+    public static final String IS_EXIT_CUSTOMERCARE = "Customer care is exited";
+    public static final String CREATE_CUSTOMERCARE_SUCCESSFULLY = "Create Customer care successfully";
+    public static final String CREATE_CUSTOMERCARE_FAILED = "Create Customer care failed";
+    public static final String CUSTOMERCARE_NOT_FOUND = "Customer care not found";
+    public static final String UPDATE_CUSTOMERCARE_SUCCESSFULLY = "Update Customer care successfully";
+    public static final String UPDATE_CUSTOMERCARE_FAILED = "Update Customer care failed";
+    public static final String DELETE_CUSTOMERCARE_SUCCESSFULLY = "Delete Customer care successfully";
+    public static final String RONGE_FOMAT_CUSTOMERCARE ="invalid or emty string";
 }

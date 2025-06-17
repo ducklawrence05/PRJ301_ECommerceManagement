@@ -18,14 +18,14 @@ public class CustomerCareDAO {
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCustomerCare]";
     private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblCustomerCare] WHERE userID = ? AND subject = ?";
 
-    public int create(CustomerCare care) throws SQLException {
+    public int create(String userID,String subject, String content, String status, String reply) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(CREATE)) {
-            ps.setString(1, care.getUserID());
-            ps.setString(2, care.getSubject());
-            ps.setString(3, care.getContent());
-            ps.setString(4, care.getStatus());
-            ps.setString(5, care.getReply());
+            ps.setString(1, userID);
+            ps.setString(2, subject);
+            ps.setString(3, content);
+            ps.setString(4, status);
+            ps.setString(5, reply);
             return ps.executeUpdate();
         }
     }
@@ -38,15 +38,15 @@ public class CustomerCareDAO {
         }
     }
 
-    public int update(CustomerCare care) throws SQLException {
+    public int update(int id, String userID,String subject, String content, String status, String reply) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE)) {
-            ps.setString(1, care.getUserID());
-            ps.setString(2, care.getSubject());
-            ps.setString(3, care.getContent());
-            ps.setString(4, care.getStatus());
-            ps.setString(5, care.getReply());
-            ps.setInt(6, care.getTicketID());
+            ps.setString(1, userID);
+            ps.setString(2, subject);
+            ps.setString(3, content);
+            ps.setString(4, status);
+            ps.setString(5, reply);
+            ps.setInt(6, id);
             return ps.executeUpdate();
         }
     }

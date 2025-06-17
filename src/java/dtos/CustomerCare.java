@@ -27,6 +27,14 @@ public class CustomerCare {
         this.status = status;
         this.reply = reply;
     }
+    
+    public CustomerCare(String userID, String subject, String content, String status, String reply) {
+        this.userID = userID;
+        this.subject = subject;
+        this.content = content;
+        this.status = status;
+        this.reply = reply;
+    }
 
     public int getTicketID() {
         return ticketID;

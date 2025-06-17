@@ -83,14 +83,14 @@ public class PromotionService {
     //checker
     private boolean isEmtyString(String s){
         if(s.isEmpty()){
-            return false;
+            return true;
         }
         if(s == ""){
-            return false;
+            return true;
         }
         if(s==" "){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }
