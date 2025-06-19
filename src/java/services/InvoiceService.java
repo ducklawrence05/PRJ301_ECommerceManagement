@@ -40,6 +40,7 @@ public class InvoiceService {
         for(int i = 0; i <= productID.length - 1; i++){
             sr = createInvoiceDetail(sr, invoiceID, productID[i], quantity[i], price[i]);
             if(!sr.isSuccess()){
+                sr.setMessage("Error occur when add product " + i + 1 + " to invoice detail");
                 return sr;
             }
         }
