@@ -30,10 +30,15 @@ public class InvoiceService {
     private UserDAO userDao = new UserDAO();
     private final String ACTIVE = "active";
     private final String INACTIVE = "inactive";
-
-    public ServiceResponse<Invoice> createInvoice(String userID, String totalAmount, String status) throws SQLException, ParseException {
-        LocalDate createDate = LocalDate.now();
+    public ServiceResponse<Invoice> create(String userID, String totalAmount, String status, String _productID, String _quantity, String _price) throws SQLException, ParseException{
         ServiceResponse sr = new ServiceResponse();
+        sr = createInvoice(sr, userID, totalAmount, status);
+        sr = createInvoiceDetail(sr, _productID, _quantity, _price);
+        return sr;
+    }
+    public ServiceResponse<Invoice> createInvoice(ServiceResponse sr, String userID, String totalAmount, String status) throws SQLException, ParseException {
+        LocalDate createDate = LocalDate.now();
+        
         sr.setSuccess(false);
         if (!userDao.checkUserExists(userID)) {
             sr.setMessage(Message.USER_NOT_EXIST);
@@ -61,8 +66,7 @@ public class InvoiceService {
         return sr;
     }
 
-    public ServiceResponse<InvoiceDetail> createInvoiceDetail(String _productID, String _quantity, String _price) throws SQLException, ParseException {
-        ServiceResponse sr = new ServiceResponse();
+    public ServiceResponse<InvoiceDetail> createInvoiceDetail(ServiceResponse sr, String _productID, String _quantity, String _price) throws SQLException, ParseException {
         sr.setSuccess(false);
         int productID = Integer.parseInt(_productID);
         int quantity = Integer.parseInt(_quantity);
