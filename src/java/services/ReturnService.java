@@ -22,7 +22,7 @@ public class ReturnService {
         if(invoiceID == null
             || isNullOrEmptyString(reason)
             || isNullOrEmptyString(status)){
-            return Message.RETURN_NOT_FOUND;
+            return Message.ALL_FIELDS_ARE_REQUIRED;
         }
         
         return Message.CREATE_RETURN_SUCCESSFULLY;
