@@ -31,4 +31,9 @@ public class Url {
     public static final String CATEGORY_LIST_PAGE= "/categoryList.jsp";
     public static final String CREATE_CATEGORY_PAGE= "/createCategory.jsp";
     public static final String UPDATE_CATEGORY_PAGE= "/updateCategory.jsp";
+    
+    //Promotion
+    public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
+    public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
+    public static final String UPDATE_PROMOTION_PAGE= "/updatePromotion.jsp";
 }
