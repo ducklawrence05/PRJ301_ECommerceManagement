@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import dtos.InvoiceViewModel;
 import dtos.InvoiceDetailViewModel;
+import java.sql.Statement;
 /**
  *
  * @author ADMIN
@@ -24,7 +25,7 @@ import dtos.InvoiceDetailViewModel;
 public class InvoiceDAO {
 
     private final String CREATE_INVOICE = "INSERT INTO [dbo].[tblInvoices]([userID],[totalAmount],[status],[createDate]) VALUES (?,?,?,?)";
-    private final String CREATE_INVOICE_DETAIL = "INSERT INTO [dbo].[tblInvoiceDetails]([productID],[quantity],[price]) VALUES (?,?,?)";
+    private final String CREATE_INVOICE_DETAIL = "INSERT INTO [dbo].[tblInvoiceDetails]([invoiceID],[productID],[quantity],[price]) VALUES (?,?,?,?)";
     private final String UPDATE_INVOICE = "UPDATE [dbo].[tblInvoices] SET [userID] = ?,[totalAmount] = ?,[status] = ?,[createDate] = ? WHERE invoiceID =?";
     private final String UPDATE_INVOICE_DETAIL = "UPDATE [dbo].[tblInvoiceDetails] SET [quantity] = ?,[price] = ? WHERE invoiceID =? AND productID = ?";
     private final String DELETE_INVOICE = "DELETE FROM [dbo].[tblInvoices] WHERE invoiceID =?";
@@ -38,7 +39,7 @@ public class InvoiceDAO {
     private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
     private final String GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID = ? AND productID = ?";
     public int createInvoice(String userID, float totalAmount, String status, LocalDate createDate) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE_INVOICE)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE_INVOICE, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, userID);
             ps.setFloat(2, totalAmount);
             ps.setString(3, status);
@@ -48,15 +49,25 @@ public class InvoiceDAO {
                 ps.setNull(4, Types.DATE);
             }
             
-            return ps.executeUpdate();
+            int affectedRows = ps.executeUpdate();
+            if(affectedRows > 0){
+                try(ResultSet rs = ps.getGeneratedKeys()){
+                    if(rs.next()){
+                        int invoiceID = rs.getInt(1);
+                        return invoiceID;
+                    }
+                }
+            }
+            return 0;
         }
     }
 
-    public int createInvoiceDetail(int productID, int quantity, float price) throws SQLException {
+    public int createInvoiceDetail(int invoiceID, int productID, int quantity, float price) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE_INVOICE_DETAIL)) {
-            ps.setInt(1, productID);
-            ps.setInt(2, quantity);
-            ps.setFloat(3, price);
+            ps.setInt(1, invoiceID);
+            ps.setInt(2, productID);
+            ps.setInt(3, quantity);
+            ps.setFloat(4, price);
             return ps.executeUpdate();
         }
     }

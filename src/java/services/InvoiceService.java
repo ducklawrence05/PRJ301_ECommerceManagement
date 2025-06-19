@@ -30,13 +30,23 @@ public class InvoiceService {
     private UserDAO userDao = new UserDAO();
     private final String ACTIVE = "active";
     private final String INACTIVE = "inactive";
-    public ServiceResponse<Invoice> create(String userID, String totalAmount, String status, String _productID, String _quantity, String _price) throws SQLException, ParseException{
-        ServiceResponse sr = new ServiceResponse();
+    public ServiceResponse<Integer> create(String userID, String totalAmount, String status, String[] productID, String[] quantity, String[] price) throws SQLException, ParseException{
+        ServiceResponse<Integer> sr = new ServiceResponse();
         sr = createInvoice(sr, userID, totalAmount, status);
-        sr = createInvoiceDetail(sr, _productID, _quantity, _price);
+        if(!sr.isSuccess()){
+            return sr;
+        }
+        int invoiceID = sr.getData();
+        for(int i = 0; i <= productID.length - 1; i++){
+            sr = createInvoiceDetail(sr, invoiceID, productID[i], quantity[i], price[i]);
+            if(!sr.isSuccess()){
+                return sr;
+            }
+        }
+        
         return sr;
     }
-    public ServiceResponse<Invoice> createInvoice(ServiceResponse sr, String userID, String totalAmount, String status) throws SQLException, ParseException {
+    public ServiceResponse<Integer> createInvoice(ServiceResponse sr, String userID, String totalAmount, String status) throws SQLException, ParseException {
         LocalDate createDate = LocalDate.now();
         
         sr.setSuccess(false);
@@ -57,16 +67,18 @@ public class InvoiceService {
             sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
             return sr;
         }
-        if (invoiceDao.createInvoice(userID, _totalAmount, status, createDate) == 0) {
+        int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, status, createDate);
+        if (invoiceID == 0) {
             sr.setMessage(Message.CREATE_INVOICE_FAILED);
             return sr;
         }
+        sr.setData(invoiceID);
         sr.setSuccess(true);
         sr.setMessage(Message.CREATE_INVOICE_SUCCESSFULLY);
         return sr;
     }
 
-    public ServiceResponse<InvoiceDetail> createInvoiceDetail(ServiceResponse sr, String _productID, String _quantity, String _price) throws SQLException, ParseException {
+    public ServiceResponse<Integer> createInvoiceDetail(ServiceResponse sr, int invoiceID, String _productID, String _quantity, String _price) throws SQLException, ParseException {
         sr.setSuccess(false);
         int productID = Integer.parseInt(_productID);
         int quantity = Integer.parseInt(_quantity);
@@ -79,7 +91,7 @@ public class InvoiceService {
             sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
             return sr;
         }
-        if (invoiceDao.createInvoiceDetail(productID, quantity, price) == 0) {
+        if (invoiceDao.createInvoiceDetail(invoiceID, productID, quantity, price) == 0) {
             sr.setMessage(Message.CREATE_INVOICE_DETAIL_FAILED);
             return sr;
         }
