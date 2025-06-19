@@ -15,6 +15,8 @@ public class Message {
     public static final String UNAUTHORIZED = "You do not have permission to access this function.";
     public static final String CONTROLLER_NOT_FOUND = "Controller not found.";
     public static final String ALL_FIELDS_ARE_REQUIRED = "All fields are required.";
+    public static final String INPUT_POSITIVE_NUMBER = "Number can not negative";
+    public static final String SUCCESS = "Success";
     
     // User
     public static final String PASSWORD_NOT_MATCH_CONFIRM_PASSWORD = "Password not match confirm password!";
@@ -32,7 +34,44 @@ public class Message {
     public static final String DELETE_USER_SUCCESSFULLY = "Delete user successfully";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
+    
+    //Invoice
+    public static final String CREATE_INVOICE_FAILED = "Create invoice failed";
+    public static final String CREATE_INVOICE_SUCCESSFULLY = "Create invoice successfully";
+    public static final String UPDATE_INVOICE_SUCCESSFULLY = "Update invoice successfully";
+    public static final String UPDATE_INVOICE_FAILED = "Update invoice failed";
+    public static final String DELETE_INVOICE_SUCCESSFULLY = "Delete invoice successfully";
+    public static final String INVOICE_NOT_FOUND = "Invoice not found";
+    public static final String PRODUCT_IS_NOT_EXIST = "Product is not exist";
+    public static final String USER_NOT_EXIST = "User is not exist";
+    ///////////////////////////
+    public static final String CREATE_INVOICE_DETAIL_FAILED = "Create invoice detail failed";
+    public static final String CREATE_INVOICE_DETAIL_SUCCESSFULLY = "Create invoice detail successfully";
+    public static final String UPDATE_INVOICE_DETAIL_SUCCESSFULLY = "Update invoice detail successfully";
+    public static final String UPDATE_INVOICE_DETAIL_FAILED = "Update invoice detail failed";
+    public static final String DELETE_INVOICE_DETAIL_SUCCESSFULLY = "Delete invoice detail successfully";
+    public static final String INVOICE_DETAIL_NOT_FOUND = "invoice detail not found";
 
+    // Product
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
+    public static final String NO_MATCHING_PRODUCTS_FOUND = "No matching products found!";
+    public static final String INVALID_PRICE_OR_QUANTITY = "Price and quantity must be greater than 0";
+    public static final String THIS_USER_IS_NOT_A_SELLER_OR_ADMIN = "This user is not a seller or admin";
+    public static final String INVALID_STATUS = "Invalid status";
+    public static final String CREATE_PRODUCT_SUCCESSFULLY = "Create product successfully";
+    public static final String CREATE_PRODUCT_FAILED = "Create product failed";
+    public static final String UPDATE_PRODUCT_SUCCESSFULLY = "Update product successfully";
+    public static final String UPDATE_PRODUCT_FAILED = "Update product failed";
+    public static final String DELETE_PRODUCT_SUCCESSFULLY = "Delete product successfully";
+    
+    // Cart
+    public static final String CART_NOT_FOUND = "Cart not found";
+    public static final String CREATE_CART_SUCCESSFULLY = "Create cart successfully";
+    public static final String CREATE_CART_FAILED = "Create cart failed";
+    public static final String UPDATE_CART_SUCCESSFULLY = "Update cart successfully";
+    public static final String UPDATE_CART_FAILED = "Update cart failed";
+    public static final String DELETE_CART_SUCCESSFULLY = "Delete cart successfully";
+    
     //Category
     public static final String IS_EXIT_CATAGORY = "Category is exited";
     public static final String CREATE_CATEGORY_SUCCESSFULLY = "Create category successfully";
