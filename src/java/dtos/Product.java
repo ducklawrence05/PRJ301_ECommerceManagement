@@ -15,7 +15,7 @@ public class Product {
     private double price;
     private int quantity;
     private String sellerID;
-    private String status;
+    private String status; // active, inactive and out of stock
 
     public Product() {
     }
