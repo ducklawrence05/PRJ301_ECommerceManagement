@@ -82,6 +82,10 @@ public class ProductDAO {
     private final String UPDATE_PRODUCT_STATUS_BY_ID = 
             "UPDATE tblProducts SET status = ? WHERE productID = ?";
     
+    private final String UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID =
+            "UPDATE tblProducts SET quantity = ?, status = ? "
+            + "WHERE productID = ?";
+    
     private final String DELETE_PRODUCT_BY_ID = "DELETE FROM tblProducts WHERE productID = ?";
 
     //
@@ -151,7 +155,7 @@ public class ProductDAO {
     }
 
     public int updateProduct(int productID, String name, int categoryID, double price,
-            int quantity, String sellerID, String status) throws SQLException {
+            int quantity, String status) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_BY_ID)) {
             stm.setString(1, name);
             stm.setInt(2, categoryID);
@@ -168,6 +172,16 @@ public class ProductDAO {
                 PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_STATUS_BY_ID)) {
             stm.setString(1, status);
             stm.setInt(2, productID);
+            return stm.executeUpdate();
+        }
+    }
+    
+    public int updateProductQuantityAndStatus(int productID, int quantity, String status) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  
+                PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID)) {
+            stm.setInt(1, quantity);
+            stm.setString(2, status);
+            stm.setInt(3, productID);
             return stm.executeUpdate();
         }
     }

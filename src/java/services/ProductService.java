@@ -5,13 +5,17 @@
 package services;
 
 import constants.Message;
+import constants.Role;
 import daos.CategoryDAO;
 import daos.ProductDAO;
+import daos.UserDAO;
+import dtos.User;
 import dtos.Product;
 import dtos.ProductViewModel;
 import java.sql.SQLException;
 import java.util.List;
 import responses.ServiceResponse;
+import utils.ServiceUtils;
 
 /**
  *
@@ -20,6 +24,11 @@ import responses.ServiceResponse;
 public class ProductService {
     private ProductDAO productDAO = new ProductDAO();
     private CategoryDAO categoryDAO = new CategoryDAO();
+    private UserDAO userDAO = new UserDAO();
+    
+    private final String OUT_OF_STOCK = "out of stock";
+    private final String ACTIVE = "active";
+    private final String INACTIVE = "inactive";
     
     public ServiceResponse<List<ProductViewModel>> getAllProducts() throws SQLException {
         return returnProductsHelper(productDAO.getAllProducts());
@@ -33,7 +42,7 @@ public class ProductService {
     }
     
     public ServiceResponse<List<ProductViewModel>> getProductsByName(String name) throws SQLException {
-        if(isNullOrEmptyString(name)){
+        if(ServiceUtils.isNullOrEmptyString(name)){
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
@@ -41,7 +50,7 @@ public class ProductService {
     }
     
     public ServiceResponse<List<ProductViewModel>> getProductsByCategoryName(String cName) throws SQLException {
-        if(isNullOrEmptyString(cName)){
+        if(ServiceUtils.isNullOrEmptyString(cName)){
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
@@ -53,7 +62,7 @@ public class ProductService {
     }
     
     public ServiceResponse<List<ProductViewModel>> getProductsBySellerID(String sellerID) throws SQLException {
-        if(isNullOrEmptyString(sellerID)){
+        if(ServiceUtils.isNullOrEmptyString(sellerID)){
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
@@ -61,26 +70,105 @@ public class ProductService {
     }
     
     public ServiceResponse<List<ProductViewModel>> getProductsByStatus(String status) throws SQLException {
-        if(isNullOrEmptyString(status)){
+        if(ServiceUtils.isNullOrEmptyString(status)){
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
         return returnProductsHelper(productDAO.getProductsByStatus(status));
     }
     
-    public ServiceResponse<Product> insertProduct(String name, int categoryID, double price,
+    public String createProduct(String name, int categoryID, double price,
             int quantity, String sellerID, String status) throws SQLException {
-        if(isNullOrEmptyString(name)
-                || isNullOrEmptyString(sellerID)
-                || isNullOrEmptyString(status)){
-            return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
+        if(ServiceUtils.isNullOrEmptyString(name)
+                || ServiceUtils.isNullOrEmptyString(sellerID)
+                || ServiceUtils.isNullOrEmptyString(status)){
+            return Message.ALL_FIELDS_ARE_REQUIRED;
         }
         
         if(categoryDAO.searchByID(categoryID) == null) {
-            
+            return Message.CATEGORY_NOT_FOUND;
         }
         
-        return null;
+        if(price <= 0 || quantity <= 0) {
+            return Message.INVALID_PRICE_OR_QUANTITY;
+        }
+        
+        User user = userDAO.getUserByID(sellerID, true);
+        if (user == null) {
+            return Message.USER_NOT_FOUND;
+        }
+        if(user.getRole() != Role.ADMIN || user.getRole() != Role.SELLER){
+            return Message.THIS_USER_IS_NOT_A_SELLER_OR_ADMIN;
+        }
+        
+        if(!ServiceUtils.checkStatus(status, ACTIVE, INACTIVE)){
+            return Message.INVALID_STATUS;
+        }
+        
+        if(productDAO.insertProduct(name, categoryID, price, quantity, sellerID, status.toLowerCase()) == 0){
+            return Message.CREATE_PRODUCT_FAILED;
+        }
+        
+        return Message.CREATE_PRODUCT_SUCCESSFULLY;
+    }
+    
+    public String updateProduct(int productID, String name, int categoryID, double price,
+            int quantity, String status) throws SQLException {
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null){
+            return Message.PRODUCT_NOT_FOUND;
+        }
+        
+        if(categoryDAO.searchByID(categoryID) == null){
+            return Message.CATEGORY_NOT_FOUND;
+        }
+        
+        if(ServiceUtils.isNullOrEmptyString(name)){
+            name = product.getName();
+        }
+        
+        if(ServiceUtils.isNullOrEmptyString(status)){
+            status = product.getStatus();
+        }
+        
+        if(quantity == 0 && !status.equals(OUT_OF_STOCK)){
+            status = OUT_OF_STOCK;
+        }
+        
+        if(quantity != 0 && status.equals(OUT_OF_STOCK)){
+            quantity = 0;
+        }
+        
+        if(productDAO.updateProduct(productID, name, categoryID, price, quantity, status) == 0){
+            return Message.UPDATE_PRODUCT_FAILED;
+        }
+        
+        return Message.UPDATE_PRODUCT_SUCCESSFULLY;
+    }
+    
+    public String updateProductQuantityAndStatus(int productID, int quantity) throws SQLException {
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null){
+            return Message.PRODUCT_NOT_FOUND;
+        }
+        String status = product.getStatus();
+        
+        if(quantity == 0 && !status.equals(OUT_OF_STOCK)){
+            status = OUT_OF_STOCK;
+        }
+        
+        if(productDAO.updateProductQuantityAndStatus(productID, quantity, status) == 0){
+            return Message.UPDATE_PRODUCT_FAILED;
+        }
+        
+        return Message.UPDATE_PRODUCT_SUCCESSFULLY;
+    }
+    
+    public String deleteProductByID(int productID) throws SQLException {
+        if(productDAO.deleteProduct(productID) == 0){
+            return Message.PRODUCT_NOT_FOUND;
+        }
+        return Message.DELETE_PRODUCT_SUCCESSFULLY;
     }
     
     // helper
@@ -88,9 +176,5 @@ public class ProductService {
         return products == null 
                 ? ServiceResponse.failure(Message.NO_MATCHING_PRODUCTS_FOUND)
                 : ServiceResponse.success(Message.SUCCESS, products);
-    }
-    
-    private boolean isNullOrEmptyString(String str){
-        return str == null || str.isEmpty();
     }
 }
