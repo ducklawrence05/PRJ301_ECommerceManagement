@@ -11,10 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import responses.ServiceResponse;
 
-/**
- *
- * @author Huy
- */
+
 public class CategoryService {
     CategoryDAO dAO = new CategoryDAO();
     
