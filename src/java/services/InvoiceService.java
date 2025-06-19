@@ -17,6 +17,7 @@ import dtos.InvoiceViewModel;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import utils.ServiceUtils;
 
 /**
  *
@@ -24,23 +25,26 @@ import java.util.List;
  */
 public class InvoiceService {
 
-    InvoiceDAO invoiceDao = new InvoiceDAO();
-    ProductDAO productDao = new ProductDAO();
-    UserDAO userDao = new UserDAO();
+    private InvoiceDAO invoiceDao = new InvoiceDAO();
+    private ProductDAO productDao = new ProductDAO();
+    private UserDAO userDao = new UserDAO();
+    private final String ACTIVE = "active";
+    private final String INACTIVE = "inactive";
 
-    public boolean isNullOrEmptyString(String check) {
-        return check == null || check.isEmpty();
-    }
-
-    public ServiceResponse<Invoice> createInvoice(String userID, String totalAmount, String status, LocalDate createDate) throws SQLException, ParseException {
+    public ServiceResponse<Invoice> createInvoice(String userID, String totalAmount, String status) throws SQLException, ParseException {
+        LocalDate createDate = LocalDate.now();
         ServiceResponse sr = new ServiceResponse();
         sr.setSuccess(false);
-        if (!isExistUser(userID)) {
+        if (!userDao.checkUserExists(userID)) {
             sr.setMessage(Message.USER_NOT_EXIST);
             return sr;
         }
-        if (isNullOrEmptyString(userID) || isNullOrEmptyString(status)) {
+        if (ServiceUtils.isNullOrEmptyString(userID) || ServiceUtils.isNullOrEmptyString(status)) {
             sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
+            return sr;
+        }
+        if(!ServiceUtils.checkStatus(status, ACTIVE, INACTIVE)){
+            sr.setMessage(Message.INVALID_STATUS);
             return sr;
         }
         float _totalAmount = Float.parseFloat(totalAmount);
@@ -80,7 +84,8 @@ public class InvoiceService {
         return sr;
     }
 
-    public ServiceResponse<Invoice> updateInvoice(String _invoiceID, String userID, String _totalAmount, String status, LocalDate createDate) throws SQLException, ParseException {
+    public ServiceResponse<Invoice> updateInvoice(String _invoiceID, String userID, String _totalAmount, String status) throws SQLException, ParseException {
+        LocalDate createDate = LocalDate.now();
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
         float totalAmount = Float.parseFloat(_totalAmount);
@@ -90,8 +95,12 @@ public class InvoiceService {
         }
         sr.setSuccess(false);
 
-        if (isNullOrEmptyString(userID) || isNullOrEmptyString(status)) {
+        if (ServiceUtils.isNullOrEmptyString(userID) || ServiceUtils.isNullOrEmptyString(status)) {
             sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
+            return sr;
+        }
+        if(!ServiceUtils.checkStatus(status, ACTIVE, INACTIVE)){
+            sr.setMessage(Message.INVALID_STATUS);
             return sr;
         }
         if (totalAmount < 0) {
@@ -182,7 +191,7 @@ public class InvoiceService {
     }
 
     public List<InvoiceViewModel> getInvoiceByUserID(String userID) throws SQLException {
-        if (isNullOrEmptyString(userID)) {
+        if (ServiceUtils.isNullOrEmptyString(userID)) {
             return null;
         }
         return invoiceDao.getInvoiceByUserID(userID);
@@ -214,11 +223,6 @@ public class InvoiceService {
         return true;
     }
 
-    public boolean isExistUser(String userID) throws SQLException {
-        if (userDao.getUsersByID(userID) == null) {
-            return false;
-        }
-        return true;
-    }
+   
 
 }
