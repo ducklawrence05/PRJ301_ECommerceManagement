@@ -49,7 +49,7 @@ public class CartDAO {
     private final String CLEAR_CART = "DELETE FROM tblCartDetails WHERE cartID = ?";
     
     //
-    public CartViewModel getCartViewModelByID(int cartID) throws SQLException {
+    public CartViewModel getCartByID(int cartID) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement psCart = con.prepareStatement(GET_CART_BY_ID);
              PreparedStatement psDetails = con.prepareStatement(GET_CART_DETAILS)) {
@@ -66,7 +66,7 @@ public class CartDAO {
         }
     }
 
-    public CartViewModel getCartViewModelByUserID(String userID) throws SQLException {
+    public CartViewModel getCartByUserID(String userID) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement psCart = con.prepareStatement(GET_CART_BY_USER_ID);
              PreparedStatement psDetails = con.prepareStatement(GET_CART_DETAILS)) {

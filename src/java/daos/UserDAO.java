@@ -84,7 +84,8 @@ public class UserDAO {
     }
 
     public boolean checkUserExists(String userID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_USER_BY_ID)) {
+        try ( Connection conn = DBContext.getConnection();  
+                PreparedStatement stm = conn.prepareStatement(GET_USER_BY_ID)) {
             stm.setString(1, userID);
             return stm.executeQuery().next();
         }
