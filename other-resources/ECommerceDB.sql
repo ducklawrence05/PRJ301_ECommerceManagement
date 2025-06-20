@@ -1,6 +1,4 @@
-﻿Drop DATABASE ECommerceDB;
-
-CREATE DATABASE ECommerceDB;
+﻿CREATE DATABASE ECommerceDB;
 
 GO
 
