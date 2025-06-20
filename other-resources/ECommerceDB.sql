@@ -20,7 +20,17 @@ CREATE TABLE tblCategories (
     description NVARCHAR(255) NOT NULL
 );
 
--- 3. Sản phẩm
+-- 3. Chương trình khuyến mãi
+CREATE TABLE tblPromotions (
+    promoID INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    discountPercent FLOAT NOT NULL,
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    status VARCHAR(20) NOT NULL
+);
+
+-- 4. Sản phẩm
 CREATE TABLE tblProducts (
     productID INT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL,
@@ -29,18 +39,10 @@ CREATE TABLE tblProducts (
     quantity INT NOT NULL,
     sellerID VARCHAR(20) NOT NULL,
     status VARCHAR(20) NOT NULL,
+    promoID INT NULL,
     FOREIGN KEY (categoryID) REFERENCES tblCategories(categoryID),
-    FOREIGN KEY (sellerID) REFERENCES tblUsers(userID)
-);
-
--- 4. Chương trình khuyến mãi
-CREATE TABLE tblPromotions (
-    promoID INT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL,
-    discountPercent FLOAT NOT NULL,
-    startDate DATE NOT NULL,
-    endDate DATE NOT NULL,
-    status VARCHAR(20) NOT NULL
+    FOREIGN KEY (sellerID) REFERENCES tblUsers(userID),
+    FOREIGN KEY (promoID) REFERENCES tblPromotions(promoID)
 );
 
 -- 5. Giỏ hàng

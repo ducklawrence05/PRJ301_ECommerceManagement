@@ -25,6 +25,7 @@ public class CartService {
     private final ProductDAO productDAO = new ProductDAO();
 
     private final String OUT_OF_STOCK = "out of stock";
+    private final String ACTIVE = "active";
     private final String INACTIVE = "inactive";
 
     public ServiceResponse<CartViewModel> getCartByID(int cartID) throws SQLException {
@@ -116,18 +117,48 @@ public class CartService {
                     ? Message.ADD_TO_CART_SUCCESSFULLY : Message.ADD_TO_CART_FAILED;
         }
     }
-
-    public String deleteItemFromCart(int cartID, int productID) throws SQLException {
-        if(cartDAO.deleteItemFromCart(cartID, productID) == 0){
-           return Message.CART_DETAIL_NOT_FOUND; 
+    
+    public ServiceResponse deleteItemFromCart(int cartID, int productID) throws SQLException {
+        int quantityInCart = cartDAO.getItemFromCart(cartID, productID).getQuantity();
+        if (quantityInCart == 0) {
+            return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND);
         }
-        return Message.DELETE_ITEM_FROM_CART_SUCCESSFULLY;
+        
+        // check product
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null) {
+            return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);
+        }
+        
+        // add quantity back to stock
+        int newQuantity = product.getQuantity() + quantityInCart;
+        product.setQuantity(newQuantity);
+        if (product.getStatus().equalsIgnoreCase(OUT_OF_STOCK) && newQuantity > 0){
+            product.setStatus(ACTIVE);
+        }
+        
+        // update product
+        if (productDAO.updateProductQuantityAndStatus(productID, product.getQuantity(), product.getStatus()) == 0) {
+            return ServiceResponse.failure(Message.UPDATE_PRODUCT_FAILED);
+        }
+        
+        // delete item from cart
+        if(cartDAO.deleteItemFromCart(cartID, productID) == 0){
+           return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND); 
+        }
+        
+        return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
     }
 
-    public String clearCart(int cartID) throws SQLException {
-        if(cartDAO.clearCart(cartID) == 0){
-            return Message.CLEAR_CART_FAILED;
+    public ServiceResponse deleteItemsFromCart(int cartID, int[] productIDs) throws SQLException {
+        ServiceResponse rs = null;
+        for (int i = 0; i < productIDs.length; i++){
+            rs = deleteItemFromCart(cartID, productIDs[i]);
+            if(!rs.isSuccess()){
+                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
+            }
         }
-        return Message.CLEAR_CART_SUCCESSFULLY;
+        
+        return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
     }
 }

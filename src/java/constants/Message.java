@@ -77,7 +77,7 @@ public class Message {
     public static final String DELETE_CART_SUCCESSFULLY = "Delete cart successfully";
     public static final String ADD_TO_CART_SUCCESSFULLY = "Add to cart successfully";
     public static final String ADD_TO_CART_FAILED = "Add to cart failed";
-    public static final String DELETE_ITEM_FROM_CART_SUCCESSFULLY = "Delete item from cart successfully";
+    public static final String DELETE_ITEMS_FROM_CART_SUCCESSFULLY = "Delete item(s) from cart successfully";
     public static final String CLEAR_CART_SUCCESSFULLY = "Clear cart successfully";
     public static final String CLEAR_CART_FAILED = "Clear cart failed";
     
