@@ -18,13 +18,13 @@ import utils.DBContext;
  * @author Huy
  */
 public class CategoryDAO {
-    private final String CREATE = "INSERT INTO [dbo].[tblCategory] ([categoryName],[description]) VALUES (?,?) ";
-    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategory] WHERE categoryID = ?";
-//    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
-    private final String UPDATE = "UPDATE [dbo].[tblCategory] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
-    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
-    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryName = ?";
-    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategory]";
+    private final String CREATE = "INSERT INTO [dbo].[tblCategories] ([categoryName],[description]) VALUES (?,?) ";
+    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategories] WHERE categoryID = ?";
+//    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategories] WHERE categoryName = ?";
+    private final String UPDATE = "UPDATE [dbo].[tblCategories] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
+    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategories] WHERE categoryID = ?";
+    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategories] WHERE categoryName = ?";
+    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategories]";
     
     //check exit
     public boolean isExit(String category)  throws SQLException{
