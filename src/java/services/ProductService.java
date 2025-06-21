@@ -27,7 +27,7 @@ public class ProductService {
     private UserDAO userDAO = new UserDAO();
     private PromotionDAO promotionDAO = new PromotionDAO();
     
-    private final String OUT_OF_STOCK = "out of stock";
+    private final String OUT_OF_STOCK = "outOfStock";
     private final String ACTIVE = "active";
     private final String INACTIVE = "inactive";
     
@@ -106,7 +106,7 @@ public class ProductService {
         if (user == null) {
             return Message.USER_NOT_FOUND;
         }
-        if(user.getRole() != Role.ADMIN || user.getRole() != Role.SELLER){
+        if(user.getRole() != Role.ADMIN && user.getRole() != Role.SELLER){
             return Message.THIS_USER_IS_NOT_A_SELLER;
         }
         
@@ -129,14 +129,12 @@ public class ProductService {
     
     public String updateProduct(int productID, String name, int categoryID, double price,
             int quantity, String status, Integer promoID, User currentUser) throws SQLException {
-        ProductViewModel product = productDAO.getProductByID(productID);
-        if (product == null){
-            return Message.PRODUCT_NOT_FOUND;
+        ServiceResponse<ProductViewModel> sr = isCreator(productID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
         
-        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
-            return Message.UNAUTHORIZED;
-        }
+        ProductViewModel product = sr.getData();
         
         if(categoryDAO.searchByID(categoryID) == null){
             return Message.CATEGORY_NOT_FOUND;
@@ -172,14 +170,12 @@ public class ProductService {
     }
     
     public String updateProductQuantityAndStatus(int productID, int quantity, User currentUser) throws SQLException {
-        ProductViewModel product = productDAO.getProductByID(productID);
-        if (product == null){
-            return Message.PRODUCT_NOT_FOUND;
+        ServiceResponse<ProductViewModel> sr = isCreator(productID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
         
-        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
-            return Message.UNAUTHORIZED;
-        }
+        ProductViewModel product = sr.getData();
         
         String status = product.getStatus();
         
@@ -195,13 +191,9 @@ public class ProductService {
     }
     
     public String deleteProductByID(int productID, User currentUser) throws SQLException {
-        ProductViewModel product = productDAO.getProductByID(productID);
-        if (product == null){
-            return Message.PRODUCT_NOT_FOUND;
-        }
-        
-        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
-            return Message.UNAUTHORIZED;
+        ServiceResponse<ProductViewModel> sr = isCreator(productID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
         
         if(productDAO.deleteProduct(productID) == 0){
@@ -210,14 +202,22 @@ public class ProductService {
         return Message.DELETE_PRODUCT_SUCCESSFULLY;
     }
     
-    public ServiceResponse isCreator(int productID, String userID) throws SQLException {
-        String sellerID = productDAO.getProductByID(productID).getSellerID();
-        return sellerID.equalsIgnoreCase(userID)
-                ? ServiceResponse.success(Message.SUCCESS)
-                : ServiceResponse.failure(Message.UNAUTHORIZED);
+    // helper
+    private ServiceResponse<ProductViewModel> isCreator(int productID, User currentUser) throws SQLException {
+        // check product exist
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if(product == null){
+            return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);
+        }
+        
+        // check creator
+        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
+            return ServiceResponse.failure(Message.UNAUTHORIZED);
+        }
+        
+        return ServiceResponse.success(Message.SUCCESS, product);
     }
     
-    // helper
     private ServiceResponse<List<ProductViewModel>> returnProductsHelper(List<ProductViewModel> products){
         return products == null 
                 ? ServiceResponse.failure(Message.NO_MATCHING_PRODUCTS_FOUND)

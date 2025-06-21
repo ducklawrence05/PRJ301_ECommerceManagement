@@ -24,7 +24,8 @@ public class ProductDAO {
             + "WHERE productID = ? AND status = ?";
 
     private final String GET_ALL_PRODUCTS = "SELECT p.*, c.categoryName, u.fullName AS sellerFullName, "
-            + "CASE WHEN pr.discountPercent IS NOT NULL THEN p.price * (1 - pr.discountPercent / 100.0) ELSE p.price END AS salePrice "
+            + "CASE WHEN pr.discountPercent IS NOT NULL THEN ROUND(p.price * (1 - pr.discountPercent), 2) "
+                + "ELSE p.price END AS salePrice "
             + "FROM tblProducts p "
             + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID "
             + "JOIN tblCategories c ON p.categoryID = c.categoryID "
@@ -227,7 +228,8 @@ public class ProductDAO {
                 rs.getInt("quantity"),
                 rs.getString("sellerID"),
                 rs.getString("sellerFullName"),
-                rs.getString("status")
+                rs.getString("status"),
+                rs.getInt("promoID")
         );
     }
 }

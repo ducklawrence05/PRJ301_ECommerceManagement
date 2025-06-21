@@ -8,10 +8,12 @@ import constants.Message;
 import daos.CartDAO;
 import daos.ProductDAO;
 import daos.UserDAO;
+import dtos.User;
 import dtos.CartDetail;
 import dtos.CartViewModel;
 import dtos.ProductViewModel;
 import java.sql.SQLException;
+import java.util.List;
 import responses.ServiceResponse;
 
 /**
@@ -24,7 +26,7 @@ public class CartService {
     private final UserDAO userDAO = new UserDAO();
     private final ProductDAO productDAO = new ProductDAO();
 
-    private final String OUT_OF_STOCK = "out of stock";
+    private final String OUT_OF_STOCK = "outOfStock";
     private final String ACTIVE = "active";
     private final String INACTIVE = "inactive";
 
@@ -54,19 +56,24 @@ public class CartService {
         return Message.CREATE_CART_SUCCESSFULLY;
     }
 
-    public String deleteCartByID(int cartID) throws SQLException {
+    public String deleteCartByID(int cartID, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
+        }
+        
         if (cartDAO.deleteCartByID(cartID) == 0) {
             return Message.CART_NOT_FOUND;
         }
         return Message.DELETE_CART_SUCCESSFULLY;
     }
 
-    public String upsertItemToCart(int cartID, int productID, int quantity) throws SQLException {
-        // check cart exist
-        if (cartDAO.getCartByID(cartID) == null) {
-            return Message.CART_NOT_FOUND;
+    public String upsertItemToCart(int cartID, int productID, int quantity, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
-
+        
         // check quantity input
         if (quantity <= 0) {
             return Message.INVALID_QUANTITY;
@@ -118,11 +125,71 @@ public class CartService {
         }
     }
     
-    public ServiceResponse deleteItemFromCart(int cartID, int productID) throws SQLException {
-        int quantityInCart = cartDAO.getItemFromCart(cartID, productID).getQuantity();
-        if (quantityInCart == 0) {
+    public ServiceResponse deleteItemFromCart(int cartID, int productID, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr;
+        }
+        
+        return deleteItemFromCart(cartID, productID);
+    }
+
+    public ServiceResponse deleteItemsFromCart(int cartID, List<Integer> productIDs, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr;
+        }
+        
+        for (int i = 0; i < productIDs.size(); i++){
+            sr = deleteItemFromCart(cartID, productIDs.get(i));
+            if(!sr.isSuccess()){
+                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
+            }
+        }
+        
+        return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
+    }
+    
+    public ServiceResponse clearCart(int cartID, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr;
+        }
+        
+        List<Integer> productIDs = cartDAO.getProductIDsByCartID(cartID);
+        for (int i = 0; i < productIDs.size(); i++){
+            sr = deleteItemFromCart(cartID, productIDs.get(i));
+            if(!sr.isSuccess()){
+                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
+            }
+        }
+        
+        return ServiceResponse.success(Message.CLEAR_CART_SUCCESSFULLY);
+    }
+    
+    //helper
+    private ServiceResponse<CartViewModel> isCreator(int cartID, User currentUser) throws SQLException {
+        // check cart exist
+        CartViewModel cart = cartDAO.getCartByID(cartID);
+        if(cart == null){
+            return ServiceResponse.failure(Message.CART_NOT_FOUND);
+        }
+        
+        // check creator
+        if(!currentUser.getUserID().equalsIgnoreCase(cart.getUserID())){
+            return ServiceResponse.failure(Message.UNAUTHORIZED);
+        }
+        
+        return ServiceResponse.success(Message.SUCCESS, cart);
+    }
+    
+    private ServiceResponse deleteItemFromCart(int cartID, int productID) throws SQLException {
+        CartDetail cartDetail = cartDAO.getItemFromCart(cartID, productID);
+        if(cartDetail == null) {
             return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND);
         }
+        
+        int quantityInCart = cartDetail.getQuantity();
         
         // check product
         ProductViewModel product = productDAO.getProductByID(productID);
@@ -148,24 +215,5 @@ public class CartService {
         }
         
         return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
-    }
-
-    public ServiceResponse deleteItemsFromCart(int cartID, int[] productIDs) throws SQLException {
-        ServiceResponse rs = null;
-        for (int i = 0; i < productIDs.length; i++){
-            rs = deleteItemFromCart(cartID, productIDs[i]);
-            if(!rs.isSuccess()){
-                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
-            }
-        }
-        
-        return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
-    }
-    
-    public ServiceResponse isCreator(int cartID, String userID) throws SQLException {
-        String creatorID = cartDAO.getCartByID(cartID).getUserID();
-        return creatorID.equalsIgnoreCase(userID)
-                ? ServiceResponse.success(Message.SUCCESS)
-                : ServiceResponse.failure(Message.UNAUTHORIZED);
     }
 }
