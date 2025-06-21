@@ -57,7 +57,9 @@ public class UserService {
             return null;
         }
         
-        User user = userDAO.login(userID);
+        User user = userDAO.login(userID); 
+        if(user == null) return null;
+        
         String storedHashedPassword = user.getPassword();
         
         return BCrypt.checkpw(password, storedHashedPassword) 

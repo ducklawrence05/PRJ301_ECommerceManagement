@@ -10,6 +10,7 @@ import dtos.Category;
 import java.sql.SQLException;
 import java.util.List;
 import responses.ServiceResponse;
+import static utils.ServiceUtils.isNullOrEmptyString;
 
 
 public class CategoryService {
@@ -71,11 +72,5 @@ public class CategoryService {
     //get all
     public List<Category> getAll() throws SQLException{
         return dAO.getAll();
-    }
-    
-    
-    //check emty
-    private boolean isNullOrEmptyString(String str){
-        return str == null || str.isEmpty();
     }
 }

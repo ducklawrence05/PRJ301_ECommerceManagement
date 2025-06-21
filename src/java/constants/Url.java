@@ -21,7 +21,9 @@ public class Url {
     public static final String UPDATE_USER_PAGE = "/updateUser.jsp";
     
     // Product
-    public static final String PRODUCT_PAGE = "/productList.jsp";
+    public static final String PRODUCT_LIST_PAGE = "/productList.jsp";
+    public static final String CREATE_PRODUCT_PAGE = "/createProduct.jsp";
+    public static final String UPDATE_PRODUCT_PAGE = "/updateProduct.jsp";
     
     // Controller
     public static final String AUTH_CONTROLLER = "/auth";
@@ -36,4 +38,13 @@ public class Url {
     //Invoice
     public static final String INVOICE_LIST_PAGE = "";
     public static final String INVOICE_DETAIL_PAGE = "";
+
+    //Delivery
+    public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";
+    public static final String UPDATE_DELIVERY_PAGE = "updateDelivery";
+    
+    //Promotion
+    public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
+    public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
+    public static final String UPDATE_PROMOTION_PAGE= "/updatePromotion.jsp";
 }

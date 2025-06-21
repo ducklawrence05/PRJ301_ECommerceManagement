@@ -5,6 +5,7 @@
 
 package controllers;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Role;
 import constants.Url;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import services.CategoryService;
 
@@ -51,7 +53,7 @@ public class CategoryController extends HttpServlet {
                 url = Url.UPDATE_CATEGORY_PAGE;
                 break;
             case FIND_BY_ID:
-                list = findByID(request,response);
+                list = findByID(request, response);
                 break;
             case FIND_BY_NAME:
                 list = findByName(request,response);
@@ -104,27 +106,77 @@ public class CategoryController extends HttpServlet {
         }
     }
 
-    private List<Category> findByID(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     private List<Category> findByName(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Category> list = new ArrayList<>();
+        try {
+            String name = request.getParameter("categoryName");
+            Category category = categoryService.findByName(name);
+            if(category != null){
+                list.add(category);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+        }
+        return list;
     }
 
     private List<Category> getAllCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Category> categorys = new ArrayList<>();
+        try {
+            categorys = categoryService.getAll();
+        } catch (Exception e) {
+            e.printStackTrace();;
+            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+        }
+        return categorys;
     }
     
-    private void createCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void createCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        String categoryName = request.getParameter("categoryName");
+        String description = request.getParameter("description");
+        String message;
+        try {
+            message = categoryService.create(categoryName, description);
+        } catch (IllegalArgumentException ex) {
+            message = Message.CREATE_CATEGORY_FAILED;
+        }
+        request.setAttribute("MSG", message);
     }
 
-    private void updateCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void updateCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        int id = Integer.parseInt(request.getParameter("categoryID"));
+        String categoryName = request.getParameter("categoryName");
+        String description = request.getParameter("description");
+        Category category = categoryService.findByID(id);
+        String message;
+        if(category == null){
+            request.setAttribute("MSG", Message.CART_NOT_FOUND);
+        }
+        try {
+            message = categoryService.update(id, categoryName, description);
+        } catch (IllegalArgumentException ex) {
+            message = Message.UPDATE_CATEGORY_FAILED;
+        }
+        request.setAttribute("MSG", message);
     }
 
-    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        int id = Integer.parseInt(request.getParameter("categoryID"));
+        String message = categoryService.delete(id);
+        request.setAttribute("MSG", message);
+    }
+
+    private List<Category> findByID(HttpServletRequest request, HttpServletResponse response) {
+        List<Category> list = new ArrayList<>();
+        try {
+            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            Category category = categoryService.findByID(categoryID);
+            if (category != null) list.add(category);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+        }
+        return list;
     }
 }

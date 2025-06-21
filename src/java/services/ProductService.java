@@ -8,9 +8,9 @@ import constants.Message;
 import constants.Role;
 import daos.CategoryDAO;
 import daos.ProductDAO;
+import daos.PromotionDAO;
 import daos.UserDAO;
 import dtos.User;
-import dtos.Product;
 import dtos.ProductViewModel;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,6 +25,7 @@ public class ProductService {
     private ProductDAO productDAO = new ProductDAO();
     private CategoryDAO categoryDAO = new CategoryDAO();
     private UserDAO userDAO = new UserDAO();
+    private PromotionDAO promotionDAO = new PromotionDAO();
     
     private final String OUT_OF_STOCK = "out of stock";
     private final String ACTIVE = "active";
@@ -66,6 +67,14 @@ public class ProductService {
             return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
         
+        User user = userDAO.getUserByID(sellerID, true);
+        if (user == null) {
+            return ServiceResponse.failure(Message.USER_NOT_FOUND);
+        }
+        if(user.getRole() != Role.ADMIN || user.getRole() != Role.SELLER){
+            return ServiceResponse.failure(Message.THIS_USER_IS_NOT_A_SELLER);
+        }
+        
         return returnProductsHelper(productDAO.getProductsBySellerID(sellerID));
     }
     
@@ -78,7 +87,7 @@ public class ProductService {
     }
     
     public String createProduct(String name, int categoryID, double price,
-            int quantity, String sellerID, String status) throws SQLException {
+            int quantity, String sellerID, String status, Integer promoID) throws SQLException {
         if(ServiceUtils.isNullOrEmptyString(name)
                 || ServiceUtils.isNullOrEmptyString(sellerID)
                 || ServiceUtils.isNullOrEmptyString(status)){
@@ -98,14 +107,20 @@ public class ProductService {
             return Message.USER_NOT_FOUND;
         }
         if(user.getRole() != Role.ADMIN || user.getRole() != Role.SELLER){
-            return Message.THIS_USER_IS_NOT_A_SELLER_OR_ADMIN;
+            return Message.THIS_USER_IS_NOT_A_SELLER;
         }
         
         if(!ServiceUtils.checkStatus(status, ACTIVE, INACTIVE)){
             return Message.INVALID_STATUS;
         }
         
-        if(productDAO.insertProduct(name, categoryID, price, quantity, sellerID, status.toLowerCase()) == 0){
+        if(promoID != null && promotionDAO.searchByID(promoID) == null) {
+            return Message.PROMOTION_NOT_FOUND;
+        }
+        
+        if(productDAO.insertProduct(
+                name, categoryID, price, quantity, sellerID, status.toLowerCase(), promoID
+        ) == 0){
             return Message.CREATE_PRODUCT_FAILED;
         }
         
@@ -113,10 +128,14 @@ public class ProductService {
     }
     
     public String updateProduct(int productID, String name, int categoryID, double price,
-            int quantity, String status) throws SQLException {
+            int quantity, String status, Integer promoID, User currentUser) throws SQLException {
         ProductViewModel product = productDAO.getProductByID(productID);
         if (product == null){
             return Message.PRODUCT_NOT_FOUND;
+        }
+        
+        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
+            return Message.UNAUTHORIZED;
         }
         
         if(categoryDAO.searchByID(categoryID) == null){
@@ -139,36 +158,63 @@ public class ProductService {
             quantity = 0;
         }
         
-        if(productDAO.updateProduct(productID, name, categoryID, price, quantity, status) == 0){
+        if(promoID != null && promotionDAO.searchByID(promoID) == null) {
+            return Message.PROMOTION_NOT_FOUND;
+        }
+        
+        if(productDAO.updateProduct(
+                productID, name, categoryID, price, quantity, status.toLowerCase(), promoID
+        ) == 0){
             return Message.UPDATE_PRODUCT_FAILED;
         }
         
         return Message.UPDATE_PRODUCT_SUCCESSFULLY;
     }
     
-    public String updateProductQuantityAndStatus(int productID, int quantity) throws SQLException {
+    public String updateProductQuantityAndStatus(int productID, int quantity, User currentUser) throws SQLException {
         ProductViewModel product = productDAO.getProductByID(productID);
         if (product == null){
             return Message.PRODUCT_NOT_FOUND;
         }
+        
+        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
+            return Message.UNAUTHORIZED;
+        }
+        
         String status = product.getStatus();
         
         if(quantity == 0 && !status.equals(OUT_OF_STOCK)){
             status = OUT_OF_STOCK;
         }
         
-        if(productDAO.updateProductQuantityAndStatus(productID, quantity, status) == 0){
+        if(productDAO.updateProductQuantityAndStatus(productID, quantity, status.toLowerCase()) == 0){
             return Message.UPDATE_PRODUCT_FAILED;
         }
         
         return Message.UPDATE_PRODUCT_SUCCESSFULLY;
     }
     
-    public String deleteProductByID(int productID) throws SQLException {
-        if(productDAO.deleteProduct(productID) == 0){
+    public String deleteProductByID(int productID, User currentUser) throws SQLException {
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null){
             return Message.PRODUCT_NOT_FOUND;
         }
+        
+        if(!currentUser.getUserID().equalsIgnoreCase(product.getSellerID())){
+            return Message.UNAUTHORIZED;
+        }
+        
+        if(productDAO.deleteProduct(productID) == 0){
+            return Message.DELETE_PRODUCT_FAILED;
+        }
         return Message.DELETE_PRODUCT_SUCCESSFULLY;
+    }
+    
+    public ServiceResponse isCreator(int productID, String userID) throws SQLException {
+        String sellerID = productDAO.getProductByID(productID).getSellerID();
+        return sellerID.equalsIgnoreCase(userID)
+                ? ServiceResponse.success(Message.SUCCESS)
+                : ServiceResponse.failure(Message.UNAUTHORIZED);
     }
     
     // helper
