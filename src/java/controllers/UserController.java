@@ -43,7 +43,7 @@ public class UserController extends HttpServlet {
             action = GET_ALL_USERS;
         }
 
-        List<User> users = null;
+        List<User> users = new ArrayList<>();
         String url = Url.USER_LIST_PAGE;
         switch (action) {
             case CREATE: {
@@ -51,7 +51,6 @@ public class UserController extends HttpServlet {
                 break;
             }
             case UPDATE: {
-                users = new ArrayList<>();
                 users.add(getUserByID(request, response));
                 url = Url.UPDATE_USER_PAGE;
                 break;

@@ -40,13 +40,14 @@ public class Message {
     public static final String NO_MATCHING_PRODUCTS_FOUND = "No matching products found!";
     public static final String INVALID_QUANTITY = "Quantity must be greater than 0";
     public static final String INVALID_PRICE_OR_QUANTITY = "Price and quantity must be greater than 0";
-    public static final String THIS_USER_IS_NOT_A_SELLER_OR_ADMIN = "This user is not a seller or admin";
+    public static final String THIS_USER_IS_NOT_A_SELLER = "This user is not a seller";
     public static final String INVALID_STATUS = "Invalid status";
     public static final String CREATE_PRODUCT_SUCCESSFULLY = "Create product successfully";
     public static final String CREATE_PRODUCT_FAILED = "Create product failed";
     public static final String UPDATE_PRODUCT_SUCCESSFULLY = "Update product successfully";
     public static final String UPDATE_PRODUCT_FAILED = "Update product failed";
     public static final String DELETE_PRODUCT_SUCCESSFULLY = "Delete product successfully";
+    public static final String DELETE_PRODUCT_FAILED = "Delete product failed";
     
     // Cart
     public static final String CART_NOT_FOUND = "Cart not found";
@@ -57,9 +58,11 @@ public class Message {
     public static final String UPDATE_CART_SUCCESSFULLY = "Update cart successfully";
     public static final String UPDATE_CART_FAILED = "Update cart failed";
     public static final String DELETE_CART_SUCCESSFULLY = "Delete cart successfully";
+    public static final String DELETE_CART_FAILED = "Delete cart failed";
     public static final String ADD_TO_CART_SUCCESSFULLY = "Add to cart successfully";
     public static final String ADD_TO_CART_FAILED = "Add to cart failed";
     public static final String DELETE_ITEMS_FROM_CART_SUCCESSFULLY = "Delete item(s) from cart successfully";
+    public static final String DELETE_ITEMS_FROM_CART_FAILED = "Delete item(s) from cart failed";
     public static final String CLEAR_CART_SUCCESSFULLY = "Clear cart successfully";
     public static final String CLEAR_CART_FAILED = "Clear cart failed";
     
