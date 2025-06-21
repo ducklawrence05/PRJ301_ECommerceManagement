@@ -10,6 +10,7 @@ import daos.UserDAO;
 import dtos.CustomerCare;
 import java.sql.SQLException;
 import java.util.List;
+import static utils.ServiceUtils.isNullOrEmptyString;
 
 /**
  *
@@ -25,7 +26,7 @@ public class CustomerCareService {
         if(!userDAO.checkUserExists(userID)){
             return Message.USER_NOT_FOUND;
         }
-        if(isEmtyString(subject) || isEmtyString(reply) || isEmtyString(status) || isEmtyString(content)){
+        if(isNullOrEmptyString(subject) || isNullOrEmptyString(reply) || isNullOrEmptyString(status) || isNullOrEmptyString(content)){
             return Message.RONGE_FOMAT_CUSTOMERCARE;
         }
         if(customerCareDAO.create(userID, subject, content, status, reply)== 1){
@@ -47,7 +48,7 @@ public class CustomerCareService {
         if(!userDAO.checkUserExists(userID)){
             return Message.USER_NOT_FOUND;
         }
-        if(isEmtyString(subject) || isEmtyString(reply) || isEmtyString(status) || isEmtyString(content)){
+        if(isNullOrEmptyString(subject) || isNullOrEmptyString(reply) || isNullOrEmptyString(status) || isNullOrEmptyString(content)){
             return Message.RONGE_FOMAT_CUSTOMERCARE;
         }
         if(customerCareDAO.update(id, userID, subject, content, status, reply)== 1){
@@ -69,19 +70,5 @@ public class CustomerCareService {
     //get all
     public List<CustomerCare> getAll() throws SQLException {
         return customerCareDAO.getAll();
-    }
-    
-    //checker
-    private boolean isEmtyString(String s){
-        if(s.isEmpty()){
-            return true;
-        }
-        if(s == ""){
-            return true;
-        }
-        if(s==" "){
-            return true;
-        }
-        return true;
     }
 }
