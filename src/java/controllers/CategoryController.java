@@ -5,13 +5,11 @@
 
 package controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Role;
 import constants.Url;
 import dtos.Category;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -109,7 +107,7 @@ public class CategoryController extends HttpServlet {
     private List<Category> findByName(HttpServletRequest request, HttpServletResponse response) {
         List<Category> list = new ArrayList<>();
         try {
-            String name = request.getParameter("categoryName");
+            String name = request.getParameter("keySearch");
             Category category = categoryService.findByName(name);
             if(category != null){
                 list.add(category);
@@ -170,7 +168,7 @@ public class CategoryController extends HttpServlet {
     private List<Category> findByID(HttpServletRequest request, HttpServletResponse response) {
         List<Category> list = new ArrayList<>();
         try {
-            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            int categoryID = Integer.parseInt(request.getParameter("keySearch"));
             Category category = categoryService.findByID(categoryID);
             if (category != null) list.add(category);
         } catch (Exception ex) {

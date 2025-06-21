@@ -161,7 +161,7 @@ public class CustomerCareController extends HttpServlet {
     private List<CustomerCare> findByID(HttpServletRequest request, HttpServletResponse response) {
         List<CustomerCare> list = new ArrayList<>();
         try {
-            int ticketID = Integer.parseInt(request.getParameter("ticketID"));
+            int ticketID = Integer.parseInt(request.getParameter("keySearch"));
             CustomerCare customerCare = customerCareService.searchByID(ticketID);
             if (customerCare != null) {
                 list.add(customerCare);
@@ -176,7 +176,7 @@ public class CustomerCareController extends HttpServlet {
     private List<CustomerCare> findBySubject(HttpServletRequest request, HttpServletResponse response) {
         List<CustomerCare> list = new ArrayList<>();
         try {
-            String subject = request.getParameter("subject");
+            String subject = request.getParameter("keySearch");
             CustomerCare customerCare = customerCareService.searchBySubject(subject);
             if (customerCare != null) {
                 list.add(customerCare);
