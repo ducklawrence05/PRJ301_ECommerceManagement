@@ -186,8 +186,8 @@ public class InvoiceService {
         return sr;
     }
 
-    public List<InvoiceViewModel> getInvoiceByStatus(String status) throws SQLException {
-        return invoiceDao.getInvoiceByStatus(status);
+    public List<InvoiceViewModel> getInvoiceByStatus(String status, String userID) throws SQLException {
+        return invoiceDao.getInvoiceByStatus(status, userID);
     }
 
     public List<InvoiceDetailViewModel> getInvoiceDetailByID(String _invoiceID) throws SQLException, ParseException {

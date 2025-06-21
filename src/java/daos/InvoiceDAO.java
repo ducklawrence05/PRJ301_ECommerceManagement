@@ -39,7 +39,7 @@ public class InvoiceDAO {
     private final String GET_INVOICE_BY_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE invoiceID =?";
     private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
     private final String GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID = ? AND productID = ?";
-    private final String GET_INVOICES_BY_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE status = ?";
+    private final String GET_INVOICES_BY_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE status = ? and userID = ?";
 
     public int createInvoice(String userID, float totalAmount, String status, LocalDate createDate) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE_INVOICE, Statement.RETURN_GENERATED_KEYS)) {
@@ -150,9 +150,10 @@ public class InvoiceDAO {
         return null;
     }
 
-    public List<InvoiceViewModel> getInvoiceByStatus(String status) throws SQLException {
+    public List<InvoiceViewModel> getInvoiceByStatus(String status, String userID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_STATUS)) {
             ps.setString(1, status);
+            ps.setString(2, userID);
             List<InvoiceViewModel> invoiceViewModelList = new ArrayList<>();
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
