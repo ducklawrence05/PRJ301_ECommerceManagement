@@ -15,10 +15,10 @@
 </head>
 <body>
 <div class="container bg-white p-4 rounded shadow-sm">
-    <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
+    <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/user" class="btn btn-primary me-2">User CRUD</a>
+        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-primary me-2">Category CRUD</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
         </form>
@@ -38,7 +38,8 @@
             </select>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="keySearch" placeholder="Enter keyword..." required />
+            <input type="text" class="form-control" name="keySearch" placeholder="Enter keyword..." 
+                   required value="${param.keySearch}" autofocus />
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -51,12 +52,12 @@
     </c:if>
 
     <!-- No result -->
-    <c:if test="${empty categories}">
+    <c:if test="${empty requestScope.categories}">
         <div class="alert alert-warning">No matching category found!</div>
     </c:if>
 
     <!-- Table -->
-    <c:if test="${not empty categories}">
+    <c:if test="${not empty requestScope.categories}">
         <table class="table table-bordered table-hover">
             <thead class="table-light">
                 <tr>
@@ -78,12 +79,13 @@
                             <!-- Update Button -->
                             <form action="${pageContext.request.contextPath}/category" method="GET" class="d-inline">
                                 <input type="hidden" name="action" value="update" />
-                                <input type="hidden" name="categoryID" value="${category.categoryID}" />
+                                <input type="hidden" name="keySearch" value="${category.categoryID}" />
                                 <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                            </form>
+                            </form> 
 
                             <!-- Delete Button -->
-                            <form action="${pageContext.request.contextPath}/category" method="POST" class="d-inline" onsubmit="return confirm('Are you sure to delete this category?');">
+                            <form action="${pageContext.request.contextPath}/category" method="POST" class="d-inline"
+                                  onsubmit="return confirm('Are you sure to delete this category?');">
                                 <input type="hidden" name="action" value="delete" />
                                 <input type="hidden" name="categoryID" value="${category.categoryID}" />
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>

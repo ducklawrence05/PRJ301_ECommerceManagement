@@ -25,6 +25,7 @@ public class MainController extends HttpServlet {
     
     private final String AUTH = "auth";
     private final String USER = "user";
+    private final String CATEGORY = "category";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -44,6 +45,10 @@ public class MainController extends HttpServlet {
                     }
                     case USER: {
                         url = Url.USER_CONTROLLER;
+                        break;
+                    }
+                    case CATEGORY: {
+                        url = Url.CATEGORY_LIST_PAGE;
                         break;
                     }
                     default: {

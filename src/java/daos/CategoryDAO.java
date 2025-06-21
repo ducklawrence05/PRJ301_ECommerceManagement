@@ -68,11 +68,11 @@ public class CategoryDAO {
 //    }
     
     //update
-    public int update(int id,String name, String category) throws SQLException{
+    public int update(int id,String name, String description) throws SQLException{
         try(Connection conn = DBContext.getConnection();
         PreparedStatement ps = conn.prepareStatement(UPDATE)){
             ps.setString(1, name);
-            ps.setString(2, category);
+            ps.setString(2, description);
             ps.setInt(3, id);
             return ps.executeUpdate();
         }
@@ -84,7 +84,10 @@ public class CategoryDAO {
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)){
                 ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
-                return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+                return null;
         }
     }
     
@@ -94,11 +97,14 @@ public class CategoryDAO {
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
                 ps.setString(1, category);
                 ResultSet rs = ps.executeQuery();
-                return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+                return null;
         }
     }
     
-    //get all user
+    //get all category
     public List<Category> getAll() throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(GET_ALL)){

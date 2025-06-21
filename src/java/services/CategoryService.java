@@ -9,7 +9,6 @@ import daos.CategoryDAO;
 import dtos.Category;
 import java.sql.SQLException;
 import java.util.List;
-import responses.ServiceResponse;
 import static utils.ServiceUtils.isNullOrEmptyString;
 
 
@@ -33,17 +32,19 @@ public class CategoryService {
     }
     
     //update
-    public String update(int id,String name, String description) throws SQLException{
-        if(isNullOrEmptyString(name) || isNullOrEmptyString(description)){
+    public String update(int id, String name, String description) throws SQLException {
+        if (isNullOrEmptyString(name) || isNullOrEmptyString(description)) {
             return Message.RONGE_FOMAT_CATEGORY;
         }
-        if(!dAO.isExit(name)){
+
+        Category existing = dAO.searchByID(id);
+        if (existing == null) {
             return Message.CATEGORY_NOT_FOUND;
         }
-        if(dAO.update(id, name, description)==1){
+
+        if (dAO.update(id, name, description) == 1) {
             return Message.UPDATE_CATEGORY_SUCCESSFULLY;
-        }
-        else{
+        } else {
             return Message.UPDATE_CATEGORY_FAILED;
         }
     }
@@ -53,7 +54,7 @@ public class CategoryService {
         if(dAO.deleteByID(id)==1){
             return Message.DELETE_CATEGORY_SUCCESSFULLY;
         }
-        return null;
+        return Message.UPDATE_CATEGORY_FAILED;
     }
     
     //find by id
