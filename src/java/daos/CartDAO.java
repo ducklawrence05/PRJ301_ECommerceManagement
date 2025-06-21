@@ -36,8 +36,10 @@ public class CartDAO {
     private final String INSERT_CART = "INSERT INTO tblCarts (userID, createdDate) VALUES (?, ?)";
     private final String DELETE_CART = "DELETE FROM tblCarts WHERE cartID = ?";
 
+    private final String GET_PRODUCT_IDS_BY_CART_ID = 
+            "SELECT productID FROM tblCartDetails WHERE cartID = ?";
     private final String GET_CART_DETAIL = 
-            "Select * FROM tblCartDetails WHERE cartID = ? AND productID = ?";
+            "SELECT * FROM tblCartDetails WHERE cartID = ? AND productID = ?";
     private final String GET_CART_DETAILS = 
             "SELECT cd.productID, cd.quantity, p.name AS productName, p.price "
             + "(cd.quantity * p.price) AS subTotal "
@@ -106,6 +108,20 @@ public class CartDAO {
     }
 
     //
+    public List<Integer> getProductIDsByCartID(int cartID) throws SQLException {
+        List<Integer> productIDs = new ArrayList<>();
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(GET_PRODUCT_IDS_BY_CART_ID)) {
+            ps.setInt(1, cartID);
+            try (ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    productIDs.add(rs.getInt("productID"));
+                }
+            }
+        }
+        return productIDs;
+    }
+    
     public CartDetail getItemFromCart(int cartID, int productID) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement ps = con.prepareStatement(GET_CART_DETAIL)) {

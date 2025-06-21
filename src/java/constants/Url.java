@@ -25,7 +25,12 @@ public class Url {
     public static final String CREATE_PRODUCT_PAGE = "/createProduct.jsp";
     public static final String UPDATE_PRODUCT_PAGE = "/updateProduct.jsp";
     
+    // Cart
+    public static final String CART_PAGE = "/cart.jsp";
+    
     // Controller
     public static final String AUTH_CONTROLLER = "/auth";
     public static final String USER_CONTROLLER = "/user";
+    public static final String PRODUCT_CONTROLLER = "/product";
+    public static final String CART_CONTROLLER = "/cart";
 }
