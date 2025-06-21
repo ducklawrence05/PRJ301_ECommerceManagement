@@ -43,7 +43,7 @@
             <button type="submit" class="btn btn-primary w-100">Create</button>
         </form>
 
-        <a href="${pageContext.request.contextPath}/category" class="btn btn-link mt-3">Back to Category List</a>
+        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-link mt-3">Back to Category List</a>
     </div>
 </body>
 </html>

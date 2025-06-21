@@ -18,7 +18,7 @@
     <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-primary me-2">Category CRUD</a>
+        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-link mt-3 d-block">Category CRUD</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
         </form>

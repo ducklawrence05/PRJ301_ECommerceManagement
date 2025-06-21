@@ -44,7 +44,7 @@
             <button type="submit" class="btn btn-success w-100">Update</button>
         </form>
 
-        <a href="${pageContext.request.contextPath}/category" class="btn btn-link mt-3 d-block">Back to Category List</a>
+        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-link mt-3 d-block">Back to Category List</a>
     </div>
 </body>
 </html>

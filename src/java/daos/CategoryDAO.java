@@ -95,7 +95,7 @@ public class CategoryDAO {
     public Category searchByCategory(String category)  throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
-                ps.setString(1, category);
+                ps.setString(1, "%" + category + "%");
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     return mapRow(rs);

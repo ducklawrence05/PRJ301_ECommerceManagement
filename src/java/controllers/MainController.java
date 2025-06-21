@@ -48,7 +48,7 @@ public class MainController extends HttpServlet {
                         break;
                     }
                     case CATEGORY: {
-                        url = Url.CATEGORY_LIST_PAGE;
+                        url = Url.CATEGORY_CONTROLLER;
                         break;
                     }
                     default: {
