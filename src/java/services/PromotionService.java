@@ -10,6 +10,7 @@ import dtos.Promotion;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import static utils.ServiceUtils.isNullOrEmptyString;
 
 /**
  *
@@ -20,7 +21,7 @@ public class PromotionService {
     
     //create
     public String create(String name,float discount, Date startDate,Date endDate,String status) throws SQLException{
-        if(isEmtyString(name) || discount<0 || discount>100 || isEmtyString(status)){
+        if(isNullOrEmptyString(name) || discount<0 || discount>100 || isNullOrEmptyString(status)){
             return Message.RONGE_FOMAT_PROMOTION;
         }
         if(startDate.after(endDate)){
@@ -38,23 +39,24 @@ public class PromotionService {
     }
     
     //update
-    public String update(int id,String name,float discount, Date startDate,Date endDate,String status) throws SQLException{
-        if(isEmtyString(name) || discount<0 || discount>100 || isEmtyString(status)){
+    public String update(int id, String name, float discount, Date startDate, Date endDate, String status) throws SQLException {
+        if (isNullOrEmptyString(name) || discount < 0 || discount > 100 || isNullOrEmptyString(status)) {
             return Message.RONGE_FOMAT_PROMOTION;
         }
-        if(startDate.after(endDate)){
+        if (startDate.after(endDate)) {
             return Message.INVALID_DATE_PROMOTION;
         }
-        if(pdao.isExist(name)){
+        Promotion existing = pdao.searchByName(name);
+        if (existing != null && existing.getPromoID() != id) {
             return Message.IS_EXIT_PROMOTION;
         }
-        if(pdao.update(id, name, discount, startDate, endDate, status)==1){
-            return Message.CREATE_PROMOTION_SUCCESSFULLY;
-        }
-        else{
-            return Message.CREATE_PROMOTION_FAILED;
+        if (pdao.update(id, name, discount, startDate, endDate, status) == 1) {
+            return Message.UPDATE_PROMOTION_SUCCESSFULLY;
+        } else {
+            return Message.UPDATE_PROMOTION_FAILED;
         }
     }
+
     
     
     //delete
@@ -79,18 +81,5 @@ public class PromotionService {
     //get all
     public List<Promotion> getAll() throws SQLException {
         return pdao.getAll();
-    }
-    //checker
-    private boolean isEmtyString(String s){
-        if(s.isEmpty()){
-            return true;
-        }
-        if(s == ""){
-            return true;
-        }
-        if(s==" "){
-            return true;
-        }
-        return false;
     }
 }
