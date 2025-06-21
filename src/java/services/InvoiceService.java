@@ -16,6 +16,7 @@ import dtos.InvoiceDetailViewModel;
 import dtos.InvoiceViewModel;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import utils.ServiceUtils;
 
@@ -28,9 +29,10 @@ public class InvoiceService {
     private InvoiceDAO invoiceDao = new InvoiceDAO();
     private ProductDAO productDao = new ProductDAO();
     private UserDAO userDao = new UserDAO();
+    private final String PENDING = "pending";
     public ServiceResponse<Integer> create(String userID, String totalAmount, String status, String[] productID, String[] quantity, String[] price) throws SQLException, ParseException{
         ServiceResponse<Integer> sr = new ServiceResponse();
-        sr = createInvoice(sr, userID, totalAmount, status);
+        sr = createInvoice(sr, userID, totalAmount);
         if(!sr.isSuccess()){
             return sr;
         }
@@ -45,7 +47,7 @@ public class InvoiceService {
         
         return sr;
     }
-    public ServiceResponse<Integer> createInvoice(ServiceResponse sr, String userID, String totalAmount, String status) throws SQLException, ParseException {
+    public ServiceResponse<Integer> createInvoice(ServiceResponse sr, String userID, String totalAmount) throws SQLException, ParseException {
         LocalDate createDate = LocalDate.now();
         
         sr.setSuccess(false);
@@ -53,7 +55,7 @@ public class InvoiceService {
             sr.setMessage(Message.USER_NOT_EXIST);
             return sr;
         }
-        if (ServiceUtils.isNullOrEmptyString(userID) || ServiceUtils.isNullOrEmptyString(status)) {
+        if (ServiceUtils.isNullOrEmptyString(userID)) {
             sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
             return sr;
         }
@@ -62,7 +64,7 @@ public class InvoiceService {
             sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
             return sr;
         }
-        int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, status, createDate);
+        int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, PENDING, createDate);
         if (invoiceID == 0) {
             sr.setMessage(Message.CREATE_INVOICE_FAILED);
             return sr;
@@ -165,12 +167,21 @@ public class InvoiceService {
         return Message.DELETE_INVOICE_SUCCESSFULLY;
     }
 
-    public List<InvoiceViewModel> getAllInvoice() throws SQLException {
-        return invoiceDao.getAllInvoice();
+    public List<InvoiceViewModel> getInvoicesByUserIDAndStatus(String userID, String status) throws SQLException {
+        return invoiceDao.getInvoicesByUserIDAndStatus(userID, status);
     }
 
-    public List<InvoiceDetailViewModel> getAllInvoiceDetail() throws SQLException {
-        return invoiceDao.getAllInvoiceDetail();
+    public ServiceResponse<List<InvoiceDetailViewModel>> getInvoiceDetailByInvoiceID(String userID, int invoiceID) throws SQLException {
+        ServiceResponse<List<InvoiceDetailViewModel>> sr = new ServiceResponse<>();
+        List<InvoiceDetailViewModel> invoiceDetailViewModels = new ArrayList<>();
+        if(!isCreator(userID, invoiceID)){
+            sr.setSuccess(false);
+            sr.setMessage(Message.YOU_ARE_NOT_CREATOR_OF_THIS_INVOICE);
+            return sr;
+        }
+        invoiceDetailViewModels = invoiceDao.getInvoiceDetailByInvoiceID(invoiceID);
+        sr.setSuccess(true);
+        return sr;
     }
 
     public ServiceResponse<InvoiceViewModel> getInvoiceByID(String _invoiceID) throws SQLException, SQLException {
@@ -186,9 +197,9 @@ public class InvoiceService {
         return sr;
     }
 
-    public List<InvoiceViewModel> getInvoiceByStatus(String status, String userID) throws SQLException {
-        return invoiceDao.getInvoiceByStatus(status, userID);
-    }
+//    public List<InvoiceViewModel> getInvoiceByStatus(String status, String userID) throws SQLException {
+//        return invoiceDao.getInvoiceByStatus(status, userID);
+//    }
 
     public List<InvoiceDetailViewModel> getInvoiceDetailByID(String _invoiceID) throws SQLException, ParseException {
         int invoiceID = Integer.parseInt(_invoiceID);
@@ -214,6 +225,10 @@ public class InvoiceService {
             return false;
         }
         return true;
+    }
+    
+    public boolean isCreator(String userID, int invoiceID) throws SQLException{
+        return (invoiceDao.getInvoiceByUserIDAndInvoiceID(userID, invoiceID) != null);
     }
 
    

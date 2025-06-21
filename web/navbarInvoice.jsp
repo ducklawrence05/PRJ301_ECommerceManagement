@@ -61,32 +61,32 @@
   </head>
   <body>
     <div class="navbar">
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="pending" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="pending" />
         <button type="submit" class="nav-button" id="pending">Pending</button>
       </form>
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="paid" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="paid" />
         <button type="submit" class="nav-button" id="paid">Paid</button>
       </form>
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="cancel" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="cancel" />
         <button type="submit" class="nav-button" id="cancel">Cancel</button>
       </form>
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="delivering" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="delivering" />
         <button type="submit" class="nav-button" id="delivering">
           Delivering
         </button>
       </form>
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="delivered" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="delivered" />
         <button type="submit" class="nav-button" id="delivered">
           Delivered
         </button>
       </form>
-      <form class="nav-form" action="" method="get">
-        <input type="hidden" name="page" value="return" />
+      <form class="nav-form" action="${pageContext.request.contextPath}/main/invoice" method="get">
+        <input type="hidden" name="status" value="return" />
         <button type="submit" class="nav-button" id="return">Return</button>
       </form>
     </div>
@@ -94,7 +94,7 @@
     <script>
       // Lấy tham số page trên URL
       const urlParams = new URLSearchParams(window.location.search);
-      const page = urlParams.get("page") || "pending"; // Mặc định là 'pending'
+      const page = urlParams.get("status") || "pending"; // Mặc định là 'pending'
 
       // Gạch dưới nút tương ứng
       const activeButton = document.getElementById(page);
