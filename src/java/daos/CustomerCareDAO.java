@@ -1,6 +1,7 @@
 package daos;
 
 import dtos.CustomerCare;
+import dtos.CustomerCareViewModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,8 @@ public class CustomerCareDAO {
     private final String SEARCH_BY_SUBJECT = "SELECT * FROM [dbo].[tblCustomerCare] WHERE subject = ?";
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCustomerCare]";
     private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblCustomerCare] WHERE userID = ? AND subject = ?";
-    private final String CUSTOMER_CARE_VIEW_MODEL = "";
+    private final String CUSTOMER_CARE_VIEW_BY_ID_AND_USER = "SELECT c.ticketID, c.userID, u.fullName, c.subject, c.content, c.status, c.reply FROM tblCustomerCare c JOIN tblUsers u ON c.userID = u.userID WHERE c.ticketID = ? AND c.userID = ?";
+
 
     public int create(String userID,String subject, String content, String status, String reply) throws SQLException {
         try (Connection conn = DBContext.getConnection();
@@ -111,6 +113,27 @@ public class CustomerCareDAO {
             ps.setString(2, subject);
             ResultSet rs = ps.executeQuery();
             return rs.next();
+        }
+    }
+    
+    public CustomerCareViewModel getCustomerCareViewModelByTicketAndUser(int ticketID, String userID) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CUSTOMER_CARE_VIEW_BY_ID_AND_USER)) {
+            ps.setInt(1, ticketID);
+            ps.setString(2, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new CustomerCareViewModel(
+                    rs.getInt("ticketID"),
+                    rs.getString("userID"),
+                    rs.getString("fullName"),
+                    rs.getString("subject"),
+                    rs.getString("content"),
+                    rs.getString("status"),
+                    rs.getString("reply")
+                );
+            }
+            return null;
         }
     }
 }

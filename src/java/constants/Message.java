@@ -101,6 +101,7 @@ public class Message {
     public static final String DELETE_PROMOTION_SUCCESSFULLY = "Delete Promotion successfully";
     public static final String RONGE_FOMAT_PROMOTION ="invalid or emty string";
     public static final String INVALID_DATE_PROMOTION = "start date higher than end date";
+    public static String START_DATE_MUST_BE_TODAY_OR_FUTURE = "Start date must be today or future";
     
     //Customer care
     public static final String IS_EXIT_CUSTOMERCARE = "Customer care is exited";
@@ -110,7 +111,9 @@ public class Message {
     public static final String UPDATE_CUSTOMERCARE_SUCCESSFULLY = "Update Customer care successfully";
     public static final String UPDATE_CUSTOMERCARE_FAILED = "Update Customer care failed";
     public static final String DELETE_CUSTOMERCARE_SUCCESSFULLY = "Delete Customer care successfully";
-    public static final String RONGE_FOMAT_CUSTOMERCARE ="invalid or emty string";
+    public static final String WRONG_FORMAT_CUSTOMERCARE ="invalid or emty string";
+    public static final String DELETE_CUSTOMERCARE_FAILED ="Delete Customer care failed";
+
 
     //Delivery
     public static final String CREATE_DELIVERY_SUCCESSFULLY = "Create Delivery successfully";
@@ -125,4 +128,5 @@ public class Message {
     public static final String DELETE_RETURN_SUCCESSFULLY = "Delete Return successfully";
     public static final String UPDATE_RETURN_FAILED = "Update Return failed";
     public static final String RETURN_NOT_FOUND = "Return not found";
+    
 }

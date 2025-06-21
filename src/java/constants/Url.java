@@ -40,4 +40,10 @@ public class Url {
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
     public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
     public static final String UPDATE_PROMOTION_PAGE= "/updatePromotion.jsp";
+    
+    //Customer care 
+    public static String CUSTOMERCARE_LIST_PAGE = "customerCareList.jsp";
+    public static String CREATE_CUSTOMERCARE_PAGE = "createCustomerCare.jsp";
+    public static String UPDATE_CUSTOMERCARE_PAGE = "updateCustomerCare.jsp";
+    public static String VIEW_CUSTOMERCARE_PAGE = "customerCareViewModel.jsp";
 }
