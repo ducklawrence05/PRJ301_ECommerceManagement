@@ -16,11 +16,12 @@ public class Product {
     private int quantity;
     private String sellerID;
     private String status; // active, inactive and out of stock
+    private int promoID;
 
     public Product() {
     }
 
-    public Product(int productID, String name, int categoryID, double price, int quantity, String sellerID, String status) {
+    public Product(int productID, String name, int categoryID, double price, int quantity, String sellerID, String status, int promoID) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
@@ -28,6 +29,7 @@ public class Product {
         this.quantity = quantity;
         this.sellerID = sellerID;
         this.status = status;
+        this.promoID = promoID;
     }
 
     public int getProductID() {
@@ -84,5 +86,13 @@ public class Product {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getPromoID() {
+        return promoID;
+    }
+
+    public void setPromoID(int promoID) {
+        this.promoID = promoID;
     }
 }

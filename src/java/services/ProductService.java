@@ -8,9 +8,9 @@ import constants.Message;
 import constants.Role;
 import daos.CategoryDAO;
 import daos.ProductDAO;
+import daos.PromotionDAO;
 import daos.UserDAO;
 import dtos.User;
-import dtos.Product;
 import dtos.ProductViewModel;
 import java.sql.SQLException;
 import java.util.List;
@@ -25,6 +25,7 @@ public class ProductService {
     private ProductDAO productDAO = new ProductDAO();
     private CategoryDAO categoryDAO = new CategoryDAO();
     private UserDAO userDAO = new UserDAO();
+    private PromotionDAO promotionDAO = new PromotionDAO();
     
     private final String OUT_OF_STOCK = "out of stock";
     private final String ACTIVE = "active";
@@ -78,7 +79,7 @@ public class ProductService {
     }
     
     public String createProduct(String name, int categoryID, double price,
-            int quantity, String sellerID, String status) throws SQLException {
+            int quantity, String sellerID, String status, Integer promoID) throws SQLException {
         if(ServiceUtils.isNullOrEmptyString(name)
                 || ServiceUtils.isNullOrEmptyString(sellerID)
                 || ServiceUtils.isNullOrEmptyString(status)){
@@ -105,7 +106,13 @@ public class ProductService {
             return Message.INVALID_STATUS;
         }
         
-        if(productDAO.insertProduct(name, categoryID, price, quantity, sellerID, status.toLowerCase()) == 0){
+        if(promoID != null && promotionDAO.searchByID(promoID) == null) {
+            return Message.PROMOTION_NOT_FOUND;
+        }
+        
+        if(productDAO.insertProduct(
+                name, categoryID, price, quantity, sellerID, status.toLowerCase(), promoID
+        ) == 0){
             return Message.CREATE_PRODUCT_FAILED;
         }
         
@@ -113,7 +120,7 @@ public class ProductService {
     }
     
     public String updateProduct(int productID, String name, int categoryID, double price,
-            int quantity, String status) throws SQLException {
+            int quantity, String status, Integer promoID) throws SQLException {
         ProductViewModel product = productDAO.getProductByID(productID);
         if (product == null){
             return Message.PRODUCT_NOT_FOUND;
@@ -139,7 +146,13 @@ public class ProductService {
             quantity = 0;
         }
         
-        if(productDAO.updateProduct(productID, name, categoryID, price, quantity, status) == 0){
+        if(promoID != null && promotionDAO.searchByID(promoID) == null) {
+            return Message.PROMOTION_NOT_FOUND;
+        }
+        
+        if(productDAO.updateProduct(
+                productID, name, categoryID, price, quantity, status.toLowerCase(), promoID
+        ) == 0){
             return Message.UPDATE_PRODUCT_FAILED;
         }
         
@@ -157,7 +170,7 @@ public class ProductService {
             status = OUT_OF_STOCK;
         }
         
-        if(productDAO.updateProductQuantityAndStatus(productID, quantity, status) == 0){
+        if(productDAO.updateProductQuantityAndStatus(productID, quantity, status.toLowerCase()) == 0){
             return Message.UPDATE_PRODUCT_FAILED;
         }
         
@@ -169,6 +182,13 @@ public class ProductService {
             return Message.PRODUCT_NOT_FOUND;
         }
         return Message.DELETE_PRODUCT_SUCCESSFULLY;
+    }
+    
+    public ServiceResponse isCreator(int productID, String userID) throws SQLException {
+        String sellerID = productDAO.getProductByID(productID).getSellerID();
+        return sellerID.equalsIgnoreCase(userID)
+                ? ServiceResponse.success(Message.SUCCESS)
+                : ServiceResponse.failure(Message.UNAUTHORIZED);
     }
     
     // helper

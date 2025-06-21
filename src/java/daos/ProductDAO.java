@@ -22,90 +22,68 @@ public class ProductDAO {
     private final String CHECK_PRODUCT_BY_ID = "SELECT * FROM tblProducts WHERE productID = ?";
     private final String CHECK_PRODUCT_STATUS = "SELECT * FROM tblProducts "
             + "WHERE productID = ? AND status = ?";
+
+    private final String GET_ALL_PRODUCTS = "SELECT p.*, c.categoryName, u.fullName AS sellerFullName, "
+            + "CASE WHEN pr.discountPercent IS NOT NULL THEN p.price * (1 - pr.discountPercent / 100.0) ELSE p.price END AS salePrice "
+            + "FROM tblProducts p "
+            + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID "
+            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
+            + "JOIN tblUsers u ON p.sellerID = u.userID ";
+
+    private final String GET_PRODUCT_BY_ID
+            = GET_ALL_PRODUCTS + "WHERE p.productID = ?";
+
+    private final String GET_PRODUCTS_BY_NAME
+            = GET_ALL_PRODUCTS + "WHERE p.name LIKE ?";
+
+    private final String GET_PRODUCTS_BY_CATEGORY_NAME
+            = GET_ALL_PRODUCTS + "WHERE c.categoryName LIKE ?";
+
+    private final String GET_PRODUCTS_BY_PROMO_ID
+            = GET_ALL_PRODUCTS + "WHERE pr.promoID = ?";
     
-    private final String GET_ALL_PRODUCTS = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID";
+    private final String GET_PRODUCTS_BY_MIN_QUANTITY
+            = GET_ALL_PRODUCTS + "WHERE p.quantity >= ?";
 
-    private final String GET_PRODUCT_BY_ID = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE p.productID = ?";
+    private final String GET_PRODUCTS_BY_SELLER_ID
+            = GET_ALL_PRODUCTS + "WHERE p.sellerID = ?";
 
-    private final String GET_PRODUCTS_BY_NAME = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE p.name LIKE ?";
+    private final String GET_PRODUCTS_BY_STATUS
+            = GET_ALL_PRODUCTS + "WHERE p.status = ?";
 
-    private final String GET_PRODUCTS_BY_CATEGORY_NAME = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE c.categoryName LIKE ?";
+    private final String INSERT_PRODUCT
+            = "INSERT INTO tblProducts (name, categoryID, price, quantity, sellerID, status, promoID) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    private final String GET_PRODUCTS_BY_MIN_QUANTITY = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE p.quantity >= ?";
-
-    private final String GET_PRODUCTS_BY_SELLER_ID = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE p.sellerID = ?";
-
-    private final String GET_PRODUCTS_BY_STATUS = 
-            "SELECT p.*, c.categoryName, u.fullName AS sellerFullName "
-            + "FROM tblProducts p "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
-            + "JOIN tblUsers u ON p.sellerID = u.userID "
-            + "WHERE p.status = ?";
-
-    private final String INSERT_PRODUCT = 
-            "INSERT INTO tblProducts (name, categoryID, price, quantity, sellerID, status) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
-    
-    private final String UPDATE_PRODUCT_BY_ID = 
-            "UPDATE tblProducts SET name = ?, categoryID = ?, price = ?, quantity = ?, status = ? "
+    private final String UPDATE_PRODUCT_BY_ID
+            = "UPDATE tblProducts SET name = ?, categoryID = ?, price = ?, quantity = ?, status = ?, promoID = ? "
             + "WHERE productID = ?";
-    
-    private final String UPDATE_PRODUCT_STATUS_BY_ID = 
-            "UPDATE tblProducts SET status = ? WHERE productID = ?";
-    
-    private final String UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID =
-            "UPDATE tblProducts SET quantity = ?, status = ? "
+
+    private final String UPDATE_PRODUCT_STATUS_BY_ID
+            = "UPDATE tblProducts SET status = ? WHERE productID = ?";
+
+    private final String UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID
+            = "UPDATE tblProducts SET quantity = ?, status = ? "
             + "WHERE productID = ?";
-    
+
     private final String DELETE_PRODUCT_BY_ID = "DELETE FROM tblProducts WHERE productID = ?";
 
     //
     public boolean checkProductExists(int productID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  
-                PreparedStatement stm = conn.prepareStatement(CHECK_PRODUCT_BY_ID)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(CHECK_PRODUCT_BY_ID)) {
             stm.setInt(1, productID);
             return stm.executeQuery().next();
         }
     }
-    
+
     public boolean checkProductStatus(int productID, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  
-                PreparedStatement stm = conn.prepareStatement(CHECK_PRODUCT_STATUS)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(CHECK_PRODUCT_STATUS)) {
             stm.setInt(1, productID);
             stm.setString(2, status);
             return stm.executeQuery().next();
         }
     }
-    
+
     public List<ProductViewModel> getAllProducts() throws SQLException {
         List<ProductViewModel> resultList = new ArrayList<>();
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_ALL_PRODUCTS);  ResultSet rs = stm.executeQuery()) {
@@ -129,6 +107,10 @@ public class ProductDAO {
         return getProductsByString(GET_PRODUCTS_BY_CATEGORY_NAME, "%" + cName + "%");
     }
 
+    public List<ProductViewModel> getProductsByPromoID(int promoID) throws SQLException {
+        return getProductsByInteger(GET_PRODUCTS_BY_PROMO_ID, promoID);
+    }
+    
     public List<ProductViewModel> getProductsByMinQuantity(int quantity) throws SQLException {
         return getProductsByInteger(GET_PRODUCTS_BY_MIN_QUANTITY, quantity);
     }
@@ -142,53 +124,66 @@ public class ProductDAO {
     }
 
     public int insertProduct(String name, int categoryID, double price,
-            int quantity, String sellerID, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(INSERT_PRODUCT)) {
+            int quantity, String sellerID, String status, Integer promoID) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  
+                PreparedStatement stm = conn.prepareStatement(INSERT_PRODUCT)) {
             stm.setString(1, name);
             stm.setInt(2, categoryID);
             stm.setDouble(3, price);
             stm.setInt(4, quantity);
             stm.setString(5, sellerID);
             stm.setString(6, status);
+            if (promoID != null) {
+                stm.setInt(7, promoID);
+            } else {
+                stm.setNull(7, java.sql.Types.INTEGER);
+            }
             return stm.executeUpdate();
         }
     }
 
     public int updateProduct(int productID, String name, int categoryID, double price,
-            int quantity, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_BY_ID)) {
+            int quantity, String status, Integer promoID) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_BY_ID)) {
             stm.setString(1, name);
             stm.setInt(2, categoryID);
             stm.setDouble(3, price);
             stm.setInt(4, quantity);
             stm.setString(5, status);
-            stm.setInt(6, productID);
+
+            if (promoID != null) {
+                stm.setInt(6, promoID);
+            } else {
+                stm.setNull(6, java.sql.Types.INTEGER);
+            }
+
+            stm.setInt(7, productID);
+
             return stm.executeUpdate();
         }
     }
 
+
     public int updateProductStatus(int productID, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  
-                PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_STATUS_BY_ID)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_STATUS_BY_ID)) {
             stm.setString(1, status);
             stm.setInt(2, productID);
             return stm.executeUpdate();
         }
     }
-    
+
     public int updateProductQuantityAndStatus(int productID, int quantity, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  
-                PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_PRODUCT_QUANTITY_AND_STATUS_BY_ID)) {
             stm.setInt(1, quantity);
             stm.setString(2, status);
             stm.setInt(3, productID);
             return stm.executeUpdate();
         }
     }
-    
+
     public int deleteProduct(int productID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  
-                PreparedStatement stm = conn.prepareStatement(DELETE_PRODUCT_BY_ID)) {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(DELETE_PRODUCT_BY_ID)) {
             stm.setInt(1, productID);
             return stm.executeUpdate();
         }
@@ -228,6 +223,7 @@ public class ProductDAO {
                 rs.getInt("categoryID"),
                 rs.getString("categoryName"),
                 rs.getDouble("price"),
+                rs.getDouble("salePrice"),
                 rs.getInt("quantity"),
                 rs.getString("sellerID"),
                 rs.getString("sellerFullName"),

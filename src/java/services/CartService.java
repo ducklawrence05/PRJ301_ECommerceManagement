@@ -161,4 +161,11 @@ public class CartService {
         
         return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
     }
+    
+    public ServiceResponse isCreator(int cartID, String userID) throws SQLException {
+        String creatorID = cartDAO.getCartByID(cartID).getUserID();
+        return creatorID.equalsIgnoreCase(userID)
+                ? ServiceResponse.success(Message.SUCCESS)
+                : ServiceResponse.failure(Message.UNAUTHORIZED);
+    }
 }
