@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -6,6 +6,7 @@ package daos;
 
 import dtos.CartViewModel;
 import dtos.CartDetailViewModel;
+import dtos.CartDetail;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +36,8 @@ public class CartDAO {
     private final String INSERT_CART = "INSERT INTO tblCarts (userID, createdDate) VALUES (?, ?)";
     private final String DELETE_CART = "DELETE FROM tblCarts WHERE cartID = ?";
 
+    private final String GET_CART_DETAIL = 
+            "Select * FROM tblCartDetails WHERE cartID = ? AND productID = ?";
     private final String GET_CART_DETAILS = 
             "SELECT cd.productID, cd.quantity, p.name AS productName, p.price "
             + "(cd.quantity * p.price) AS subTotal "
@@ -93,7 +96,7 @@ public class CartDAO {
         }
     }
     
-    public int deleteCart(int cartID) throws SQLException {
+    public int deleteCartByID(int cartID) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement ps = con.prepareStatement(DELETE_CART)) {
 
@@ -102,6 +105,21 @@ public class CartDAO {
         }
     }
 
+    //
+    public CartDetail getItemFromCart(int cartID, int productID) throws SQLException {
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(GET_CART_DETAIL)) {
+            ps.setInt(1, cartID);
+            ps.setInt(2, productID);
+            try (ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    return mapCartDetail(rs);
+                }
+            }
+        }
+        return null;
+    }
+    
     public int insertItemToCart(int cartID, int productID, int quantity) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement ps = con.prepareStatement(INSERT_ITEM_TO_CART)) {
@@ -147,7 +165,7 @@ public class CartDAO {
     private CartViewModel getCartFromPreparedStatement(PreparedStatement ps) throws SQLException {
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return mapCart(rs);
+                return mapCartViewModel(rs);
             }
         }
         return null;
@@ -157,13 +175,13 @@ public class CartDAO {
         List<CartDetailViewModel> details = new ArrayList<>();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                details.add(mapCartDetail(rs));
+                details.add(mapCartDetailViewModel(rs));
             }
         }
         return details;
     }
     
-    private CartViewModel mapCart(ResultSet rs) throws SQLException {
+    private CartViewModel mapCartViewModel(ResultSet rs) throws SQLException {
         CartViewModel cart = new CartViewModel();
         cart.setCartID(rs.getInt("cartID"));
         cart.setUserID(rs.getString("userID"));
@@ -172,7 +190,14 @@ public class CartDAO {
         return cart;
     }
 
-    private CartDetailViewModel mapCartDetail(ResultSet rs) throws SQLException {
+    private CartDetail mapCartDetail(ResultSet rs) throws SQLException {
+        CartDetail detail = new CartDetail();
+        detail.setProductID(rs.getInt("productID"));
+        detail.setQuantity(rs.getInt("quantity"));
+        return detail;
+    }
+    
+    private CartDetailViewModel mapCartDetailViewModel(ResultSet rs) throws SQLException {
         CartDetailViewModel detail = new CartDetailViewModel();
         detail.setProductID(rs.getInt("productID"));
         detail.setProductName(rs.getString("productName"));

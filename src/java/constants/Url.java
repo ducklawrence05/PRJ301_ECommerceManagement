@@ -32,6 +32,10 @@ public class Url {
     public static final String CREATE_CATEGORY_PAGE= "/createCategory.jsp";
     public static final String UPDATE_CATEGORY_PAGE= "/updateCategory.jsp";
     
+    //Delivery
+    public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";
+    public static final String UPDATE_DELIVERY_PAGE = "updateDelivery";
+    
     //Promotion
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
     public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
