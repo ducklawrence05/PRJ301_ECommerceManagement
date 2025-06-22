@@ -13,15 +13,17 @@ public class InvoiceDetailViewModel {
     String productName;
     int quanlity;
     float price;
+    float subTotalAmount;
 
     public InvoiceDetailViewModel() {
     }
 
-    public InvoiceDetailViewModel(int productID, String productName, int quanlity, float price) {
+    public InvoiceDetailViewModel(int productID, String productName, int quanlity, float price, float subTotalAmount) {
         this.productID = productID;
         this.productName = productName;
         this.quanlity = quanlity;
         this.price = price;
+        this.subTotalAmount = subTotalAmount;
     }
 
     public int getProductID() {
@@ -55,5 +57,14 @@ public class InvoiceDetailViewModel {
     public void setPrice(float price) {
         this.price = price;
     }
+
+    public float getSubTotalAmount() {
+        return subTotalAmount;
+    }
+
+    public void setSubTotalAmount(float subTotalAmount) {
+        this.subTotalAmount = subTotalAmount;
+    }
+
     
 }

@@ -79,7 +79,7 @@ public class DeliveryDAO {
         return resultList;
     }
 
-    public Delivery getDeliveryAddress(int invoiceID) throws SQLException{
+    public Delivery getDeliveryByInvoiceID(int invoiceID) throws SQLException{
         try( Connection conn = DBContext.getConnection();
                 PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_INVOICEID)) {
             stm.setInt(1, invoiceID);

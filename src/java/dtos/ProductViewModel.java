@@ -19,11 +19,14 @@ public class ProductViewModel {
     private String sellerID;
     private String sellerFullName;
     private String status;
+    private int promoID;
 
     public ProductViewModel() {
     }
 
-    public ProductViewModel(int productID, String name, int categoryID, String categoryName, double basePrice, double salePrice, int quantity, String sellerID, String sellerFullName, String status) {
+    public ProductViewModel(int productID, String name, int categoryID, String categoryName, 
+            double basePrice, double salePrice, int quantity, String sellerID, 
+            String sellerFullName, String status, int promoID) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
@@ -34,6 +37,7 @@ public class ProductViewModel {
         this.sellerID = sellerID;
         this.sellerFullName = sellerFullName;
         this.status = status;
+        this.promoID = promoID;
     }
 
     public int getProductID() {
@@ -115,4 +119,14 @@ public class ProductViewModel {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public int getPromoID() {
+        return promoID;
+    }
+
+    public void setPromoID(int promoID) {
+        this.promoID = promoID;
+    }
+    
+    
 }

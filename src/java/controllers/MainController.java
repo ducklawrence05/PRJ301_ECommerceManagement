@@ -27,7 +27,13 @@ public class MainController extends HttpServlet {
     private final String USER = "user";
     private final String CATEGORY = "category";
     private final String CUSTOMER_CARE = "customerCare";
+
     private final String PROMOTION = "promotion";
+
+    private final String PRODUCT = "product";
+    private final String CART = "cart";
+    private final String INVOICE = "invoice";
+
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -55,6 +61,18 @@ public class MainController extends HttpServlet {
                     }
                     case CUSTOMER_CARE: {
                         url = Url.CUSTOMER_CARE_CONTROLLER;
+                        break;
+                    }
+                    case PRODUCT: {
+                        url = Url.PRODUCT_CONTROLLER;
+                        break;
+                    }
+                    case CART: {
+                        url = Url.CART_CONTROLLER;
+                        break;
+                    }
+                    case INVOICE: {
+                        url = Url.INVOICE_CONTROLLER;
                         break;
                     }
                     default: {

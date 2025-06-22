@@ -4,6 +4,7 @@
  */
 package utils;
 
+import constants.Message;
 import dtos.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import responses.ServiceResponse;
 
 /**
  *
@@ -19,6 +21,18 @@ import java.io.IOException;
 public class AuthUtils {
     
     private static final String USER_SESSION = "currentUser";
+    
+    public static ServiceResponse<User> getUserSession(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return ServiceResponse.failure(Message.UNAUTHENTICATION);
+        }
+        User currentUser = (User) session.getAttribute(USER_SESSION);
+        if (currentUser == null) {
+            return ServiceResponse.failure(Message.UNAUTHENTICATION);
+        }
+        return ServiceResponse.success(Message.SUCCESS, currentUser);
+    }
     
     public static void setUserSession(HttpServletRequest request, User user) {
         HttpSession session = request.getSession(true);

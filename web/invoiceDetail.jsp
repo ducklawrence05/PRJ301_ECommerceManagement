@@ -1,7 +1,7 @@
 <%-- 
-    Document   : updateDelivery
-    Created on : Jun 17, 2025, 1:53:28 PM
-    Author     : ngogi
+    Document   : invoiceDetail
+    Created on : Jun 22, 2025, 1:07:28 AM
+    Author     : ADMIN
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <jsp:include page="navbarInvoice.jsp" />
     </body>
 </html>
