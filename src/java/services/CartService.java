@@ -25,6 +25,8 @@ public class CartService {
     private final CartDAO cartDAO = new CartDAO();
     private final UserDAO userDAO = new UserDAO();
     private final ProductDAO productDAO = new ProductDAO();
+    
+    private final ProductService productService = new ProductService();
 
     private final String OUT_OF_STOCK = "outOfStock";
     private final String ACTIVE = "active";
@@ -251,24 +253,10 @@ public class CartService {
             return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND);
         }
         
-        int quantityInCart = cartDetail.getQuantity();
-        
-        // check product
-        ProductViewModel product = productDAO.getProductByID(productID);
-        if (product == null) {
-            return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);
-        }
-        
-        // add quantity back to stock
-        int newQuantity = product.getQuantity() + quantityInCart;
-        product.setQuantity(newQuantity);
-        if (product.getStatus().equalsIgnoreCase(OUT_OF_STOCK) && newQuantity > 0){
-            product.setStatus(ACTIVE);
-        }
-        
-        // update product
-        if (productDAO.updateProductQuantityAndStatus(productID, product.getQuantity(), product.getStatus()) == 0) {
-            return ServiceResponse.failure(Message.UPDATE_PRODUCT_FAILED);
+        // Update product quantity và status
+        ServiceResponse updateResponse = productService.restoreProductStock(productID, cartDetail.getQuantity());
+        if (!updateResponse.isSuccess()) {
+            return updateResponse;
         }
         
         // delete item from cart
