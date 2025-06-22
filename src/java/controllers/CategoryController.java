@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Role;
 import constants.Url;
 import dtos.Category;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,83 +15,91 @@ import java.util.ArrayList;
 import java.util.List;
 import services.CategoryService;
 
-/**
- *
- * @author Huy
- */
 @WebServlet(name="CategoryController", urlPatterns={"/category"})
 public class CategoryController extends HttpServlet {
-    private CategoryService categoryService = new CategoryService();
+    private final CategoryService categoryService = new CategoryService();
     private final String CREATE = "create";
-    private final String UPDATE ="update";
-    private final String DELETE ="delete";
-    private final String FIND_BY_ID ="findByID";
+    private final String UPDATE = "update";
+    private final String DELETE = "delete";
+    private final String FIND_BY_ID = "findByID";
     private final String FIND_BY_NAME = "findByName";
     private final String GET_ALL_CATEGORY = "getAll";
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
+
         String action = request.getParameter("action");
-        if(action == null){
+        if (action == null) {
             action = GET_ALL_CATEGORY;
         }
+
         List<Category> list = null;
         String url = Url.CATEGORY_LIST_PAGE;
+
         switch (action) {
             case CREATE:
                 url = Url.CREATE_CATEGORY_PAGE;
                 break;
             case UPDATE:
+                list = findByID(request, response);
                 url = Url.UPDATE_CATEGORY_PAGE;
                 break;
             case FIND_BY_ID:
                 list = findByID(request, response);
                 break;
             case FIND_BY_NAME:
-                list = findByName(request,response);
+                list = findByName(request, response);
                 break;
             case GET_ALL_CATEGORY:
-                list = getAllCategory(request,response);
+                list = getAllCategory(request, response);
                 break;
             default:
-                throw new AssertionError();
+                throw new AssertionError("Invalid action: " + action);
         }
-        if(action.equals(UPDATE)){
+
+        if (UPDATE.equals(action) && list != null && !list.isEmpty()) {
             request.setAttribute("category", list.get(0));
-        }else{
-            request.setAttribute("categories", list);
         }
-    } 
-    
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        request.setAttribute("categories", list);
+        request.getRequestDispatcher(url).forward(request, response);
+    }
+
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+        throws ServletException, IOException {
+
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
         }
+
         String url = Url.CATEGORY_LIST_PAGE;
+
         try {
             switch (action) {
-                case CREATE: {
-                    createCategory(request,response);
+                case CREATE:
+                    createCategory(request, response);
                     url = Url.CREATE_CATEGORY_PAGE;
                     break;
-                }
-                case UPDATE: {
-                    updateCategory(request,response);
+                case UPDATE:
+                    updateCategory(request, response);
                     break;
-                }
-                case DELETE: {
-                    deleteCategory(request,response);
+                case DELETE:
+                    deleteCategory(request, response);
                     break;
-                }
             }
 
             request.setAttribute("categories", categoryService.getAll());
             request.setAttribute("roleList", Role.values());
             request.getRequestDispatcher(url).forward(request, response);
+
         } catch (NumberFormatException | SQLException ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
@@ -109,9 +110,9 @@ public class CategoryController extends HttpServlet {
     private List<Category> findByName(HttpServletRequest request, HttpServletResponse response) {
         List<Category> list = new ArrayList<>();
         try {
-            String name = request.getParameter("categoryName");
+            String name = request.getParameter("keySearch");
             Category category = categoryService.findByName(name);
-            if(category != null){
+            if (category != null) {
                 list.add(category);
             }
         } catch (Exception e) {
@@ -122,16 +123,16 @@ public class CategoryController extends HttpServlet {
     }
 
     private List<Category> getAllCategory(HttpServletRequest request, HttpServletResponse response) {
-        List<Category> categorys = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
         try {
-            categorys = categoryService.getAll();
+            categories = categoryService.getAll();
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
             request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
         }
-        return categorys;
+        return categories;
     }
-    
+
     private void createCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         String categoryName = request.getParameter("categoryName");
         String description = request.getParameter("description");
@@ -148,17 +149,23 @@ public class CategoryController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("categoryID"));
         String categoryName = request.getParameter("categoryName");
         String description = request.getParameter("description");
+
         Category category = categoryService.findByID(id);
         String message;
-        if(category == null){
-            request.setAttribute("MSG", Message.CART_NOT_FOUND);
+
+        if (category == null) {
+            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+            return;
         }
+
         try {
             message = categoryService.update(id, categoryName, description);
         } catch (IllegalArgumentException ex) {
             message = Message.UPDATE_CATEGORY_FAILED;
         }
+
         request.setAttribute("MSG", message);
+        request.setAttribute("categories", categoryService.getAll());
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
@@ -170,9 +177,11 @@ public class CategoryController extends HttpServlet {
     private List<Category> findByID(HttpServletRequest request, HttpServletResponse response) {
         List<Category> list = new ArrayList<>();
         try {
-            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            int categoryID = Integer.parseInt(request.getParameter("keySearch"));
             Category category = categoryService.findByID(categoryID);
-            if (category != null) list.add(category);
+            if (category != null) {
+                list.add(category);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);

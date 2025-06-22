@@ -25,21 +25,22 @@ import java.sql.Statement;
  */
 public class InvoiceDAO {
 
-    private final String CREATE_INVOICE = "INSERT INTO [dbo].[tblInvoices]([userID],[totalAmount],[status],[createDate]) VALUES (?,?,?,?)";
+    private final String CREATE_INVOICE = "INSERT INTO [dbo].[tblInvoices]([userID],[totalAmount],[status],[createdDate]) VALUES (?,?,?,?)";
     private final String CREATE_INVOICE_DETAIL = "INSERT INTO [dbo].[tblInvoiceDetails]([invoiceID],[productID],[quantity],[price]) VALUES (?,?,?,?)";
     private final String UPDATE_INVOICE = "UPDATE [dbo].[tblInvoices] SET [status] = ? WHERE invoiceID =?";
-    private final String UPDATE_INVOICE_DETAIL = "UPDATE [dbo].[tblInvoiceDetails] SET [quantity] = ?WHERE invoiceID =? AND productID = ?";
+    private final String UPDATE_INVOICE_TOTAL_AMOUNT = "UPDATE [dbo].[tblInvoices] SET [totalAmount] = ? WHERE invoiceID =?";
+    private final String UPDATE_INVOICE_DETAIL = "UPDATE [dbo].[tblInvoiceDetails] SET [quantity] = ? WHERE invoiceID =? AND productID = ?";
     private final String DELETE_INVOICE = "DELETE FROM [dbo].[tblInvoices] WHERE invoiceID =?";
     private final String DELETE_ALL_INVOICE_DETAIL_BY_INVOICE_ID = "DELETE FROM [dbo].[tblInvoiceDetails] WHERE invoiceID =?";
     private final String DELETE_INVOICE_DETAIL = "DELETE FROM [dbo].[tblInvoiceDetails] WHERE invoiceID =? AND productID = ?";
 
-    private final String GET_ALL_INVOICE = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID";
-    private final String GET_INVOICES_BY_USER_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE userID = ?";
-    private final String GET_ALL_INVOICE_DETAIL = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID";
+    private final String GET_INVOICES_BY_USER_ID_AND_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE I.userID = ? AND status = ?";
+    private final String GET_INVOICES_BY_USER_ID_AND_INVOICE_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE I.userID = ? AND I.invoiceID = ?";
+    private final String GET_INVOICE_DETAIL_BY_INVOICE_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE I.invoiceID = ?";
     private final String GET_INVOICE_BY_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE invoiceID =?";
-    private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
-    private final String GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID = ? AND productID = ?";
-    private final String GET_INVOICES_BY_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE status = ? and userID = ?";
+//    private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
+    private final String GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE I.invoiceID = ? AND I.productID = ?";
+//    private final String GET_INVOICES_BY_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE userID = ?  and status = ?";
 
     public int createInvoice(String userID, float totalAmount, String status, LocalDate createDate) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE_INVOICE, Statement.RETURN_GENERATED_KEYS)) {
@@ -83,6 +84,14 @@ public class InvoiceDAO {
         }
     }
 
+    public int updateInvoiceTotalAmount(int invoiceID, float totalAmount) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_INVOICE_TOTAL_AMOUNT)) {
+            ps.setFloat(1, totalAmount);
+            ps.setInt(2, invoiceID);
+            return ps.executeUpdate();
+        }
+    }
+
     public int updateInvoiceDetail(int invoiceID, int productID, int quantity) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_INVOICE_DETAIL)) {
             ps.setInt(1, quantity);
@@ -114,9 +123,24 @@ public class InvoiceDAO {
         }
     }
 
-    public List<InvoiceViewModel> getAllInvoice() throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_ALL_INVOICE)) {
+    public InvoiceViewModel getInvoiceByUserIDAndInvoiceID(String userID, int invoiceID) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_USER_ID_AND_INVOICE_ID)) {
+            ps.setString(1, userID);
+            ps.setInt(2, invoiceID);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    return mapRowInvoiceViewModel(rs);
+                }
+            }
+            return null;
+        }
+    }
+
+    public List<InvoiceViewModel> getInvoicesByUserIDAndStatus(String userID, String status) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_USER_ID_AND_STATUS)) {
             List<InvoiceViewModel> invoiceViewModelList = new ArrayList<>();
+            ps.setString(1, userID);
+            ps.setString(2, status);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     invoiceViewModelList.add(mapRowInvoiceViewModel(rs));
@@ -126,9 +150,10 @@ public class InvoiceDAO {
         }
     }
 
-    public List<InvoiceDetailViewModel> getAllInvoiceDetail() throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_ALL_INVOICE_DETAIL)) {
+    public List<InvoiceDetailViewModel> getInvoiceDetailsByInvoiceID(int invoiceID) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_INVOICE_ID)) {
             List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
+            ps.setInt(1, invoiceID);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     invoiceDetailViewModelList.add(mapRowInvoiceDetailViewModel(rs));
@@ -151,9 +176,11 @@ public class InvoiceDAO {
     }
 
     public List<InvoiceViewModel> getInvoiceByStatus(String status, String userID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_STATUS)) {
-            ps.setString(1, status);
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_USER_ID_AND_STATUS)) {
+
             ps.setString(2, userID);
+            ps.setString(1, status);
+
             List<InvoiceViewModel> invoiceViewModelList = new ArrayList<>();
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -164,20 +191,19 @@ public class InvoiceDAO {
         }
     }
 
-    public List<InvoiceDetailViewModel> getInvoiceDetailByID(int invoiceID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_ID)) {
-            List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
-            ps.setInt(1, invoiceID);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    invoiceDetailViewModelList.add(mapRowInvoiceDetailViewModel(rs));
-                }
-            }
-            return invoiceDetailViewModelList;
-        }
-
-    }
-
+//    public List<InvoiceDetailViewModel> getInvoiceDetailByID(int invoiceID) throws SQLException {
+//        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_ID)) {
+//            List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
+//            ps.setInt(1, invoiceID);
+//            try ( ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    invoiceDetailViewModelList.add(mapRowInvoiceDetailViewModel(rs));
+//                }
+//            }
+//            return invoiceDetailViewModelList;
+//        }
+//
+//    }
     public InvoiceDetailViewModel getInvoiceDetailByIDAndProductID(int invoiceID, int productID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID)) {
             ps.setInt(1, invoiceID);
@@ -191,26 +217,27 @@ public class InvoiceDAO {
         return null;
     }
 
-    private InvoiceViewModel mapRowInvoiceViewModel(ResultSet rs) throws SQLException {
+    public InvoiceViewModel mapRowInvoiceViewModel(ResultSet rs) throws SQLException {
         int invoiceID = rs.getInt("invoiceID");
-        List<InvoiceDetailViewModel> invoiceDetailList = getInvoiceDetailByID(invoiceID);
+        List<InvoiceDetailViewModel> invoiceDetailList = getInvoiceDetailsByInvoiceID(invoiceID);
         return new InvoiceViewModel(
                 invoiceID,
                 rs.getString("userID"),
                 rs.getString("fullName"),
                 rs.getFloat("totalAmount"),
                 rs.getString("status"),
-                rs.getDate("createDate").toLocalDate(),
+                rs.getDate("createdDate").toLocalDate(),
                 invoiceDetailList
         );
     }
 
-    private InvoiceDetailViewModel mapRowInvoiceDetailViewModel(ResultSet rs) throws SQLException {
+    public InvoiceDetailViewModel mapRowInvoiceDetailViewModel(ResultSet rs) throws SQLException {
         return new InvoiceDetailViewModel(
                 rs.getInt("productID"),
                 rs.getString("name"),
                 rs.getInt("quantity"),
-                rs.getFloat("price")
+                rs.getFloat("price"),
+                rs.getInt("quantity") * rs.getFloat("price")
         );
     }
 

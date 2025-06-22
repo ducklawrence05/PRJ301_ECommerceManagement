@@ -13,25 +13,31 @@ public class ProductViewModel {
     private String name;
     private int categoryID;
     private String categoryName;
-    private double price;
+    private double basePrice;
+    private double salePrice;
     private int quantity;
     private String sellerID;
     private String sellerFullName;
     private String status;
+    private int promoID;
 
     public ProductViewModel() {
     }
 
-    public ProductViewModel(int productID, String name, int categoryID, String categoryName, double price, int quantity, String sellerID, String sellerFullName, String status) {
+    public ProductViewModel(int productID, String name, int categoryID, String categoryName, 
+            double basePrice, double salePrice, int quantity, String sellerID, 
+            String sellerFullName, String status, int promoID) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
         this.categoryName = categoryName;
-        this.price = price;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
         this.quantity = quantity;
         this.sellerID = sellerID;
         this.sellerFullName = sellerFullName;
         this.status = status;
+        this.promoID = promoID;
     }
 
     public int getProductID() {
@@ -66,12 +72,20 @@ public class ProductViewModel {
         this.categoryName = categoryName;
     }
 
-    public double getPrice() {
-        return price;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
     public int getQuantity() {
@@ -106,5 +120,13 @@ public class ProductViewModel {
         this.status = status;
     }
 
+    public int getPromoID() {
+        return promoID;
+    }
+
+    public void setPromoID(int promoID) {
+        this.promoID = promoID;
+    }
+    
     
 }

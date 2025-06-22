@@ -18,46 +18,43 @@ import utils.DBContext;
  * @author Huy
  */
 public class CategoryDAO {
-    private final String CREATE = "INSERT INTO [dbo].[tblCategory] ([categoryName],[description]) VALUES (?,?) ";
-    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategory] WHERE categoryID = ?";
-//    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategory] WHERE categoryName = ?";
-    private final String UPDATE = "UPDATE [dbo].[tblCategory] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
-    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategory] WHERE categoryID = ?";
-    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategory] WHERE categoryName = ?";
-    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategory]";
-    
+    private final String CREATE = "INSERT INTO [dbo].[tblCategories] ([categoryName],[description]) VALUES (?,?) ";
+    private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCategories] WHERE categoryID = ?";
+//    private final String DELETE_BY_CATEGORIES = "DELETE FROM [dbo].[tblCategories] WHERE categoryName = ?";
+    private final String UPDATE = "UPDATE [dbo].[tblCategories] SET [categoryName] = ? ,[description] =? WHERE categoryID = ?";
+    private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCategories] WHERE categoryID = ?";
+    private final String SEARCH_BY_CATEGORIES = "SELECT * FROM [dbo].[tblCategories] WHERE categoryName = ?";
+    private final String GET_ALL = "SELECT * FROM [dbo].[tblCategories]";
+
     //check exit
-    public boolean isExit(String category)  throws SQLException{
-        try(Connection conn = DBContext.getConnection();
-            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
-                ps.setString(1, category);
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    return true;
-                }
+    public boolean isExit(String category) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)) {
+            ps.setString(1, category);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
         }
         return false;
     }
-    
+
     //create
-    public int create(String name, String description) throws SQLException{
-        try(Connection conn = DBContext.getConnection();
-            PreparedStatement ps = conn.prepareStatement(CREATE)){
-                ps.setString(1, name);
-                ps.setString(2, description);
-                return ps.executeUpdate();
+    public int create(String name, String description) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(CREATE)) {
+            ps.setString(1, name);
+            ps.setString(2, description);
+            return ps.executeUpdate();
         }
     }
-    
+
     //delete by id
-    public int deleteByID(int id) throws SQLException{
-        try(Connection conn = DBContext.getConnection();
-            PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)){
-                ps.setInt(1, id);
-                return ps.executeUpdate();
+    public int deleteByID(int id) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate();
         }
     }
-    
+
 //    //delete by category
 //    public int deleteByCategoy(String category) throws SQLException{
 //        try(Connection conn = DBContext.getConnection();
@@ -66,39 +63,45 @@ public class CategoryDAO {
 //            return ps.executeUpdate();
 //        }
 //    }
-    
     //update
-    public int update(int id,String name, String category) throws SQLException{
+    public int update(int id,String name, String description) throws SQLException{
         try(Connection conn = DBContext.getConnection();
         PreparedStatement ps = conn.prepareStatement(UPDATE)){
             ps.setString(1, name);
-            ps.setString(2, category);
+            ps.setString(2, description);
             ps.setInt(3, id);
             return ps.executeUpdate();
         }
     }
-    
+
     //search by id
-    public Category searchByID(int id)  throws SQLException{
-        try(Connection conn = DBContext.getConnection();
-            PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)){
-                ps.setInt(1, id);
-                ResultSet rs = ps.executeQuery();
-                return mapRow(rs);
+    public Category searchByID(int id) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)) {
+            ps.setInt(1, id);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
         }
+        return null;
     }
-    
-    //search by category
-    public Category searchByCategory(String category)  throws SQLException{
+
+
+//search by category
+public Category searchByCategory(String category)  throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)){
-                ps.setString(1, category);
+                ps.setString(1, "%" + category + "%");
                 ResultSet rs = ps.executeQuery();
-                return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+                return null;
         }
     }
     
-    //get all user
+    //get all category
     public List<Category> getAll() throws SQLException{
         try(Connection conn = DBContext.getConnection();
             PreparedStatement ps = conn.prepareStatement(GET_ALL)){

@@ -11,17 +11,19 @@ package dtos;
 public class InvoiceDetailViewModel {
     int productID;
     String productName;
-    int quanlity;
+    int quantity;
     float price;
+    float subTotalAmount;
 
     public InvoiceDetailViewModel() {
     }
 
-    public InvoiceDetailViewModel(int productID, String productName, int quanlity, float price) {
+    public InvoiceDetailViewModel(int productID, String productName, int quantity, float price, float subTotalAmount) {
         this.productID = productID;
         this.productName = productName;
-        this.quanlity = quanlity;
+        this.quantity = quantity;
         this.price = price;
+        this.subTotalAmount = subTotalAmount;
     }
 
     public int getProductID() {
@@ -40,12 +42,12 @@ public class InvoiceDetailViewModel {
         this.productName = productName;
     }
 
-    public int getQuanlity() {
-        return quanlity;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuanlity(int quanlity) {
-        this.quanlity = quanlity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public float getPrice() {
@@ -55,5 +57,14 @@ public class InvoiceDetailViewModel {
     public void setPrice(float price) {
         this.price = price;
     }
+
+    public float getSubTotalAmount() {
+        return subTotalAmount;
+    }
+
+    public void setSubTotalAmount(float subTotalAmount) {
+        this.subTotalAmount = subTotalAmount;
+    }
+
     
 }

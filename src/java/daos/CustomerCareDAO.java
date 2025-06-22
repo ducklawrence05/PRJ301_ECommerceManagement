@@ -1,6 +1,7 @@
 package daos;
 
 import dtos.CustomerCare;
+import dtos.CustomerCareViewModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,12 +12,17 @@ import utils.DBContext;
 
 public class CustomerCareDAO {
     private final String CREATE = "INSERT INTO [dbo].[tblCustomerCare] ([userID], [subject], [content], [status], [reply]) VALUES (?, ?, ?, ?, ?)";
+    private final String CREATE_FOR_CUSTOMER = "INSERT INTO [dbo].[tblCustomerCare] ([userID], [subject], [content], [status], [reply]) VALUES (?, ?, ?, 'waitting', null)";
     private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCustomerCare] WHERE ticketID = ?";
     private final String UPDATE = "UPDATE [dbo].[tblCustomerCare] SET [userID] = ?, [subject] = ?, [content] = ?, [status] = ?, [reply] = ? WHERE ticketID = ?";
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCustomerCare] WHERE ticketID = ?";
     private final String SEARCH_BY_SUBJECT = "SELECT * FROM [dbo].[tblCustomerCare] WHERE subject = ?";
     private final String GET_ALL = "SELECT * FROM [dbo].[tblCustomerCare]";
     private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblCustomerCare] WHERE userID = ? AND subject = ?";
+    private final String GET_ALL_VIEW_MODEL = 
+    "SELECT c.ticketID, c.userID, u.fullName, c.subject, c.content, c.status, c.reply " +
+    "FROM tblCustomerCare c " +
+    "JOIN tblUsers u ON c.userID = u.userID";
 
     public int create(String userID,String subject, String content, String status, String reply) throws SQLException {
         try (Connection conn = DBContext.getConnection();
@@ -26,6 +32,16 @@ public class CustomerCareDAO {
             ps.setString(3, content);
             ps.setString(4, status);
             ps.setString(5, reply);
+            return ps.executeUpdate();
+        }
+    }
+    
+    public int createForCustomer(String userID,String subject, String content) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CREATE_FOR_CUSTOMER)) {
+            ps.setString(1, userID);
+            ps.setString(2, subject);
+            ps.setString(3, content);
             return ps.executeUpdate();
         }
     }
@@ -92,6 +108,18 @@ public class CustomerCareDAO {
         );
     }
     
+    private CustomerCareViewModel mapRowVM(ResultSet rs) throws SQLException {
+        return new CustomerCareViewModel(
+                rs.getInt("ticketID"),
+                rs.getString("userID"),
+                rs.getString("fullName"),
+                rs.getString("subject"),
+                rs.getString("content"),
+                rs.getString("status"),
+                rs.getString("reply")
+        );
+    }
+    
     public boolean isExist(String userID, String subject) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(CHECK_EXIST)) {
@@ -100,5 +128,17 @@ public class CustomerCareDAO {
             ResultSet rs = ps.executeQuery();
             return rs.next();
         }
+    }
+    
+    public List<CustomerCareViewModel> getAllViewModels() throws SQLException {
+        List<CustomerCareViewModel> list = new ArrayList<>();
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(GET_ALL_VIEW_MODEL);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRowVM(rs));
+            }
+        }
+        return list;
     }
 }

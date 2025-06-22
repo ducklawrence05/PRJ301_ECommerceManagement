@@ -19,7 +19,7 @@ public class UserDAO {
     private final String INSERT_USER = "INSERT INTO tblUsers "
             + "(userID, fullName, roleID, password, phone)"
             + "VALUES (?, ?, ?, ?, ?)";
-    private final String UPDATE_USER = "UPDATE tblUsers SET fullName = ?, roleID = ?, password = ?, phone = ?"
+    private final String UPDATE_USER = "UPDATE tblUsers SET fullName = ?, roleID = ?, password = ?, phone = ? "
             + "WHERE userID LIKE ?";
     private final String DELETE_USER = "DELETE FROM tblUsers WHERE userID LIKE ?";
 
@@ -112,7 +112,8 @@ public class UserDAO {
             stm.setString(3, password);
             stm.setString(4, phone);
             stm.setString(5, userID);
-            return stm.executeUpdate();
+            int res = stm.executeUpdate();
+            return res;
         }
     }
 
