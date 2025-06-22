@@ -27,6 +27,7 @@ public class MainController extends HttpServlet {
     private final String USER = "user";
     private final String CATEGORY = "category";
     private final String CUSTOMER_CARE = "customerCare";
+    private final String PROMOTION = "promotion";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {

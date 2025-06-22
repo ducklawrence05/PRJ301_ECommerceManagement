@@ -14,7 +14,6 @@ public class Url {
     public static final String LOGIN_PAGE = "/login.jsp";
     public static final String WELCOME_PAGE = "/welcome.jsp";
     public static final String ADMIN_PAGE = "/admin.jsp";
-
     // User
     public static final String USER_LIST_PAGE = "/userList.jsp";
     public static final String CREATE_USER_PAGE = "/createUser.jsp";
