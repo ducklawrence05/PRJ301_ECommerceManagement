@@ -25,6 +25,10 @@ public class MainController extends HttpServlet {
     
     private final String AUTH = "auth";
     private final String USER = "user";
+    private final String CATEGORY = "category";
+    private final String CUSTOMER_CARE = "customerCare";
+    private final String PRODUCT = "product";
+    private final String CART = "cart";
     private final String INVOICE = "invoice";
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -45,6 +49,22 @@ public class MainController extends HttpServlet {
                     }
                     case USER: {
                         url = Url.USER_CONTROLLER;
+                        break;
+                    }
+                    case CATEGORY: {
+                        url = Url.CATEGORY_CONTROLLER;
+                        break;
+                    }
+                    case CUSTOMER_CARE: {
+                        url = Url.CUSTOMER_CARE_CONTROLLER;
+                        break;
+                    }
+                    case PRODUCT: {
+                        url = Url.PRODUCT_CONTROLLER;
+                        break;
+                    }
+                    case CART: {
+                        url = Url.CART_CONTROLLER;
                         break;
                     }
                     case INVOICE: {
