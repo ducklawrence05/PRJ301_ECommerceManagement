@@ -206,6 +206,12 @@ public class ProductService {
 
     //Buyer
     public ServiceResponse restoreProductStock(int productID, int quantityToAddBack) throws SQLException {
+        // check quantity input
+        if (quantityToAddBack <= 0) {
+            return ServiceResponse.failure(Message.INVALID_QUANTITY);
+        }
+        
+        // check product exist
         ProductViewModel product = productDAO.getProductByID(productID);
         if (product == null) {
             return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);

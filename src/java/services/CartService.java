@@ -139,6 +139,12 @@ public class CartService {
             return sr.getMessage();
         }
         
+        // check item is exist or not
+        CartDetail existingItem = cartDAO.getItemFromCart(cartID, productID);
+        if (existingItem == null) {
+            return Message.CART_DETAIL_NOT_FOUND;
+        }
+        
         // check quantity input
         if (quantity <= 0) {
             return Message.INVALID_QUANTITY;
@@ -153,12 +159,6 @@ public class CartService {
         if (product.getStatus().equalsIgnoreCase(INACTIVE)
                 || product.getStatus().equalsIgnoreCase(OUT_OF_STOCK)) {
             return Message.PRODUCT_IS_INACTIVE_OR_OUT_OF_STOCK;
-        }
-
-        // check item is exist or not
-        CartDetail existingItem = cartDAO.getItemFromCart(cartID, productID);
-        if (existingItem == null) {
-            return Message.CART_DETAIL_NOT_FOUND;
         }
         
         // back to quantity in stock
@@ -261,6 +261,25 @@ public class CartService {
         
         // delete item from cart
         if(cartDAO.deleteItemFromCart(cartID, productID) == 0){
+           return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND); 
+        }
+        
+        return ServiceResponse.success(Message.DELETE_ITEMS_FROM_CART_SUCCESSFULLY);
+    }
+    
+    public ServiceResponse deleteItemFromCartForCreateInvoice(String userID, int productID) throws SQLException {
+        CartViewModel cart = cartDAO.getCartByUserID(userID);
+        if (cart == null) {
+            return ServiceResponse.failure(Message.CART_NOT_FOUND);
+        }
+        
+        CartDetail cartDetail = cartDAO.getItemFromCart(cart.getCartID(), productID);
+        if(cartDetail == null) {
+            return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND);
+        }
+        
+        // delete item from cart
+        if(cartDAO.deleteItemFromCart(cart.getCartID(), productID) == 0){
            return ServiceResponse.failure(Message.CART_DETAIL_NOT_FOUND); 
         }
         

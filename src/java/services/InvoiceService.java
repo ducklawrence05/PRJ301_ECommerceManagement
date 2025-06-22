@@ -9,11 +9,13 @@ import dtos.Invoice;
 import dtos.InvoiceDetail;
 import java.time.LocalDate;
 import constants.Message;
+import daos.CartDAO;
 import daos.InvoiceDAO;
 import daos.ProductDAO;
 import daos.UserDAO;
 import dtos.InvoiceDetailViewModel;
 import dtos.InvoiceViewModel;
+import dtos.ProductViewModel;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,9 +29,13 @@ import utils.ServiceUtils;
 public class InvoiceService {
 
     private InvoiceDAO invoiceDao = new InvoiceDAO();
-    private ProductDAO productDao = new ProductDAO();
+    private ProductDAO productDAO = new ProductDAO();
+    private CartService cartService = new CartService();
     private UserDAO userDao = new UserDAO();
+    
     private final String PENDING = "pending";
+    private final String INACTIVE = "inactive";
+    private final String OUT_OF_STOCK = "outOfStock";
     
     public ServiceResponse<InvoiceViewModel> create(String userID, String[] productID, 
             String[] quantity, String[] price) throws SQLException, ParseException{
@@ -42,10 +48,16 @@ public class InvoiceService {
         // get invoiceID to create invoice item base on it
         int invoiceID = sr.getData();
         
-        
+        // create invoice items
         for(int i = 0; i <= productID.length - 1; i++){
+            // create item
             boolean success = createInvoiceDetail(
                     sr, invoiceID, productID[i], quantity[i], price[i]).isSuccess();
+            // remove from cart
+            success = cartService.deleteItemFromCartForCreateInvoice(
+                    userID, invoiceID).isSuccess();
+            
+            // check success
             if(!success){
                 return ServiceResponse.failure(
                         "Error occur when add product " + i + 1 + " to invoice detail");
@@ -138,18 +150,53 @@ public class InvoiceService {
         int invoiceID = Integer.parseInt(_invoiceID);
         int productID = Integer.parseInt(_productID);
         int quantity = Integer.parseInt(_quantity);
+        
+        // get item from invoice
         sr = getInvoiceDetailByIDAndProductID(_invoiceID, _productID);
         if (sr.isSuccess() == false) {
             return sr;
         }
         sr.setSuccess(false);
-        if (quantity < 0) {
-            quantity = sr.getData().getQuantity();
+        
+        // check quantity input
+        if (quantity <= 0) {
+            return ServiceResponse.failure(Message.INVALID_QUANTITY);
         }
+
+        // check product exist
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null) {
+            return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);
+        }
+
+        if (product.getStatus().equalsIgnoreCase(INACTIVE)
+                || product.getStatus().equalsIgnoreCase(OUT_OF_STOCK)) {
+            return ServiceResponse.failure(Message.PRODUCT_IS_INACTIVE_OR_OUT_OF_STOCK);
+        }
+        
+        // back to quantity in stock
+        product.setQuantity(product.getQuantity() + sr.getData().getQuantity());
+        
+        // check new stock
+        if (quantity > product.getQuantity()) {
+            return ServiceResponse.failure(Message.QUANTITY_EXCEEDS_AVAILABLE);
+        }
+
+        // update quantity in stock
+        product.setQuantity(product.getQuantity() - quantity);
+        if (product.getQuantity() == 0) {
+            product.setStatus(OUT_OF_STOCK);
+        }
+
+        // update product
+        if (productDAO.updateProductQuantityAndStatus(productID, product.getQuantity(), product.getStatus()) == 0) {
+            return ServiceResponse.failure(Message.UPDATE_PRODUCT_FAILED);
+        }
+        
         if (invoiceDao.updateInvoiceDetail(invoiceID, productID, quantity) == 0) {
-            sr.setMessage(Message.UPDATE_INVOICE_DETAIL_FAILED);
-            return sr;
+            return ServiceResponse.failure(Message.UPDATE_INVOICE_DETAIL_FAILED);
         }
+        
         sr.setSuccess(true);
         sr.setMessage(Message.UPDATE_INVOICE_DETAIL_SUCCESSFULLY);
         return sr;
@@ -249,7 +296,7 @@ public class InvoiceService {
     }
 
     public boolean isExistProduct(int productID) throws SQLException {
-        if (productDao.getProductByID(productID) == null) {
+        if (productDAO.getProductByID(productID) == null) {
             return false;
         }
         return true;
