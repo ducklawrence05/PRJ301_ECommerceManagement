@@ -36,13 +36,21 @@ public class CartDAO {
     private final String INSERT_CART = "INSERT INTO tblCarts (userID, createdDate) VALUES (?, ?)";
     private final String DELETE_CART = "DELETE FROM tblCarts WHERE cartID = ?";
 
+    private final String GET_PRODUCT_IDS_BY_CART_ID = 
+            "SELECT productID FROM tblCartDetails WHERE cartID = ?";
+    
     private final String GET_CART_DETAIL = 
-            "Select * FROM tblCartDetails WHERE cartID = ? AND productID = ?";
+            "SELECT * FROM tblCartDetails WHERE cartID = ? AND productID = ?";
+    
     private final String GET_CART_DETAILS = 
-            "SELECT cd.productID, cd.quantity, p.name AS productName, p.price "
-            + "(cd.quantity * p.price) AS subTotal "
-            + "FROM tblCartDetails cd JOIN tblProducts p ON cd.productID = p.productID "
+            "SELECT cd.productID, cd.quantity, p.name AS productName, p.price, " 
+            + "ROUND(p.price * (1 - ISNULL(pr.discountPercent, 0)), 2) AS salePrice, " 
+            + "ROUND(cd.quantity * (p.price * (1 - ISNULL(pr.discountPercent, 0))), 2) AS subTotal " 
+            + "FROM tblCartDetails cd " 
+            + "JOIN tblProducts p ON cd.productID = p.productID " 
+            + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID " 
             + "WHERE cd.cartID = ?";
+    
     private final String INSERT_ITEM_TO_CART = 
             "INSERT INTO tblCartDetails(cartID, productID, quantity) VALUES (?, ?, ?)";
     private final String UPDATE_ITEM_QUANTITY = 
@@ -106,6 +114,20 @@ public class CartDAO {
     }
 
     //
+    public List<Integer> getProductIDsByCartID(int cartID) throws SQLException {
+        List<Integer> productIDs = new ArrayList<>();
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(GET_PRODUCT_IDS_BY_CART_ID)) {
+            ps.setInt(1, cartID);
+            try (ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    productIDs.add(rs.getInt("productID"));
+                }
+            }
+        }
+        return productIDs;
+    }
+    
     public CartDetail getItemFromCart(int cartID, int productID) throws SQLException {
         try (Connection con = DBContext.getConnection();
              PreparedStatement ps = con.prepareStatement(GET_CART_DETAIL)) {
@@ -202,7 +224,8 @@ public class CartDAO {
         detail.setProductID(rs.getInt("productID"));
         detail.setProductName(rs.getString("productName"));
         detail.setQuantity(rs.getInt("quantity"));
-        detail.setPrice(rs.getDouble("price"));
+        detail.setBasePrice(rs.getDouble("price"));
+        detail.setSalePrice(rs.getDouble("salePrice"));
         detail.setSubTotal(rs.getDouble("subTotal"));
         return detail;
     }

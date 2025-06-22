@@ -12,17 +12,19 @@ public class CartDetailViewModel {
     private int productID;
     private String productName;
     private int quantity;
-    private double price;
+    private double basePrice;
+    private double salePrice;
     private double subTotal;
 
     public CartDetailViewModel() {
     }
 
-    public CartDetailViewModel(int productID, String productName, int quantity, double price, double subTotal) {
+    public CartDetailViewModel(int productID, String productName, int quantity, double basePrice, double salePrice, double subTotal) {
         this.productID = productID;
         this.productName = productName;
         this.quantity = quantity;
-        this.price = price;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
         this.subTotal = subTotal;
     }
 
@@ -50,12 +52,20 @@ public class CartDetailViewModel {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
-        return price;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
     }
 
     public double getSubTotal() {
@@ -65,4 +75,6 @@ public class CartDetailViewModel {
     public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
     }
+
+    
 }
