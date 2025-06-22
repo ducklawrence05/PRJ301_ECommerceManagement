@@ -34,12 +34,12 @@ public class Url {
     public static final String UPDATE_CATEGORY_PAGE= "/updateCategory.jsp";
     
     //Invoice
-    public static final String INVOICE_LIST_PAGE = "invoiceList.jsp";
-    public static final String INVOICE_DETAIL_PAGE = "invoiceDetail.jsp";
+    public static final String INVOICE_LIST_PAGE = "/invoiceList.jsp";
+    public static final String INVOICE_DETAIL_PAGE = "/invoiceDetail.jsp";
 
     //Delivery
     public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";
-    public static final String UPDATE_DELIVERY_PAGE = "updateDelivery";
+    public static final String UPDATE_DELIVERY_PAGE = "/updateDelivery";
     
     //Promotion
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";

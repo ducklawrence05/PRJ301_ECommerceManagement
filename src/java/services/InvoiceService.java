@@ -30,6 +30,7 @@ public class InvoiceService {
 
     private InvoiceDAO invoiceDao = new InvoiceDAO();
     private ProductDAO productDAO = new ProductDAO();
+    private ProductService productService = new ProductService();
     private CartService cartService = new CartService();
     private UserDAO userDao = new UserDAO();
     
@@ -55,7 +56,7 @@ public class InvoiceService {
                     sr, invoiceID, productID[i], quantity[i], price[i]).isSuccess();
             // remove from cart
             success = cartService.deleteItemFromCartForCreateInvoice(
-                    userID, invoiceID).isSuccess();
+                    userID, Integer.parseInt(productID[i])).isSuccess();
             
             // check success
             if(!success){
@@ -67,6 +68,7 @@ public class InvoiceService {
         return ServiceResponse.success(Message.SUCCESS, 
                 getInvoiceByID(String.valueOf(invoiceID), userID).getData());
     }
+    
     public ServiceResponse<Integer> createInvoice(String userID, String[] quantity, String[] price) throws SQLException, ParseException {
         LocalDate createdDate = LocalDate.now();
         
@@ -197,11 +199,10 @@ public class InvoiceService {
             return ServiceResponse.failure(Message.UPDATE_INVOICE_DETAIL_FAILED);
         }
         
-        sr.setSuccess(true);
-        sr.setMessage(Message.UPDATE_INVOICE_DETAIL_SUCCESSFULLY);
-        return sr;
+        return ServiceResponse.success(Message.UPDATE_INVOICE_DETAIL_SUCCESSFULLY);
     }
 
+    // use when invoice detail is unavailable
     public ServiceResponse<Invoice> deleteInvoice(String _invoiceID) throws SQLException, ParseException {
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
@@ -218,22 +219,46 @@ public class InvoiceService {
     public String deleteAllInvoiceDetailByID(String _invoiceID) throws SQLException, SQLException {
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
-        invoiceDao.deleteAllInvoiceDetailByID(invoiceID);
+        
+        List<Integer> productIDs = invoiceDao.getProductIDsByInvoiceID(invoiceID);
+        
+        if(productIDs.isEmpty()){
+            return Message.YOUR_INVOICE_IS_EMPTY;
+        }
+        
+        // delete one by one
+        for (int i = 0; i < productIDs.size(); i++){
+            sr = deleteInvoiceDetailByInvoicveIDAndProductID(_invoiceID, String.valueOf(productIDs.get(i)));
+            if(!sr.isSuccess()){
+                return "Error occurred when removing item " + (i + 1) + " from invoice.";
+            }
+        }
+        
+//        invoiceDao.deleteAllInvoiceDetailByID(invoiceID);
         return Message.DELETE_INVOICE_SUCCESSFULLY;
     }
 
     public ServiceResponse deleteInvoiceDetailByInvoicveIDAndProductID(String _invoiceID, String _productID) throws SQLException, SQLException {
         int invoiceID = Integer.parseInt(_invoiceID);
         int productID = Integer.parseInt(_productID);
-        ServiceResponse sr = new ServiceResponse();
-        if (invoiceDao.deleteAllInvoiceDetailByIvoiceIDAndProductID(invoiceID, productID) == 0) {
-            sr.setMessage(Message.INVOICE_DETAIL_NOT_FOUND);
-            sr.setSuccess(false);
-            return sr;
+        
+        InvoiceDetailViewModel item = invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID);
+        if (item == null){
+            return ServiceResponse.failure(Message.INVOICE_DETAIL_NOT_FOUND);
+        } 
+        
+        // Update product quantity và status
+        ServiceResponse updateResponse = productService.restoreProductStock(productID, item.getQuantity());
+        if (!updateResponse.isSuccess()) {
+            return updateResponse;
         }
-        sr.setMessage(Message.DELETE_INVOICE_DETAIL_SUCCESSFULLY);
-        sr.setSuccess(true);
-        return sr;
+        
+        // delete item
+        if (invoiceDao.deleteAllInvoiceDetailByIvoiceIDAndProductID(invoiceID, productID) == 0) {
+            return ServiceResponse.failure(Message.INVOICE_DETAIL_NOT_FOUND);
+        }
+        
+        return ServiceResponse.success(Message.DELETE_INVOICE_DETAIL_SUCCESSFULLY);
     }
 
     public List<InvoiceViewModel> getInvoicesByUserIDAndStatus(String userID, String status) throws SQLException {
