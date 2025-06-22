@@ -121,7 +121,7 @@ public class PromotionController extends HttpServlet {
     private List<Promotion> searchByID(HttpServletRequest request, HttpServletResponse response) {
         List<Promotion> list = new ArrayList<>();
         try {
-            int id = Integer.parseInt(request.getParameter("promoID"));
+            int id = Integer.parseInt(request.getParameter("keySearch"));
             Promotion promotion = promotionService.searchByID(id);
             if(promotion != null){
                 list.add(promotion);
@@ -136,7 +136,7 @@ public class PromotionController extends HttpServlet {
     private List<Promotion> searchByName(HttpServletRequest request, HttpServletResponse response) {
         List<Promotion> list = new ArrayList<>();
         try {
-            String name = request.getParameter("name");
+            String name = request.getParameter("keySearch");
             Promotion promotion = promotionService.searchByName(name);
             if(promotion != null){
                 list.add(promotion);

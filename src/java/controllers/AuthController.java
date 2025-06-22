@@ -94,8 +94,8 @@ public class AuthController extends HttpServlet {
             AuthUtils.clearUserSession(request);
             AuthUtils.setUserSession(request, user);
             
-            String url = user.getRole() == Role.ADMIN ? Url.ADMIN_PAGE : ("/main" + Url.PRODUCT_LIST_PAGE);
-            request.getRequestDispatcher(url).forward(request, response);
+            String url = user.getRole() == Role.ADMIN ? Url.ADMIN_PAGE : ("/main" + Url.PRODUCT_CONTROLLER);
+            response.sendRedirect(request.getContextPath() + url);
         } catch (SQLException ex){
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
             request.getRequestDispatcher(Url.LOGIN_PAGE).forward(request, response);

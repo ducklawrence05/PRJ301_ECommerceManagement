@@ -57,8 +57,8 @@
                                 </c:choose>
                         </td>
 
-                        <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${detail.price}" /> VND</td>
-                        <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${detail.subTotalAmount}" /> VND</td>
+                        <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${detail.price}" /></td>
+                        <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${detail.subTotalAmount}" /></td>
 
                         <!-- Action: mỗi form update và delete riêng biệt -->
                         <td>
@@ -74,8 +74,6 @@
                                     <input type="submit" value="Delete" />
                                 </form>
                             </c:if>
-
-
                         </td>
                     </tr>
                 </c:forEach>
@@ -83,7 +81,7 @@
         </table>
 
 
-        <h4>Total amount: <fmt:formatNumber type="number" maxFractionDigits="2" value="${invoiceViewModel.totalAmount}" /> VND</h4>
+        <h4>Total amount: <fmt:formatNumber type="number" maxFractionDigits="2" value="${invoiceViewModel.totalAmount}" /></h4>
         <c:if test="${!empty requestScope.MSG}">
             <h3 style="color: green">${MSG}</h3>
         </c:if>

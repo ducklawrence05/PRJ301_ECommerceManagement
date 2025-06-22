@@ -21,28 +21,29 @@ import utils.DBContext;
  */
 public class DeliveryDAO {
 
-    private final String GET_ALL_DELIVERES = "SELECT * SELECT * FROM tblDeliveries";
+    private final String GET_ALL_DELIVERY = "SELECT * FROM tblDeliveries";
+    
     private final String GET_DELIVERY_BY_ID = "SELECT * FROM tblDeliveries WHERE deliveryID LIKE ?";
     private final String GET_DELIVERY_BY_STATUS = "SELECT * FROM tblDeliveries WHERE status LIKE ?";
-    private final String GET_DELIVERY_BY_DATE = "SELECT * FROM tblDeliveries WHERE deliveryDate BETWEEN ? AND ?";
     private final String GET_DELIVERY_BY_INVOICEID = "SELECT * FROM tblDeliveries WHERE invoiceID LIKE ?";
     private final String INSERT_DELIVERY = "INSERT INTO tblDeliveries"
             + "(invoiceID, address, deliveryDate, status)"
             + " VALUES (?, ?, ?, ?)";
-    private final String UPDATE_DELIVERY = "UPDATE tblDeliveries "
-            + "SET address = ?, deliveryDate = ?, status = ? "
-            + "WHERE deliveryID = ?";
-    private final String DELETE_DELIVERY = "DELETE FROM tblDeliveries WHERE deliveryID = ?";
+    private final String UPDATE_DELIVERY = "UPDATE tblDeliveries SET deliveryID = ?  WHERE status = ?";
 
-    public List<Delivery> getAllDeliveries() throws SQLException {
+    public List<Delivery> getAllDelivery() throws SQLException {
         List<Delivery> resultList = new ArrayList<>();
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_ALL_DELIVERES);  ResultSet rs = stm.executeQuery()) {
+        try ( Connection conn = DBContext.getConnection();
+                PreparedStatement stm = conn.prepareStatement(GET_ALL_DELIVERY);
+                ResultSet rs = stm.executeQuery()) {
             while (rs.next()) {
                 resultList.add(mapRow(rs));
             }
         }
         return resultList;
     }
+    
+    
 
     public Delivery getDeliveryByID(int deliveryID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_ID)) {
@@ -60,26 +61,7 @@ public class DeliveryDAO {
         return searchByKeyWord(GET_DELIVERY_BY_STATUS, status);
     }
 
-    public List<Delivery> getDeliveryByDate(LocalDate deliveryDate) throws SQLException {
-        List<Delivery> resultList = new ArrayList<>();
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_DATE)) {
-
-            if (deliveryDate != null) {
-                stm.setDate(3, java.sql.Date.valueOf(deliveryDate));
-            } else {
-                stm.setNull(3, Types.DATE);
-            }
-
-            try ( ResultSet rs = stm.executeQuery()) {
-                while (rs.next()) {
-                    resultList.add(mapRow(rs));
-                }
-            }
-        }
-        return resultList;
-    }
-
-    public Delivery getDeliveryAddress(int invoiceID) throws SQLException{
+    public Delivery getDeliveryByInvoiceID(int invoiceID) throws SQLException{
         try( Connection conn = DBContext.getConnection();
                 PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_INVOICEID)) {
             stm.setInt(1, invoiceID);
@@ -96,7 +78,7 @@ public class DeliveryDAO {
     private List<Delivery> searchByKeyWord(String sql, String keyword) throws SQLException {
         List<Delivery> resultList = new ArrayList<>();
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setString(1, "%" + keyword + "%");
+            stm.setString(1,keyword);
             try ( ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     resultList.add(mapRow(rs));
@@ -123,26 +105,16 @@ public class DeliveryDAO {
         }
     }
 
-    public int updateDelivery(String address, LocalDate deliveryDate, String status) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_DELIVERY)) {
-            stm.setString(1, address);
-
-            if (deliveryDate != null) {
-                stm.setDate(2, java.sql.Date.valueOf(deliveryDate));
-            } else {
-                stm.setNull(2, Types.DATE);
-            }
-
-            stm.setString(3, status);
-            return stm.executeUpdate();
-        }
-    }
-
-    public int deleteDelivery(int deliveryID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(DELETE_DELIVERY)) {
+    public boolean updateDelivery(int deliveryID, String status) throws SQLException {
+        boolean isUpdate = false;
+        try ( Connection conn = DBContext.getConnection(); 
+                PreparedStatement stm = conn.prepareStatement(UPDATE_DELIVERY)) {
+            
             stm.setInt(1, deliveryID);
-            return stm.executeUpdate();
+            stm.setString(2, status);
+            isUpdate = stm.executeUpdate() > 0;
         }
+        return isUpdate;
     }
 
     public boolean checkDelivertyExists(Integer deliveryID) throws SQLException {

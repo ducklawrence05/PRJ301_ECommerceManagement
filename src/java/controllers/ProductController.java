@@ -96,6 +96,7 @@ public class ProductController extends HttpServlet {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            url = Url.ERROR_PAGE;
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
         }
         
@@ -116,36 +117,37 @@ public class ProductController extends HttpServlet {
         }
         
         String url = Url.PRODUCT_LIST_PAGE;
+        String message = Message.SYSTEM_ERROR;
         try{
             switch(action){
                 case CREATE:{
-                    createProduct(request);
+                    message = createProduct(request);
                     url = Url.CREATE_PRODUCT_PAGE;
                     break;
                 }
                 case UPDATE:{
-                    updateProduct(request);
+                    message = updateProduct(request);
                     request.setAttribute("product", getProductByID(request));
                     url = Url.UPDATE_PRODUCT_PAGE;
                     break;
                 }
                 case UPDATE_QUANTITY:{
-                    updateProductQuantityAndStatus(request);
+                    message = updateProductQuantityAndStatus(request);
                     request.setAttribute("product", getProductByID(request));
                     url = Url.PRODUCT_LIST_PAGE;
                     break;
                 }
                 case DELETE:{
-                    deleteProduct(request);
+                    message = deleteProduct(request);
                     request.setAttribute("products", getAllProducts(request));
                     break;
                 }
             }
         }catch(Exception ex){
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
             url = Url.ERROR_PAGE;
         }
+        request.setAttribute("MSG", message);
         request.getRequestDispatcher(url).forward(request, response);
     }
     
@@ -153,61 +155,60 @@ public class ProductController extends HttpServlet {
             throws ServletException, IOException, NumberFormatException, SQLException{
         int productID = Integer.parseInt(request.getParameter("productID"));
         
-        ServiceResponse<ProductViewModel> rs = productService.getProductByID(productID);
+        ServiceResponse<ProductViewModel> sr = productService.getProductByID(productID);
         
-        return handleServiceResponse(request, rs);
+        return handleServiceResponse(request, sr);
     }
 
     private List<ProductViewModel> getAllProducts(HttpServletRequest request)
             throws ServletException, IOException, SQLException{
-        ServiceResponse<List<ProductViewModel>> rs = productService.getAllProducts();
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getAllProducts();
+        return handleServiceResponse(request, sr);
     }
     
     private List<ProductViewModel> getProductsByName(HttpServletRequest request)
             throws ServletException, IOException, SQLException{
         String keySearch = request.getParameter("keySearch");
-        ServiceResponse<List<ProductViewModel>> rs = productService.getProductsByName(keySearch);
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getProductsByName(keySearch);
+        return handleServiceResponse(request, sr);
     }
     
     private List<ProductViewModel> getProductsByCategoryName(HttpServletRequest request)
             throws ServletException, IOException, SQLException{
         String keySearch = request.getParameter("keySearch");
-        ServiceResponse<List<ProductViewModel>> rs = productService.getProductsByCategoryName(keySearch);
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getProductsByCategoryName(keySearch);
+        return handleServiceResponse(request, sr);
     }
     
     private List<ProductViewModel> getProductsByMinQuantity(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         int keySearch = Integer.parseInt(request.getParameter("keySearch"));
-        ServiceResponse<List<ProductViewModel>> rs = productService.getProductsByMinQuantity(keySearch);
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getProductsByMinQuantity(keySearch);
+        return handleServiceResponse(request, sr);
     }
     
     private List<ProductViewModel> getProductsBySellerID(HttpServletRequest request)
             throws ServletException, IOException, SQLException{
         String keySearch = request.getParameter("keySearch");
-        ServiceResponse<List<ProductViewModel>> rs = productService.getProductsBySellerID(keySearch);
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getProductsBySellerID(keySearch);
+        return handleServiceResponse(request, sr);
     }
     
     private List<ProductViewModel> getProductsByStatus(HttpServletRequest request)
             throws ServletException, IOException, SQLException{
         String keySearch = request.getParameter("keySearch");
-        ServiceResponse<List<ProductViewModel>> rs = productService.getProductsByStatus(keySearch);
-        return handleServiceResponse(request, rs);
+        ServiceResponse<List<ProductViewModel>> sr = productService.getProductsByStatus(keySearch);
+        return handleServiceResponse(request, sr);
     }
     
-    private void createProduct(HttpServletRequest request)
+    private String createProduct(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         // get currentUser
-        ServiceResponse<User> rs = AuthUtils.getUserSession(request);
-        if(!rs.isSuccess()){
-            request.setAttribute("MSG", rs.getMessage());
-            return;
+        ServiceResponse<User> sr = AuthUtils.getUserSession(request);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
-        User currentUser = rs.getData();
+        User currentUser = sr.getData();
         
         String name = request.getParameter("name");
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
@@ -222,19 +223,17 @@ public class ProductController extends HttpServlet {
             promoID = Integer.parseInt(_promoID);
         }
         
-        String message = productService.createProduct(name, categoryID, price, quantity, sellerID, status, promoID);
-        request.setAttribute("MSG", message);
+        return productService.createProduct(name, categoryID, price, quantity, sellerID, status, promoID);
     }
     
-    private void updateProduct(HttpServletRequest request)
+    private String updateProduct(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         // get currentUser
-        ServiceResponse<User> rs = AuthUtils.getUserSession(request);
-        if(!rs.isSuccess()){
-            request.setAttribute("MSG", rs.getMessage());
-            return;
+        ServiceResponse<User> sr = AuthUtils.getUserSession(request);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
-        User currentUser = rs.getData();
+        User currentUser = sr.getData();
         
         int productID = Integer.parseInt(request.getParameter("productID"));
         String name = request.getParameter("name");
@@ -249,41 +248,36 @@ public class ProductController extends HttpServlet {
             promoID = Integer.parseInt(_promoID);
         }
         
-        String message = productService.updateProduct(productID, name, categoryID, price, quantity, status, promoID, currentUser);
-        request.setAttribute("MSG", message);
+        return productService.updateProduct(productID, name, categoryID, price, quantity, status, promoID, currentUser);
     }
     
-    private void updateProductQuantityAndStatus(HttpServletRequest request)
+    private String updateProductQuantityAndStatus(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         // get currentUser
-        ServiceResponse<User> rs = AuthUtils.getUserSession(request);
-        if(!rs.isSuccess()){
-            request.setAttribute("MSG", rs.getMessage());
-            return;
+        ServiceResponse<User> sr = AuthUtils.getUserSession(request);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
-        User currentUser = rs.getData();
+        User currentUser = sr.getData();
         
         int productID = Integer.parseInt(request.getParameter("productID"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         
-        String message = productService.updateProductQuantityAndStatus(productID, quantity, currentUser);
-        request.setAttribute("MSG", message);
+        return productService.updateProductQuantityAndStatus(productID, quantity, currentUser);
     }
     
-    private void deleteProduct(HttpServletRequest request)
+    private String deleteProduct(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         // get currentUser
-        ServiceResponse<User> rs = AuthUtils.getUserSession(request);
-        if(!rs.isSuccess()){
-            request.setAttribute("MSG", rs.getMessage());
-            return;
+        ServiceResponse<User> sr = AuthUtils.getUserSession(request);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
         }
-        User currentUser = rs.getData();
+        User currentUser = sr.getData();
         
         int productID = Integer.parseInt(request.getParameter("productID"));
         
-        String message = productService.deleteProductByID(productID, currentUser);
-        request.setAttribute("MSG", message);
+        return productService.deleteProductByID(productID, currentUser);
     }
     
     
