@@ -25,6 +25,8 @@ public class MainController extends HttpServlet {
     
     private final String AUTH = "auth";
     private final String USER = "user";
+    private final String DELIVERY = "delivery";
+    private final String RETURN = "return";
     private final String CATEGORY = "category";
     private final String CUSTOMER_CARE = "customerCare";
     private final String PRODUCT = "product";
@@ -49,6 +51,14 @@ public class MainController extends HttpServlet {
                     }
                     case USER: {
                         url = Url.USER_CONTROLLER;
+                        break;
+                    }
+                    case DELIVERY: {
+                        url = Url.DELIVERY_CONTROLLER;
+                        break;
+                    }
+                    case RETURN: {
+                        url = Url.RETURN_CONTROLLER;
                         break;
                     }
                     case CATEGORY: {

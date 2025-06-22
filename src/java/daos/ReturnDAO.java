@@ -19,32 +19,40 @@ import utils.DBContext;
  */
 public class ReturnDAO {
 
-    private final String GET_ALL_RETURN = "SELECT * SELECT * FROM tblReturns";
+    private final String GET_ALL_RETURN = "SELECT * FROM tblReturns";
     private final String GET_RETURN_BY_ID = "SELECT * FROM tblReturns WHERE returnID LIKE ?";
-    private final String GET_RETURN_BY_REASON = "SELECT * FROM tblReturns WHERE reason LIKE ?";
     private final String GET_RETURN_BY_STATUS = "SELECT * FROM tblReturns WHERE status LIKE ?";
-
     private final String INSERT_RETURN = "INSERT INTO tblReturns"
             + "(invoiceID, reason, status)"
             + " VALUES (?, ?, ?)";
     private final String UPDATE_RETURN = "UPDATE tblReturns "
-            + "SET reason = ?, status = ? "
+            + "SET status = ? "
             + "WHERE returnID = ?";
 
     public List<Return> getAllReturn() throws SQLException {
         List<Return> resultList = new ArrayList<>();
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_ALL_RETURN);  ResultSet rs = stm.executeQuery()) {
+        try ( Connection conn = DBContext.getConnection();
+                PreparedStatement stm = conn.prepareStatement(GET_ALL_RETURN);
+                ResultSet rs = stm.executeQuery()) {
             while (rs.next()) {
                 resultList.add(mapRow(rs));
             }
         }
         return resultList;
     }
-    
-        public List<Return> getReturnReason(String reason) throws SQLException {
-        return searchByKeyWord(GET_RETURN_BY_REASON, reason);
+
+    public Return getReturnID(int returnID) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_RETURN_BY_ID)) {
+            stm.setInt(1, returnID);
+            try ( ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        }
+        return null;
     }
-    
+
     public List<Return> getReturnStatus(String status) throws SQLException {
         return searchByKeyWord(GET_RETURN_BY_STATUS, status);
     }
@@ -61,7 +69,7 @@ public class ReturnDAO {
         }
         return resultList;
     }
-
+    
     public int insertReturn(int invoiceID,
             String reason, String status) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(INSERT_RETURN)) {
@@ -71,15 +79,14 @@ public class ReturnDAO {
             return stm.executeUpdate();
         }
     }
-    
-        public int updateReturn(String reason, String status) throws SQLException {
+
+    public int updateReturn(String status) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_RETURN)) {
-            stm.setString(1, reason);
-            stm.setString(2, status);
+            stm.setString(1, status);
             return stm.executeUpdate();
         }
     }
-    
+
     public boolean checkReturnExists(Integer returnID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_RETURN_BY_ID)) {
             stm.setInt(1, returnID);

@@ -30,50 +30,50 @@ public class DeliveryService {
         
     }   
     
-    public String updateDelivery(Integer deliveryID,String address, LocalDate deliveryDate, String status) throws  SQLException {
+    public String updateDelivery(Integer deliveryID, String status) throws  SQLException {
         if(!deliveryDAO.checkDelivertyExists(deliveryID)){
             return Message.DELIVERY_NOT_FOUND;
         }
         
         Delivery delivery = new Delivery();
         
-        if(isNullOrEmptyString(address)){
-            address = delivery.getAddress();
-        }
+//        if(isNullOrEmptyString(address)){
+//            address = delivery.getAddress();
+//        }
         
-        if(deliveryDate == null){
-            deliveryDate = delivery.getDeliveryDate();
-        }
+//        if(deliveryDate == null){
+//            deliveryDate = delivery.getDeliveryDate();
+//        }
         
         if(isNullOrEmptyString(status)){
             status = delivery.getStatus();
         }
-        
-        if (deliveryDAO.updateDelivery(address, deliveryDate, status) == 0){
+       
+        if (!deliveryDAO.updateDelivery(deliveryID, status)){
             return Message.UPDATE_DELIVERY_FAILED;
         }
         
         return Message.UPDATE_DELIVERY_SUCCESSFULLY;
     }
     
-    public String deleteDelivery(int deliveryID) throws SQLException {
-        if(deliveryDAO.deleteDelivery(deliveryID) == 0){
-            return Message.DELIVERY_NOT_FOUND;
-        }
-        return  Message.DELETE_DELIVERY_SUCCESSFULLY;
-    }
+//    public String deleteDelivery(int deliveryID) throws SQLException {
+//        if(deliveryDAO.deleteDelivery(deliveryID) == 0){
+//            return Message.DELIVERY_NOT_FOUND;
+//        }
+//        return  Message.DELETE_DELIVERY_SUCCESSFULLY;
+//    }
     
     public List<Delivery> getAllDelivery() throws SQLException {
-        return deliveryDAO.getAllDeliveries();
+        return deliveryDAO.getAllDelivery();
     }
     
     public List<Delivery> getDeliveryByStatus(String status) throws SQLException {
         return deliveryDAO.getDeliveryStatus(status);
     }
     
-    public List<Delivery> getDeleveryDate(LocalDate deliveryDate) throws SQLException {
-        return deliveryDAO.getDeliveryByDate(deliveryDate);
-    }
+//    public List<Delivery> getDeleveryDate(LocalDate deliveryDate) throws SQLException {
+//        return deliveryDAO.getDeliveryByDate(deliveryDate);
+//    }
         
     private boolean isNullOrEmptyString(String str){
         return str == null || str.isEmpty();
