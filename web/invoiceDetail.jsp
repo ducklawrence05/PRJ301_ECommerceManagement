@@ -105,6 +105,12 @@
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="cancel">Return</button>
             </form>
+                
+                <form  action="${pageContext.request.contextPath}/main/delivery/..." method="POST">
+                <input type="text" name="reason" value="" />
+                <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
+                <button type="submit" id="cancel">Cancel</button>
+            </form>
 
         </c:if>
 
