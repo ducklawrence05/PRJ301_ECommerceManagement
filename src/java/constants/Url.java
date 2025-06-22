@@ -39,7 +39,7 @@ public class Url {
 
     //Delivery
     public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";
-    public static final String UPDATE_DELIVERY_PAGE = "updateDelivery";
+    public static final String RETURN_LIST_PAGE = "/returnList.jsp";
     
     //Promotion
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
@@ -60,4 +60,6 @@ public class Url {
     public static final String INVOICE_CONTROLLER = "/invoice";
     public static final String CATEGORY_CONTROLLER = "/category";
     public static final String CUSTOMER_CARE_CONTROLLER = "/customerCare";
+    public static final String DELIVERY_CONTROLLER = "/delivery";
+    public static final String RETURN_CONTROLLER = "/return";
 }

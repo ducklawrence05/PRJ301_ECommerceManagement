@@ -10,10 +10,14 @@
     <body>
         <h2>Delivery list (Pending)</h2>
 
-        <form action="${pageContext.request.contextPath}/main/delovery" method="GET">
-            <input type="text" name="status" placeholder="Enter status..." />
-            <input type="submit" name="action" value="Search" />
+        <form action="${pageContext.request.contextPath}/main/delivery/getDeliveryByStatus" method="GET">
+            <input type="text" name="status" placeholder="Enter status..." />      
+            <button type="submit" name="action">Search</button>
         </form>
+            
+         <form action="${pageContext.request.contextPath}/main/delivery/getAllDelivery" method="GET">   
+            <button type="submit" name="action">Search</button>
+        </form>    
             
             <c:if test="${empty returns}">
                 <div>No matching delivery found!</div>
@@ -33,7 +37,7 @@
             </thead>
             
             <tbody>
-                <c:forEach var="delivery" items="${requestScope.invoice}">
+                <c:forEach var="delivery" items="${requestScope.delivery}">
                 <c:if test="${delivery.status == 'Pending'}">
                     <tr>
                         <td>${delivery.deliveryID}</td>
@@ -49,17 +53,14 @@
                                     <option value="Delivering">Delivering</option>
                                     <option value="Delivered">Delivered</option>
                                 </select>
-                                
-                                <button type="submit" value="update">Update</button>
+                                <button type="submit" name="action">Update</button>
                             </form>
 
                             <form action=action="${pageContext.request.contextPath}/main/return/update" method="POST">
                                 <input type="hidden" name="invoiceID" value="${delivery.invoiceID}" />
                                 <textarea name="reason" rows="2" cols="20" required></textarea>
-                                <button type="submit" value="update">Update</button>
-                            </form>
-                                
-                                
+                                <button type="submit" value="update">Return</button>
+                            </form>       
                         </td>
                     </tr>
                 </c:if>
