@@ -7,6 +7,9 @@ package controllers;
 import constants.Message;
 import constants.Url;
 import dtos.Delivery;
+import dtos.InvoiceDetailViewModel;
+import dtos.InvoiceViewModel;
+import dtos.User;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,6 +20,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import services.DeliveryService;
+import services.InvoiceService;
 import utils.AuthUtils;
 
 /**
@@ -27,6 +31,8 @@ import utils.AuthUtils;
 public class DeliveryController extends HttpServlet {
 
     private DeliveryService deliveryService = new DeliveryService();
+    private InvoiceService invoiceService = new InvoiceService();
+    
     private final String CREATE = "create";
     private final String UPDATE = "update";
 
@@ -55,9 +61,6 @@ public class DeliveryController extends HttpServlet {
                 deliverys = getDeliveryByStatus(request, response);
                 break;
             }
-            case GET_DELIVERY_BY_STATUS: {
-                deliverys= getInvoiceByStatus(request, response);
-            }
         }
         
         request.setAttribute("delivery", deliverys);
@@ -79,7 +82,10 @@ public class DeliveryController extends HttpServlet {
                 
                 case CREATE: {
                     createDelivery(request, response);
-                    
+                    url = Url.INVOICE_LIST_PAGE;
+                    request.setAttribute("status", "paid");
+                    List<InvoiceViewModel> invoiceViewModels = getInvoiceByUserIDAndStatus(request, response);
+                    request.setAttribute("invoiceViewModels", invoiceViewModels);
                     break;
                 }
                 case UPDATE: {
@@ -87,6 +93,7 @@ public class DeliveryController extends HttpServlet {
                     url = Url.DELIVERY_LIST_PAGE;
                     break;
                 }
+                
                 
             }
             
@@ -128,6 +135,20 @@ public class DeliveryController extends HttpServlet {
     public void createDelivery(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, SQLException {
         
+        int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
+        String invoiceID_ = request.getParameter("invoiceID");
+        String address = request.getParameter("address");
+        LocalDate deliveryDate = LocalDate.parse(request.getParameter("createdDate"));
+        String status = "pending";
+        
+        String message = deliveryService.createDelivery(invoiceID, address, deliveryDate, status);
+        String userID = AuthUtils.getUserSession(request).getData().getUserID();
+        try {
+            invoiceService.updateInvoice(invoiceID_, userID, "paid");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
         
         
     }
@@ -138,6 +159,20 @@ public class DeliveryController extends HttpServlet {
           String status = request.getParameter("status");
           String message = deliveryService.updateDelivery(id, status);
           request.setAttribute("MSG",message);
+    }
+    
+    private List<InvoiceViewModel> getInvoiceByUserIDAndStatus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            User user = AuthUtils.getUserSession(request).getData();
+            String status = request.getParameter("status");
+            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
+            return invoiceViewModels;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
     }
           
 }

@@ -89,6 +89,7 @@
             <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
                 <input type="hidden" name="status" value="paid" />
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
+                <input type="text" name="address" value="Address" required="">
                 <button type="submit" id="paid">Paid</button>
             </form>
             <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">

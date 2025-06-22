@@ -4,11 +4,13 @@
  */
 package services;
 
+import static com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl.createDate;
 import constants.Message;
 import daos.DeliveryDAO;
 import dtos.Delivery;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,6 +27,12 @@ public class DeliveryService {
             || deliveryDate == null
             || isNullOrEmptyString(status)) {
             return Message.ALL_FIELDS_ARE_REQUIRED;
+        }
+
+        LocalDate newDate = deliveryDate.plusDays(3);
+        
+        if(deliveryDAO.insertDelivery(invoiceID, address, newDate, status) == 0){
+            return Message.CREATE_DELIVERY_FAILED;
         }
         return Message.CREATE_DELIVERY_SUCCESSFULLY;
         
