@@ -64,12 +64,12 @@ public class DeliveryService {
         return Message.UPDATE_DELIVERY_SUCCESSFULLY;
     }
     
-//    public String deleteDelivery(int deliveryID) throws SQLException {
-//        if(deliveryDAO.deleteDelivery(deliveryID) == 0){
-//            return Message.DELIVERY_NOT_FOUND;
-//        }
-//        return  Message.DELETE_DELIVERY_SUCCESSFULLY;
-//    }
+    public String deleteDelivery(int invoiceID) throws SQLException {
+        if(deliveryDAO.deleteDelivery(invoiceID) == 0){
+            return Message.DELIVERY_NOT_FOUND;
+        }
+        return  Message.DELETE_DELIVERY_SUCCESSFULLY;
+    }
     
     public List<Delivery> getAllDelivery() throws SQLException {
         return deliveryDAO.getAllDelivery();
@@ -77,6 +77,10 @@ public class DeliveryService {
     
     public List<Delivery> getDeliveryByStatus(String status) throws SQLException {
         return deliveryDAO.getDeliveryStatus(status);
+    }
+    
+    public Delivery getDeliveryByInvoiceID(int invoiceID) throws SQLException {
+        return deliveryDAO.getDeliveryByInvoiceID(invoiceID);
     }
     
 //    public List<Delivery> getDeleveryDate(LocalDate deliveryDate) throws SQLException {

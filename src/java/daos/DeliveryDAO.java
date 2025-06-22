@@ -30,7 +30,8 @@ public class DeliveryDAO {
             + "(invoiceID, address, deliveryDate, status)"
             + " VALUES (?, ?, ?, ?)";
     private final String UPDATE_DELIVERY = "UPDATE tblDeliveries SET deliveryID = ?  WHERE status = ?";
-
+    private final String DELETE_DELIVERY = "DELETE  from tblDeliveries where invoiceID = ?";
+    
     public List<Delivery> getAllDelivery() throws SQLException {
         List<Delivery> resultList = new ArrayList<>();
         try ( Connection conn = DBContext.getConnection();
@@ -116,6 +117,16 @@ public class DeliveryDAO {
         }
         return isUpdate;
     }
+    
+     public int deleteDelivery(int invoiceID) throws SQLException{
+         try ( Connection conn = DBContext.getConnection(); 
+                PreparedStatement stm = conn.prepareStatement(DELETE_DELIVERY)) {
+            
+            stm.setInt(1, invoiceID);
+            
+            return stm.executeUpdate();
+        }
+     }
 
     public boolean checkDelivertyExists(Integer deliveryID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_ID)) {

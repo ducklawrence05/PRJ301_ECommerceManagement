@@ -86,10 +86,11 @@
             <h3 style="color: green">${MSG}</h3>
         </c:if>
         <c:if test="${requestScope.status == 'pending'}">
-            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
+            <form  action="${pageContext.request.contextPath}/main/delivery/create" method="POST">
                 <input type="hidden" name="status" value="paid" />
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
-                <input type="text" name="address" value="Address" required="">
+                <input type="hidden" name="createdDate" value="${invoiceViewModel.createdDate}" />
+                <input type="text" name="address" placeholder="address" required="">
                 <button type="submit" id="paid">Paid</button>
             </form>
             <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
@@ -99,8 +100,9 @@
             </form>
         </c:if>
         <c:if test="${requestScope.status == 'paid'}">
-            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
+            <form  action="${pageContext.request.contextPath}/main/return/create" method="POST">
                 <input type="hidden" name="status" value="return" />
+                <input type="text" name="reason" placeholder="Sao mày dám huy don cua taoooooooo" required="">
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="cancel">Return</button>
             </form>

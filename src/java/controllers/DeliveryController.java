@@ -138,7 +138,7 @@ public class DeliveryController extends HttpServlet {
         int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
         String invoiceID_ = request.getParameter("invoiceID");
         String address = request.getParameter("address");
-        LocalDate deliveryDate = LocalDate.parse(request.getParameter("createdDate"));
+        LocalDate deliveryDate = LocalDate.now();
         String status = "pending";
         
         String message = deliveryService.createDelivery(invoiceID, address, deliveryDate, status);

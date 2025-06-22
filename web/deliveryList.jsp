@@ -11,12 +11,18 @@
         <h2>Delivery list (Pending)</h2>
 
         <form action="${pageContext.request.contextPath}/main/delivery/getDeliveryByStatus" method="GET">
-            <input type="text" name="status" placeholder="Enter status..." />      
+            
+            <select name="status">
+                <option  value="Pending">Pending</option>
+                <option  value="Delivering">Delivering</option>
+                <option  value="Delivered">Delivered</option>
+            </select>
             <button type="submit" name="action">Search</button>
         </form>
             
          <form action="${pageContext.request.contextPath}/main/delivery/getAllDelivery" method="GET">   
             <button type="submit" name="action">Search</button>
+            
         </form>    
             
             <c:if test="${empty returns}">
@@ -38,7 +44,7 @@
             
             <tbody>
                 <c:forEach var="delivery" items="${requestScope.delivery}">
-                <c:if test="${delivery.status == 'Pending'}">
+                
                     <tr>
                         <td>${delivery.deliveryID}</td>
                         <td>${delivery.invoiceID}</td>
@@ -63,7 +69,7 @@
                             </form>       
                         </td>
                     </tr>
-                </c:if>
+                
             </c:forEach>
             </tbody>          
         </table>
