@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,9 @@ public class DeliveryDAO {
     private final String GET_DELIVERY_BY_ID = "SELECT * FROM tblDeliveries WHERE deliveryID LIKE ?";
     private final String GET_DELIVERY_BY_STATUS = "SELECT * FROM tblDeliveries WHERE status LIKE ?";
     private final String GET_DELIVERY_BY_INVOICEID = "SELECT * FROM tblDeliveries WHERE invoiceID LIKE ?";
-//    private final String INSERT_DELIVERY = "INSERT INTO tblDeliveries"
-//            + "(invoiceID, address, deliveryDate, status)"
-//            + " VALUES (?, ?, ?, ?)";
+    private final String INSERT_DELIVERY = "INSERT INTO tblDeliveries"
+            + "(invoiceID, address, deliveryDate, status)"
+            + " VALUES (?, ?, ?, ?)";
     private final String UPDATE_DELIVERY = "UPDATE tblDeliveries SET deliveryID = ?  WHERE status = ?";
 
     public List<Delivery> getAllDelivery() throws SQLException {
@@ -87,22 +88,22 @@ public class DeliveryDAO {
         return resultList;
     }
 
-//    public int insertDelivery(int invoiceID,
-//            String address, LocalDate deliveryDate, String status) throws SQLException {
-//        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(INSERT_DELIVERY)) {
-//            stm.setInt(1, invoiceID);
-//            stm.setString(2, address);
-//
-//            if (deliveryDate != null) {
-//                stm.setDate(3, java.sql.Date.valueOf(deliveryDate));
-//            } else {
-//                stm.setNull(3, Types.DATE);
-//            }
-//
-//            stm.setString(4, status);
-//            return stm.executeUpdate();
-//        }
-//    }
+    public int insertDelivery(int invoiceID,
+            String address, LocalDate deliveryDate, String status) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(INSERT_DELIVERY)) {
+            stm.setInt(1, invoiceID);
+            stm.setString(2, address);
+
+            if (deliveryDate != null) {
+                stm.setDate(3, java.sql.Date.valueOf(deliveryDate));
+            } else {
+                stm.setNull(3, Types.DATE);
+            }
+
+            stm.setString(4, status);
+            return stm.executeUpdate();
+        }
+    }
 
     public boolean updateDelivery(int deliveryID, String status) throws SQLException {
         boolean isUpdate = false;

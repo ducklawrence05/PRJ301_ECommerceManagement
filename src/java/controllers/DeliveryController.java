@@ -27,11 +27,13 @@ import utils.AuthUtils;
 public class DeliveryController extends HttpServlet {
 
     private DeliveryService deliveryService = new DeliveryService();
-
+    private final String CREATE = "create";
     private final String UPDATE = "update";
 
     private final String GET_ALL_DELIVERY = "getAllDelivery";
     private final String GET_DELIVERY_BY_STATUS = "getDeliveryByStatus";
+    private final String GET_INVOICE_BY_STATUS = "getInvoiceByStatus";
+    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,13 +55,10 @@ public class DeliveryController extends HttpServlet {
                 deliverys = getDeliveryByStatus(request, response);
                 break;
             }
+            case GET_DELIVERY_BY_STATUS: {
+                deliverys= getInvoiceByStatus(request, response);
+            }
         }
-        
-//        if(action.equals(UPDATE)) {
-//            request.setAttribute("delivery", deliverys.get(0));
-//        }else{
-//            request.setAttribute("delivery", deliverys);
-//        }
         
         request.setAttribute("delivery", deliverys);
         request.getRequestDispatcher(url).forward(request, response);
@@ -77,6 +76,12 @@ public class DeliveryController extends HttpServlet {
 
         try {
             switch (action) {
+                
+                case CREATE: {
+                    createDelivery(request, response);
+                    
+                    break;
+                }
                 case UPDATE: {
                     updateDelivery(request,response);
                     url = Url.DELIVERY_LIST_PAGE;
@@ -118,6 +123,13 @@ public class DeliveryController extends HttpServlet {
                 request.setAttribute("MSG", Message.SYSTEM_ERROR);
             }
             return null;
+    }
+    
+    public void createDelivery(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, SQLException {
+        
+        
+        
     }
     
     public void updateDelivery(HttpServletRequest request, HttpServletResponse response)
