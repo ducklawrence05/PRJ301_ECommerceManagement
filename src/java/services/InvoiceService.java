@@ -35,6 +35,8 @@ public class InvoiceService {
     private UserDAO userDao = new UserDAO();
     
     private final String PENDING = "pending";
+    private final String CANCEL = "cancel";
+    private final String RETURN = "return";
     private final String INACTIVE = "inactive";
     private final String OUT_OF_STOCK = "outOfStock";
     
@@ -119,6 +121,9 @@ public class InvoiceService {
             return sr;
         }
         sr.setSuccess(false);
+        
+        
+        
         if (invoiceDao.updateInvoice(invoiceID, status) == 0) {
             sr.setMessage(Message.UPDATE_INVOICE_FAILED);
             return sr;
