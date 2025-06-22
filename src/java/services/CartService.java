@@ -48,6 +48,11 @@ public class CartService {
         if (!userDAO.checkUserExists(userID)) {
             return Message.USER_NOT_FOUND;
         }
+        
+        if (cartDAO.getCartByUserID(userID) != null) {
+            return Message.CART_IS_EXISTED;
+        }
+        
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
 
         if (cartDAO.insertCart(userID, currentDate) == 0) {
@@ -96,6 +101,7 @@ public class CartService {
 
         // back to quantity in stock if update
         if (existingItem != null) {
+            quantity += currentQuantityInCart;
             product.setQuantity(product.getQuantity() + currentQuantityInCart);
         }
 
@@ -123,6 +129,57 @@ public class CartService {
             return cartDAO.insertItemToCart(cartID, productID, quantity) > 0 
                     ? Message.ADD_TO_CART_SUCCESSFULLY : Message.ADD_TO_CART_FAILED;
         }
+    }
+    
+    public String updateItemToCart(int cartID, int productID, int quantity, User currentUser) throws SQLException {
+        ServiceResponse sr = isCreator(cartID, currentUser);
+        if(!sr.isSuccess()){
+            return sr.getMessage();
+        }
+        
+        // check quantity input
+        if (quantity <= 0) {
+            return Message.INVALID_QUANTITY;
+        }
+
+        // check product exist
+        ProductViewModel product = productDAO.getProductByID(productID);
+        if (product == null) {
+            return Message.PRODUCT_NOT_FOUND;
+        }
+
+        if (product.getStatus().equalsIgnoreCase(INACTIVE)
+                || product.getStatus().equalsIgnoreCase(OUT_OF_STOCK)) {
+            return Message.PRODUCT_IS_INACTIVE_OR_OUT_OF_STOCK;
+        }
+
+        // check item is exist or not
+        CartDetail existingItem = cartDAO.getItemFromCart(cartID, productID);
+        if (existingItem == null) {
+            return Message.CART_DETAIL_NOT_FOUND;
+        }
+        
+        // back to quantity in stock
+        product.setQuantity(product.getQuantity() + existingItem.getQuantity());
+        
+        // check new stock
+        if (quantity > product.getQuantity()) {
+            return Message.QUANTITY_EXCEEDS_AVAILABLE;
+        }
+
+        // update quantity in stock
+        product.setQuantity(product.getQuantity() - quantity);
+        if (product.getQuantity() == 0) {
+            product.setStatus(OUT_OF_STOCK);
+        }
+
+        // update product
+        if (productDAO.updateProductQuantityAndStatus(productID, product.getQuantity(), product.getStatus()) == 0) {
+            return Message.UPDATE_PRODUCT_FAILED;
+        }
+
+        return cartDAO.updateItemQuantity(cartID, productID, quantity) > 0 
+                ? Message.UPDATE_CART_SUCCESSFULLY : Message.UPDATE_CART_FAILED;
     }
     
     public ServiceResponse deleteItemFromCart(int cartID, int productID, User currentUser) throws SQLException {
@@ -157,6 +214,11 @@ public class CartService {
         }
         
         List<Integer> productIDs = cartDAO.getProductIDsByCartID(cartID);
+        
+        if(productIDs.isEmpty()){
+            return ServiceResponse.failure(Message.YOUR_CART_IS_EMPTY);
+        }
+        
         for (int i = 0; i < productIDs.size(); i++){
             sr = deleteItemFromCart(cartID, productIDs.get(i));
             if(!sr.isSuccess()){

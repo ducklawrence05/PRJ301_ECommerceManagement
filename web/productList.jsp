@@ -29,6 +29,12 @@
                         <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
                     </form>
                 </div>
+                        
+                <div class="mb-3">
+                    <form action="${pageContext.request.contextPath}/main/cart" method="GET" class="d-inline">
+                        <button type="submit" class="btn btn-success">View cart</button>
+                    </form>
+                </div>
             </c:if>
 
             <c:if test="${sessionScope.currentUser.role == 'SELLER'}">
@@ -71,8 +77,11 @@
                 </div>
             </form>
 
-
-            <c:if test="${!empty requestScope.MSG}">
+            <c:if test="${!empty param.msg}">
+                <div class="alert alert-success">${param.msg}</div>
+            </c:if>
+                
+            <c:if test="${!empty requestScope.MSG and empty param.msg}">
                 <div class="alert alert-success">${requestScope.MSG}</div>
             </c:if>
 
@@ -127,8 +136,9 @@
                                             <form 
                                                 action="${pageContext.request.contextPath}/main/cart/addToCart" 
                                                 method="POST"
-                                                >
-                                                <input type="hidden" name="returnUrl" value="${pageContext.request.requestURI}" readonly />
+                                            >
+                                                <input type="hidden" name="returnUrl" value="/main/product" readonly />
+                                                <input type="hidden" name="returnMethod" value="GET" readonly />
                                                 <input type="number" name="quantity" placeholder="Enter quantity..." min="1" max="${product.quantity}" required />
                                                 <button type="submit" name="productID" value="${product.productID}" class="btn btn-sm btn-warning">Add to cart</button>
                                             </form>
