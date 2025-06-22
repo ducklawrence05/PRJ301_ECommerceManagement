@@ -75,6 +75,10 @@ public class MainController extends HttpServlet {
                         url = Url.INVOICE_CONTROLLER;
                         break;
                     }
+                    case PROMOTION: {
+                        url = Url.PROMOTION_CONTROLLER;
+                        break;
+                    }
                     default: {
                         throw new Exception();
                     }

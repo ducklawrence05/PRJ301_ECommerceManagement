@@ -10,6 +10,7 @@ import constants.Role;
 import constants.Url;
 import dtos.Category;
 import dtos.Promotion;
+import dtos.PromotionViewModel;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -49,7 +50,7 @@ public class PromotionController extends HttpServlet {
             action = GET_ALL;
         }
         
-        List<Promotion> list = null;
+        List<PromotionViewModel> list = null;
         String url = Url.PROMOTION_LIST_PAGE;
         
         switch (action){
@@ -118,11 +119,11 @@ public class PromotionController extends HttpServlet {
         }
     }
 
-    private List<Promotion> searchByID(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> list = new ArrayList<>();
+    private List<PromotionViewModel> searchByID(HttpServletRequest request, HttpServletResponse response) {
+        List<PromotionViewModel> list = new ArrayList<>();
         try {
             int id = Integer.parseInt(request.getParameter("keySearch"));
-            Promotion promotion = promotionService.searchByID(id);
+            PromotionViewModel promotion = promotionService.searchByID(id);
             if(promotion != null){
                 list.add(promotion);
             }
@@ -133,14 +134,11 @@ public class PromotionController extends HttpServlet {
         return list;
     }
 
-    private List<Promotion> searchByName(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> list = new ArrayList<>();
+    private List<PromotionViewModel> searchByName(HttpServletRequest request, HttpServletResponse response) {
+        List<PromotionViewModel> list = new ArrayList<>();
         try {
             String name = request.getParameter("keySearch");
-            Promotion promotion = promotionService.searchByName(name);
-            if(promotion != null){
-                list.add(promotion);
-            }
+            list = promotionService.searchByName(name);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.PRODUCT_NOT_FOUND);
@@ -148,8 +146,8 @@ public class PromotionController extends HttpServlet {
         return list;
     }
 
-    private List<Promotion> getAll(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> promotions = new ArrayList<>();
+    private List<PromotionViewModel> getAll(HttpServletRequest request, HttpServletResponse response) {
+        List<PromotionViewModel> promotions = new ArrayList<>();
         try {
             promotions = promotionService.getAll();
         } catch (Exception e) {

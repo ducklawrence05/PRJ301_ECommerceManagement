@@ -59,4 +59,5 @@ public class Url {
     public static final String INVOICE_CONTROLLER = "/invoice";
     public static final String CATEGORY_CONTROLLER = "/category";
     public static final String CUSTOMER_CARE_CONTROLLER = "/customerCare";
+    public static final String PROMOTION_CONTROLLER ="/promotion";
 }
