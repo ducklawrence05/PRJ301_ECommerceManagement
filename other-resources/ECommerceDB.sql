@@ -1,4 +1,5 @@
 ﻿CREATE DATABASE ECommerceDB;
+
 GO
 
 USE ECommerceDB;

@@ -4,6 +4,7 @@
  */
 package dtos;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +18,10 @@ public class InvoiceViewModel {
     String userName;
     float totalAmount;
     String status;
-    Date createDate;
+    LocalDate createDate;
     List<InvoiceDetailViewModel> invoiceDetailList;
 
-    public InvoiceViewModel(int invoiceID, String userID, String userName, float totalAmount, String status, Date createDate, List<InvoiceDetailViewModel> invoiceDetailList) {
+    public InvoiceViewModel(int invoiceID, String userID, String userName, float totalAmount, String status, LocalDate createDate, List<InvoiceDetailViewModel> invoiceDetailList) {
         this.invoiceID = invoiceID;
         this.userID = userID;
         this.userName = userName;
@@ -73,11 +74,11 @@ public class InvoiceViewModel {
         this.status = status;
     }
 
-    public Date getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
 

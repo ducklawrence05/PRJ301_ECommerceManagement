@@ -15,6 +15,7 @@ public class Message {
     public static final String UNAUTHORIZED = "You do not have permission to access this function.";
     public static final String CONTROLLER_NOT_FOUND = "Controller not found.";
     public static final String ALL_FIELDS_ARE_REQUIRED = "All fields are required.";
+    public static final String INPUT_POSITIVE_NUMBER = "Number can not negative";
     public static final String SUCCESS = "Success";
     
     // User
@@ -33,6 +34,23 @@ public class Message {
     public static final String DELETE_USER_SUCCESSFULLY = "Delete user successfully";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INVALID_USER_ID_OR_PASSWORD = "Invalid user ID or password.";
+    
+    //Invoice
+    public static final String CREATE_INVOICE_FAILED = "Create invoice failed";
+    public static final String CREATE_INVOICE_SUCCESSFULLY = "Create invoice successfully";
+    public static final String UPDATE_INVOICE_SUCCESSFULLY = "Update invoice successfully";
+    public static final String UPDATE_INVOICE_FAILED = "Update invoice failed";
+    public static final String DELETE_INVOICE_SUCCESSFULLY = "Delete invoice successfully";
+    public static final String INVOICE_NOT_FOUND = "Invoice not found";
+    public static final String PRODUCT_IS_NOT_EXIST = "Product is not exist";
+    public static final String USER_NOT_EXIST = "User is not exist";
+    ///////////////////////////
+    public static final String CREATE_INVOICE_DETAIL_FAILED = "Create invoice detail failed";
+    public static final String CREATE_INVOICE_DETAIL_SUCCESSFULLY = "Create invoice detail successfully";
+    public static final String UPDATE_INVOICE_DETAIL_SUCCESSFULLY = "Update invoice detail successfully";
+    public static final String UPDATE_INVOICE_DETAIL_FAILED = "Update invoice detail failed";
+    public static final String DELETE_INVOICE_DETAIL_SUCCESSFULLY = "Delete invoice detail successfully";
+    public static final String INVOICE_DETAIL_NOT_FOUND = "invoice detail not found";
 
     // Product
     public static final String PRODUCT_NOT_FOUND = "Product not found";
