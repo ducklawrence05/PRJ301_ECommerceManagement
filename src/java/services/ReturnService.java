@@ -16,34 +16,19 @@ import java.util.List;
  */
 public class ReturnService {
     ReturnDAO returnDAO = new ReturnDAO();
-    
-    public String createReturn(Integer invoiceID,
-            String reason, String status) throws SQLException{
-        if(invoiceID == null
-            || isNullOrEmptyString(reason)
-            || isNullOrEmptyString(status)){
-            return Message.ALL_FIELDS_ARE_REQUIRED;
-        }
-        
-        return Message.CREATE_RETURN_SUCCESSFULLY;
-    }
-    
-    public String updateReturn(int returnID ,String reason, String status) throws SQLException {
+      
+    public String updateReturn(int returnID , String status) throws SQLException {
         if(!returnDAO.checkReturnExists(returnID)) {
             return Message.RETURN_NOT_FOUND;
         }
         
         Return returnn = new Return();
         
-        if(isNullOrEmptyString(reason)){
-            reason = returnn.getReason();
-        }
-        
         if(isNullOrEmptyString(status)) {
             status = returnn.getStatus();
         }
         
-        if(returnDAO.updateReturn(reason, status) == 0){
+        if(returnDAO.updateReturn(status) == 0){
             return Message.UPDATE_RETURN_FAILED;
         }
         
@@ -55,8 +40,8 @@ public class ReturnService {
         return returnDAO.getAllReturn();
     }
     
-    public List<Return> getReturnReason(String reason) throws SQLException {
-        return returnDAO.getReturnReason(reason);
+    public Return getReturnID(int returnID) throws SQLException {
+        return returnDAO.getReturnID(returnID);
     }
     
     public List<Return> getReturnStatus(String status) throws SQLException {
