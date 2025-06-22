@@ -30,48 +30,49 @@ public class InvoiceService {
     private ProductDAO productDao = new ProductDAO();
     private UserDAO userDao = new UserDAO();
     private final String PENDING = "pending";
-    public ServiceResponse<InvoiceViewModel> create(String userID, String[] productID, String[] quantity, String[] price) throws SQLException, ParseException{
-        ServiceResponse<Integer> sr = new ServiceResponse();
-        ServiceResponse<InvoiceViewModel> srResult = new ServiceResponse();
-        sr = createInvoice(sr, userID, quantity, price);
+    
+    public ServiceResponse<InvoiceViewModel> create(String userID, String[] productID, 
+            String[] quantity, String[] price) throws SQLException, ParseException{
+        // create invoice
+        ServiceResponse<Integer> sr = createInvoice(userID, quantity, price);
         if(!sr.isSuccess()){
-            srResult.setMessage(Message.CREATE_INVOICE_FAILED);
-            srResult.setData(null);
-            return srResult;
+            return ServiceResponse.failure(Message.CREATE_INVOICE_FAILED);
         }
+        
+        // get invoiceID to create invoice item base on it
         int invoiceID = sr.getData();
+        
+        
         for(int i = 0; i <= productID.length - 1; i++){
-            boolean success = createInvoiceDetail(sr, invoiceID, productID[i], quantity[i], price[i]).isSuccess();
+            boolean success = createInvoiceDetail(
+                    sr, invoiceID, productID[i], quantity[i], price[i]).isSuccess();
             if(!success){
-                srResult.setMessage("Error occur when add product " + i + 1 + " to invoice detail");
-                return srResult;
+                return ServiceResponse.failure(
+                        "Error occur when add product " + i + 1 + " to invoice detail");
             }
         }
-        srResult.setData(getInvoiceByID(String.valueOf(invoiceID), userID).getData());
-        return srResult;
+        
+        return ServiceResponse.success(Message.SUCCESS, 
+                getInvoiceByID(String.valueOf(invoiceID), userID).getData());
     }
-    public ServiceResponse<Integer> createInvoice(ServiceResponse sr, String userID, String[] quantity, String[] price) throws SQLException, ParseException {
+    public ServiceResponse<Integer> createInvoice(String userID, String[] quantity, String[] price) throws SQLException, ParseException {
         LocalDate createdDate = LocalDate.now();
         
-        sr.setSuccess(false);
         if (!userDao.checkUserExists(userID)) {
-            sr.setMessage(Message.USER_NOT_EXIST);
-            return sr;
+            return ServiceResponse.failure(Message.USER_NOT_EXIST);
         }
+        
         if (ServiceUtils.isNullOrEmptyString(userID)) {
-            sr.setMessage(Message.ALL_FIELDS_ARE_REQUIRED);
-            return sr;
+            return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
         }
+        
         float _totalAmount = calcTotalAmountWhenCreate(quantity, price);
         int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, PENDING, createdDate);
         if (invoiceID == 0) {
-            sr.setMessage(Message.CREATE_INVOICE_FAILED);
-            return sr;
+            return ServiceResponse.failure(Message.CREATE_INVOICE_FAILED);
         }
-        sr.setData(invoiceID);
-        sr.setSuccess(true);
-        sr.setMessage(Message.CREATE_INVOICE_SUCCESSFULLY);
-        return sr;
+        
+        return ServiceResponse.success(Message.CREATE_INVOICE_SUCCESSFULLY, invoiceID);
     }
 
     public ServiceResponse<List<InvoiceDetailViewModel>> createInvoiceDetail(ServiceResponse sr, int invoiceID, String _productID, String _quantity, String _price) throws SQLException, ParseException {
