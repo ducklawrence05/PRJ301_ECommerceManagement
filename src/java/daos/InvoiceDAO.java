@@ -34,6 +34,9 @@ public class InvoiceDAO {
     private final String DELETE_ALL_INVOICE_DETAIL_BY_INVOICE_ID = "DELETE FROM [dbo].[tblInvoiceDetails] WHERE invoiceID =?";
     private final String DELETE_INVOICE_DETAIL = "DELETE FROM [dbo].[tblInvoiceDetails] WHERE invoiceID =? AND productID = ?";
 
+    private final String GET_PRODUCT_IDS_BY_INVOICE_ID = 
+            "SELECT productID FROM tblInvoiceDetails WHERE invoiceID = ?";
+    
     private final String GET_INVOICES_BY_USER_ID_AND_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE I.userID = ? AND status = ?";
     private final String GET_INVOICES_BY_USER_ID_AND_INVOICE_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE I.userID = ? AND I.invoiceID = ?";
     private final String GET_INVOICE_DETAIL_BY_INVOICE_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE I.invoiceID = ?";
@@ -123,6 +126,21 @@ public class InvoiceDAO {
         }
     }
 
+    //
+    public List<Integer> getProductIDsByInvoiceID(int invoiceID) throws SQLException {
+        List<Integer> productIDs = new ArrayList<>();
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(GET_PRODUCT_IDS_BY_INVOICE_ID)) {
+            ps.setInt(1, invoiceID);
+            try (ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    productIDs.add(rs.getInt("productID"));
+                }
+            }
+        }
+        return productIDs;
+    }
+    
     public InvoiceViewModel getInvoiceByUserIDAndInvoiceID(String userID, int invoiceID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICES_BY_USER_ID_AND_INVOICE_ID)) {
             ps.setString(1, userID);
