@@ -10,7 +10,6 @@ import constants.Url;
 import dtos.CartViewModel;
 import dtos.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -36,6 +35,7 @@ public class CartController extends HttpServlet {
     private final String CREATE = "create";
     private final String DELETE = "delete";
     private final String UPSERT_ITEM = "addToCart";
+    private final String UPDATE_ITEM = "updateItem";
     private final String DELETE_ITEM = "deleteItem";
     private final String DELETE_ITEMS = "deleteItems";
     private final String CLEAR_CART = "clear";
@@ -76,16 +76,16 @@ public class CartController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String returnUrl = request.getParameter("returnUrl");
+        String method = request.getParameter("returnMethod");
         String action = request.getParameter("action");
         
         if (action == null) {
             action = "";
         }
-        
         CartViewModel cart = new CartViewModel();
-        
         String message = Message.SYSTEM_ERROR;
         String url = Url.CART_PAGE;
+        boolean isSendRedirect = method == null ? false : method.equalsIgnoreCase("GET");
         if (returnUrl != null && !returnUrl.isEmpty()) {
             url = returnUrl;
         }
@@ -94,7 +94,6 @@ public class CartController extends HttpServlet {
             switch(action){
                 case CREATE:{
                     message = createCart(request);
-                    cart = getCartByUserID(request);
                     break;
                 }
                 case DELETE:{
@@ -103,6 +102,10 @@ public class CartController extends HttpServlet {
                 }
                 case UPSERT_ITEM:{
                     message = upsertItem(request);
+                    break;
+                }
+                case UPDATE_ITEM:{
+                    message = updateItem(request);
                     break;
                 }
                 case DELETE_ITEM:{
@@ -118,13 +121,18 @@ public class CartController extends HttpServlet {
                     break;
                 }
             }
-            request.setAttribute("cart", cart);
+            cart = getCartByUserID(request);
         }catch(Exception ex){
             ex.printStackTrace();
             url = Url.ERROR_PAGE;
         }
+        request.setAttribute("cart", cart);
         request.setAttribute("MSG", message);
-        request.getRequestDispatcher(url).forward(request, response);
+        if(isSendRedirect){
+            response.sendRedirect(request.getContextPath() + url + "?msg=" + message);
+        } else {
+            request.getRequestDispatcher(url).forward(request, response);
+        }
     }
     
     private CartViewModel getCartByID(HttpServletRequest request)
@@ -197,6 +205,28 @@ public class CartController extends HttpServlet {
         return cartService.upsertItemToCart(cartID, productID, quantity, currentUser);
     }
     
+    private String updateItem(HttpServletRequest request)
+            throws ServletException, IOException, SQLException, NumberFormatException{
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if(!srUser.isSuccess()){
+            return srUser.getMessage();
+        }
+        User currentUser = srUser.getData();
+        
+        // check cart and get cart
+        ServiceResponse<CartViewModel> srCart = 
+                cartService.getCartByUserID(currentUser.getUserID());
+        if(!srCart.isSuccess()){
+            return srCart.getMessage();
+        }
+        
+        int cartID = srCart.getData().getCartID();
+        int productID = Integer.parseInt(request.getParameter("productID"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+    
+        return cartService.updateItemToCart(cartID, productID, quantity, currentUser);
+    }
+    
     private String deleteItemFromCart(HttpServletRequest request)
             throws ServletException, IOException, SQLException, NumberFormatException{
         ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
@@ -224,6 +254,10 @@ public class CartController extends HttpServlet {
         List<Integer> productIDs = new ArrayList<>();
         String[] _productIDs = request.getParameterValues("productID");
     
+        if (_productIDs == null) {
+            return Message.YOU_DIDNT_SELECT_ANY_ITEMS_TO_DELETE;
+        }
+        
         for (String _productID : _productIDs) {
             productIDs.add(Integer.parseInt(_productID));
         }

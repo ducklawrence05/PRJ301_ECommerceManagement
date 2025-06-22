@@ -68,6 +68,7 @@ public class Message {
     public static final String DELETE_PRODUCT_FAILED = "Delete product failed";
     
     // Cart
+    public static final String CART_IS_EXISTED = "Cart is existed";
     public static final String CART_NOT_FOUND = "Cart not found";
     public static final String CART_DETAIL_NOT_FOUND = "Cart detail not found";
     public static final String QUANTITY_EXCEEDS_AVAILABLE = "Requested quantity exceeds available stock!";
@@ -83,6 +84,8 @@ public class Message {
     public static final String DELETE_ITEMS_FROM_CART_FAILED = "Delete item(s) from cart failed";
     public static final String CLEAR_CART_SUCCESSFULLY = "Clear cart successfully";
     public static final String CLEAR_CART_FAILED = "Clear cart failed";
+    public static final String YOU_DIDNT_SELECT_ANY_ITEMS_TO_DELETE = "You didn’t select any items to delete";
+    public static final String YOUR_CART_IS_EMPTY = "Your cart is empty";
     
     //Category
     public static final String IS_EXIT_CATAGORY = "Category is exited";
