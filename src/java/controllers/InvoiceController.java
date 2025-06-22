@@ -116,7 +116,7 @@ public class InvoiceController extends HttpServlet {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String status = request.getParameter("status");
-            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus("1", status);
+            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
