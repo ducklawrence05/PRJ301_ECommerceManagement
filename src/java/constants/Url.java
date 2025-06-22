@@ -24,7 +24,7 @@ public class Url {
     public static final String PRODUCT_LIST_PAGE = "/productList.jsp";
     public static final String CREATE_PRODUCT_PAGE = "/createProduct.jsp";
     public static final String UPDATE_PRODUCT_PAGE = "/updateProduct.jsp";
-    
+
     // Cart
     public static final String CART_PAGE = "/cart.jsp";
     
@@ -45,6 +45,12 @@ public class Url {
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
     public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
     public static final String UPDATE_PROMOTION_PAGE= "/updatePromotion.jsp";
+
+    //Customer care 
+    public static String CUSTOMERCARE_LIST_PAGE = "customerCareList.jsp";
+    public static String CREATE_CUSTOMERCARE_PAGE = "createCustomerCare.jsp";
+    public static String UPDATE_CUSTOMERCARE_PAGE = "updateCustomerCare.jsp";
+    public static String VIEW_CUSTOMERCARE_PAGE = "customerCareViewModel.jsp";
       
     // Controller
     public static final String AUTH_CONTROLLER = "/auth";
@@ -52,4 +58,6 @@ public class Url {
     public static final String PRODUCT_CONTROLLER = "/product";
     public static final String CART_CONTROLLER = "/cart";
     public static final String INVOICE_CONTROLLER = "/invoice";
+    public static final String CATEGORY_CONTROLLER = "/category";
+    public static final String CUSTOMER_CARE_CONTROLLER = "/customerCare";
 }
