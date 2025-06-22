@@ -28,6 +28,7 @@ public class InvoiceDAO {
     private final String CREATE_INVOICE = "INSERT INTO [dbo].[tblInvoices]([userID],[totalAmount],[status],[createDate]) VALUES (?,?,?,?)";
     private final String CREATE_INVOICE_DETAIL = "INSERT INTO [dbo].[tblInvoiceDetails]([invoiceID],[productID],[quantity],[price]) VALUES (?,?,?,?)";
     private final String UPDATE_INVOICE = "UPDATE [dbo].[tblInvoices] SET [status] = ? WHERE invoiceID =?";
+    private final String UPDATE_INVOICE_TOTAL_AMOUNT = "UPDATE [dbo].[tblInvoices] SET [totalAmount] = ? WHERE invoiceID =?";
     private final String UPDATE_INVOICE_DETAIL = "UPDATE [dbo].[tblInvoiceDetails] SET [quantity] = ?WHERE invoiceID =? AND productID = ?";
     private final String DELETE_INVOICE = "DELETE FROM [dbo].[tblInvoices] WHERE invoiceID =?";
     private final String DELETE_ALL_INVOICE_DETAIL_BY_INVOICE_ID = "DELETE FROM [dbo].[tblInvoiceDetails] WHERE invoiceID =?";
@@ -37,7 +38,7 @@ public class InvoiceDAO {
     private final String GET_INVOICES_BY_USER_ID_AND_INVOICE_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE I.userID = ? AND I.invoiceID = ?";
     private final String GET_INVOICE_DETAIL_BY_INVOICE_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE I.invoiceID = ?";
     private final String GET_INVOICE_BY_ID = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE invoiceID =?";
-    private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
+//    private final String GET_INVOICE_DETAIL_BY_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID =?";
     private final String GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID = "SELECT I.*, P.name FROM tblInvoiceDetails I JOIN tblProducts P ON I.productID = P.productID WHERE invoiceID = ? AND productID = ?";
     private final String GET_INVOICES_BY_STATUS = "SELECT I.*, U.fullName FROM tblInvoices I JOIN tblUsers U ON I.userID = U.userID WHERE status = ? and userID = ?";
 
@@ -78,6 +79,14 @@ public class InvoiceDAO {
     public int updateInvoice(int invoiceID, String status) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_INVOICE)) {
             ps.setString(1, status);
+            ps.setInt(2, invoiceID);
+            return ps.executeUpdate();
+        }
+    }
+    
+    public int updateInvoiceTotalAmount(int invoiceID, float totalAmount) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(UPDATE_INVOICE)) {
+            ps.setFloat(1, totalAmount);
             ps.setInt(2, invoiceID);
             return ps.executeUpdate();
         }
@@ -140,7 +149,7 @@ public class InvoiceDAO {
         }
     }
 
-    public List<InvoiceDetailViewModel> getInvoiceDetailByInvoiceID(int invoiceID) throws SQLException {
+    public List<InvoiceDetailViewModel> getInvoiceDetailsByInvoiceID(int invoiceID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_INVOICE_ID)) {
             List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
             ps.setInt(1, invoiceID);
@@ -179,19 +188,19 @@ public class InvoiceDAO {
         }
     }
 
-    public List<InvoiceDetailViewModel> getInvoiceDetailByID(int invoiceID) throws SQLException {
-        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_ID)) {
-            List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
-            ps.setInt(1, invoiceID);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    invoiceDetailViewModelList.add(mapRowInvoiceDetailViewModel(rs));
-                }
-            }
-            return invoiceDetailViewModelList;
-        }
-
-    }
+//    public List<InvoiceDetailViewModel> getInvoiceDetailByID(int invoiceID) throws SQLException {
+//        try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_ID)) {
+//            List<InvoiceDetailViewModel> invoiceDetailViewModelList = new ArrayList<>();
+//            ps.setInt(1, invoiceID);
+//            try ( ResultSet rs = ps.executeQuery()) {
+//                while (rs.next()) {
+//                    invoiceDetailViewModelList.add(mapRowInvoiceDetailViewModel(rs));
+//                }
+//            }
+//            return invoiceDetailViewModelList;
+//        }
+//
+//    }
 
     public InvoiceDetailViewModel getInvoiceDetailByIDAndProductID(int invoiceID, int productID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement ps = conn.prepareStatement(GET_INVOICE_DETAIL_BY_INVOICE_ID_AND_PRODUCT_ID)) {
@@ -206,9 +215,9 @@ public class InvoiceDAO {
         return null;
     }
 
-    private InvoiceViewModel mapRowInvoiceViewModel(ResultSet rs) throws SQLException {
+    public InvoiceViewModel mapRowInvoiceViewModel(ResultSet rs) throws SQLException {
         int invoiceID = rs.getInt("invoiceID");
-        List<InvoiceDetailViewModel> invoiceDetailList = getInvoiceDetailByID(invoiceID);
+        List<InvoiceDetailViewModel> invoiceDetailList = getInvoiceDetailsByInvoiceID(invoiceID);
         return new InvoiceViewModel(
                 invoiceID,
                 rs.getString("userID"),
@@ -220,12 +229,13 @@ public class InvoiceDAO {
         );
     }
 
-    private InvoiceDetailViewModel mapRowInvoiceDetailViewModel(ResultSet rs) throws SQLException {
+    public InvoiceDetailViewModel mapRowInvoiceDetailViewModel(ResultSet rs) throws SQLException {
         return new InvoiceDetailViewModel(
                 rs.getInt("productID"),
                 rs.getString("name"),
                 rs.getInt("quantity"),
-                rs.getFloat("price")
+                rs.getFloat("price"),
+                rs.getInt("quantity") * rs.getFloat("price")
         );
     }
 

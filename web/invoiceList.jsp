@@ -23,9 +23,9 @@
           </form>
         </c:if>
         <c:if test="${param.status == 'paid'}">
-             <form  action="${pageContext.request.contextPath}/main/invoice/getInvoiceDetailByInvoiceID" method="GET">
-                <input type="hidden" name="status" value="paid" />
-                <button type="submit" id="cancel">paid</button>
+             <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
+                <input type="hidden" name="status" value="cancel" />
+                <button type="submit" id="cancel">Cancel</button>
           </form>
         </c:if>
     </body>
