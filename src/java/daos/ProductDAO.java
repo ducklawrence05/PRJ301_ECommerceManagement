@@ -23,14 +23,13 @@ public class ProductDAO {
     private final String CHECK_PRODUCT_STATUS = "SELECT * FROM tblProducts "
             + "WHERE productID = ? AND status = ?";
 
-    private final String GET_ALL_PRODUCTS = "SELECT p.*, c.categoryName, u.fullName AS sellerFullName, "
-            + "CASE WHEN pr.discountPercent IS NOT NULL THEN ROUND(p.price * (1 - pr.discountPercent), 2) "
-                + "ELSE p.price END AS salePrice "
-            + "FROM tblProducts p "
-            + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID "
-            + "JOIN tblCategories c ON p.categoryID = c.categoryID "
+    private final String GET_ALL_PRODUCTS = "SELECT p.*, c.categoryName, u.fullName AS sellerFullName, " 
+            + "ROUND(p.price * (1 - ISNULL(pr.discountPercent, 0)), 2) AS salePrice " 
+            + "FROM tblProducts p " 
+            + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID " 
+            + "JOIN tblCategories c ON p.categoryID = c.categoryID " 
             + "JOIN tblUsers u ON p.sellerID = u.userID ";
-
+    
     private final String GET_PRODUCT_BY_ID
             = GET_ALL_PRODUCTS + "WHERE p.productID = ?";
 
