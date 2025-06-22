@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controllers;
 
+import constants.Message;
+import constants.Url;
+import dtos.Return;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,25 +14,109 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import services.ReturnService;
 
 /**
  *
  * @author ngogi
  */
-@WebServlet(name="ReturnController", urlPatterns={"/return"})
+@WebServlet(name = "ReturnController", urlPatterns = {"/return"})
 public class ReturnController extends HttpServlet {
+
+    private ReturnService returnService = new ReturnService();
+    private final String UPDATE = "update";
+
+    private final String GET_ALL_RETURN = "getAllReturn";
+    private final String GET_RETURN_BY_ID = "getReturnByID";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
-    } 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = GET_ALL_RETURN;
+        }
+
+        List<Return> returns = null;
+        String url = Url.RETURN_LIST_PAGE;
+        switch (action) {
+            case GET_ALL_RETURN: {
+                returns = getAllReturn(request, response);
+                break;
+            }
+            case GET_RETURN_BY_ID: {
+                returns = getReturnID(request, response);
+                break;
+            }
+        }
+
+        request.setAttribute("returnn", returns);
+        request.getRequestDispatcher(url).forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = GET_ALL_RETURN;
+        }
+        String url = Url.RETURN_LIST_PAGE;
+
+        try {
+            switch (action) {
+                case UPDATE: {
+                    updateReturn(request, response);
+                    url = Url.RETURN_LIST_PAGE;
+                    break;
+                }
+
+            }
+
+            request.setAttribute("return", returnService.getAllReturn());
+            request.getRequestDispatcher(url).forward(request, response);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
+        }
     }
 
+    private List<Return> getAllReturn(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+        try {
+            return returnService.getAllReturn();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
+    }
+
+    private List<Return> getReturnID(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+        List<Return> resultList = new ArrayList<>();
+        try {
+            int returnID = Integer.parseInt(request.getParameter("returnID"));
+            resultList.add(returnService.getReturnID(returnID));
+            return resultList;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
+    }
+    
+    public void updateReturn(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, SQLException {
+        int returnID = Integer.parseInt(request.getParameter("returnID"));
+        String status = request.getParameter("status");
+        String message = returnService.updateReturn(returnID, status);
+          request.setAttribute("MSG",message);
+    }
 
 }

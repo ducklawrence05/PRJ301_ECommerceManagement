@@ -26,6 +26,8 @@ public class Url {
     // Controller
     public static final String AUTH_CONTROLLER = "/auth";
     public static final String USER_CONTROLLER = "/user";
+    public static final String DELIVERY_CONTROLLER = "/delivery";
+    public static final String RETURN_CONTROLLER = "/return";
     
     //Category
     public static final String CATEGORY_LIST_PAGE= "/categoryList.jsp";
@@ -34,7 +36,7 @@ public class Url {
     
     //Delivery
     public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";
-    public static final String UPDATE_DELIVERY_PAGE = "updateDelivery";
+    public static final String RETURN_LIST_PAGE = "/returnList.jsp";
     
     //Promotion
     public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";

@@ -45,10 +45,6 @@ public class DeliveryController extends HttpServlet {
         List<Delivery> deliverys = null;
         String url = Url.DELIVERY_LIST_PAGE;
         switch (action) {
-            case UPDATE: {
-                url = Url.UPDATE_DELIVERY_PAGE;
-                break;
-            }
             case GET_ALL_DELIVERY: {
                 deliverys = getAllDelivery(request, response);
                 break;
@@ -59,12 +55,13 @@ public class DeliveryController extends HttpServlet {
             }
         }
         
-        if(action.equals(UPDATE)) {
-            request.setAttribute("delivery", deliverys.get(0));
-        }else{
-            request.setAttribute("delivery", deliverys);
-        }
+//        if(action.equals(UPDATE)) {
+//            request.setAttribute("delivery", deliverys.get(0));
+//        }else{
+//            request.setAttribute("delivery", deliverys);
+//        }
         
+        request.setAttribute("delivery", deliverys);
         request.getRequestDispatcher(url).forward(request, response);
     }
 
@@ -82,16 +79,22 @@ public class DeliveryController extends HttpServlet {
             switch (action) {
                 case UPDATE: {
                     updateDelivery(request,response);
-                    url = Url.UPDATE_DELIVERY_PAGE;
+                    url = Url.DELIVERY_LIST_PAGE;
                     break;
                 }
                 
             }
+            
+            request.setAttribute("delivery", deliveryService.getAllDelivery());
+            request.getRequestDispatcher(url).forward(request, response);
+            
         }catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
+        
+        
     }
     
     private  List<Delivery> getAllDelivery(HttpServletRequest request, HttpServletResponse response)
@@ -105,10 +108,10 @@ public class DeliveryController extends HttpServlet {
         return null;
     }
     
-        private  List<Delivery> getDeliveryByStatus(HttpServletRequest request, HttpServletResponse response)
+    private  List<Delivery> getDeliveryByStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
             try {
-                String status = request.getParameter("stauts");
+                String status = request.getParameter("status");
                 return deliveryService.getDeliveryByStatus(status);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -116,19 +119,13 @@ public class DeliveryController extends HttpServlet {
             }
             return null;
     }
-        
+    
     public void updateDelivery(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, SQLException {
-        
-        int deliveryID = Integer.parseInt(request.getParameter("deliveryID"));
-        String address = request.getParameter("address");
-        LocalDate deliveryDate = LocalDate.parse(request.getParameter("date"));
-        String status = request.getParameter("status");
-        
-        String message = deliveryService.updateDelivery(deliveryID, address,
-                                                        deliveryDate, status);
-        
-        request.setAttribute("MSG", message);
+          int id = Integer.parseInt(request.getParameter("deliveryID"));
+          String status = request.getParameter("status");
+          String message = deliveryService.updateDelivery(id, status);
+          request.setAttribute("MSG",message);
     }
-
+          
 }
