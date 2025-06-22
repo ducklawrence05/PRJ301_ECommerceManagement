@@ -1,6 +1,6 @@
 <%-- 
-    Document   : invoice
-    Created on : Jun 21, 2025, 11:16:10 PM
+    Document   : invoiceDetail
+    Created on : Jun 22, 2025, 1:07:28 AM
     Author     : ADMIN
 --%>
 
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        
+        <jsp:include page="navbarInvoice.jsp" />
     </body>
 </html>

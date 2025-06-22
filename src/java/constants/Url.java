@@ -34,8 +34,8 @@ public class Url {
     public static final String UPDATE_CATEGORY_PAGE= "/updateCategory.jsp";
     
     //Invoice
-    public static final String INVOICE_LIST_PAGE = "";
-    public static final String INVOICE_DETAIL_PAGE = "";
+    public static final String INVOICE_LIST_PAGE = "invoiceList.jsp";
+    public static final String INVOICE_DETAIL_PAGE = "invoiceDetail.jsp";
 
     //Delivery
     public static final String DELIVERY_LIST_PAGE = "/deliveryList.jsp";

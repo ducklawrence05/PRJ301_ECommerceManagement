@@ -44,6 +44,7 @@ public class Message {
     public static final String INVOICE_NOT_FOUND = "Invoice not found";
     public static final String PRODUCT_IS_NOT_EXIST = "Product is not exist";
     public static final String USER_NOT_EXIST = "User is not exist";
+    public static final String YOU_ARE_NOT_CREATOR_OF_THIS_INVOICE = "You are not creator of this invoice";
     ///////////////////////////
     public static final String CREATE_INVOICE_DETAIL_FAILED = "Create invoice detail failed";
     public static final String CREATE_INVOICE_DETAIL_SUCCESSFULLY = "Create invoice detail successfully";
