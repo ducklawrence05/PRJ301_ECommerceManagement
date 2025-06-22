@@ -7,7 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container py-4">
-    <form method="GET" action="${pageContext.request.contextPath}/main/product">
+    <form 
+        method="GET" 
+        action="${pageContext.request.contextPath}/main/product"
+        class="mb-3"
+        >
         <button type="submit" class="btn btn-success">Back to product page</button>
     </form>
     
@@ -22,7 +26,14 @@
     </c:if>
 
     <c:if test="${cart != null}">
-        <h2 class="mb-4">🛒 Your Cart</h2>
+        <h2>
+            <a 
+                href="${pageContext.request.contextPath}/main/cart" 
+                class="me-2 mb-3"
+                style="text-decoration: none; color: black">
+                Your cart
+            </a>
+        </h2>
 
         <!-- User Info -->
         <div class="card mb-4">
