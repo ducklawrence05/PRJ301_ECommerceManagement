@@ -27,7 +27,8 @@ public class CustomerCareController extends HttpServlet {
     private final String FIND_BY_ID = "findByID";
     private final String FIND_BY_SUBJECT = "findBySubject";
     private final String GET_ALL = "getAll";
-    private final String VIEW_BY_USER_AND_TICKET = "viewByTicketAndUser";
+    private final String GET_ALL_VIEW = "getAllViewModel";
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,6 +39,7 @@ public class CustomerCareController extends HttpServlet {
         }
 
         List<CustomerCare> list = null;
+        List<CustomerCareViewModel> listVM = null;
         String url = Url.CUSTOMERCARE_LIST_PAGE;
 
         switch (action) {
@@ -60,16 +62,16 @@ public class CustomerCareController extends HttpServlet {
             case GET_ALL:
                 list = getAll(request, response);
                 break;
-            case VIEW_BY_USER_AND_TICKET:
-                CustomerCareViewModel viewModel = getCustomerCareViewByTicketAndUser(request, response);
-                request.setAttribute("customerCareView", viewModel);
+            case GET_ALL_VIEW:
+                listVM = getAllViewModel(request, response);
+                request.setAttribute("customerCareView", listVM);
                 url = Url.VIEW_CUSTOMERCARE_PAGE;
                 break;
             default:
                 throw new AssertionError();
         }
 
-        if (!CREATE.equals(action) && !UPDATE.equals(action) && !VIEW_BY_USER_AND_TICKET.equals(action)) {
+        if (!CREATE.equals(action) && !UPDATE.equals(action) && !GET_ALL_VIEW.equals(action)) {
             request.setAttribute("customerCares", list);
         }
 
@@ -115,12 +117,10 @@ public class CustomerCareController extends HttpServlet {
         String userID = request.getParameter("userID");
         String subject = request.getParameter("subject");
         String content = request.getParameter("content");
-        String status = request.getParameter("status");
-        String reply = request.getParameter("reply");
 
         String message;
         try {
-            message = customerCareService.create(userID, subject, content, status, reply);
+            message = customerCareService.create(userID, subject, content);
         } catch (IllegalArgumentException ex) {
             message = Message.CREATE_CUSTOMERCARE_FAILED;
         }
@@ -199,15 +199,14 @@ public class CustomerCareController extends HttpServlet {
         return list;
     }
 
-    private CustomerCareViewModel getCustomerCareViewByTicketAndUser(HttpServletRequest request, HttpServletResponse response) {
+    private List<CustomerCareViewModel> getAllViewModel(HttpServletRequest request, HttpServletResponse response) {
         try {
-            int ticketID = Integer.parseInt(request.getParameter("ticketID"));
-            String userID = request.getParameter("userID");
-            return customerCareService.getCustomerCareViewByTicketAndUser(ticketID, userID);
+            return customerCareService.getAllViewModels();
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
             return null;
         }
     }
+
 }

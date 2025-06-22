@@ -27,6 +27,7 @@ public class Url {
     public static final String AUTH_CONTROLLER = "/auth";
     public static final String USER_CONTROLLER = "/user";
     public static final String CATEGORY_CONTROLLER = "/category";
+    public static final String CUSTOMER_CARE_CONTROLLER = "/customerCare";
     
     //Category
     public static final String CATEGORY_LIST_PAGE= "/categoryList.jsp";
