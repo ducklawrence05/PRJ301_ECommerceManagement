@@ -52,23 +52,5 @@
             <p>There are no invoices to display.</p>
         </c:if>
 
-
-
-
-
-
-
-        <c:if test="${param.status == 'cancel'}">
-            <form  action="${pageContext.request.contextPath}/main/invoice/getInvoiceDetailByInvoiceID" method="GET">
-                <input type="hidden" name="status" value="cancel" />
-                <button type="submit" id="cancel">See More In4</button>
-            </form>
-        </c:if>
-        <c:if test="${param.status == 'paid'}">
-            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
-                <input type="hidden" name="status" value="cancel" />
-                <button type="submit" id="cancel">Cancel</button>
-            </form>
-        </c:if>
     </body>
 </html>

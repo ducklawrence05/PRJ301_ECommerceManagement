@@ -127,7 +127,7 @@ public class InvoiceController extends HttpServlet {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String status = request.getParameter("status");
-            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus("U001", status);
+            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -141,7 +141,7 @@ public class InvoiceController extends HttpServlet {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String _invoiceID = request.getParameter("invoiceID");
-            ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, "U001");
+            ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, user.getUserID());
             request.setAttribute("MSG", sr.getMessage());
             return sr.getData();
         } catch (Exception ex) {
@@ -174,13 +174,13 @@ public class InvoiceController extends HttpServlet {
             String invoiceID = request.getParameter("invoiceID");
             String productID = request.getParameter("productID");
             String quantity = request.getParameter("quantity");
-//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            String userID = AuthUtils.getUserSession(request).getData().getUserID();
             ServiceResponse<InvoiceDetailViewModel> sr = invoiceService.updateInvoiceDetail(invoiceID, productID, quantity);
             if (sr.isSuccess()) {
-                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, "U001");
+                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, userID);
             }
             request.setAttribute("MSG", sr.getMessage());
-            return invoiceService.getInvoiceByID(invoiceID, "U001").getData();
+            return invoiceService.getInvoiceByID(invoiceID, userID).getData();
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
@@ -193,13 +193,13 @@ public class InvoiceController extends HttpServlet {
         try {
             String invoiceID = request.getParameter("invoiceID");
             String productID = request.getParameter("productID");
-//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            String userID = AuthUtils.getUserSession(request).getData().getUserID();
             ServiceResponse sr = invoiceService.deleteInvoiceDetailByInvoicveIDAndProductID(invoiceID, productID);
             if (sr.isSuccess()) {
-                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, "U001");
+                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, userID);
             }
             request.setAttribute("MSG", sr.getMessage());
-            InvoiceViewModel invoiceViewModel = invoiceService.getInvoiceByID(invoiceID, "U001").getData();
+            InvoiceViewModel invoiceViewModel = invoiceService.getInvoiceByID(invoiceID, userID).getData();
             if(invoiceViewModel.getTotalAmount() == 0){
                 invoiceService.deleteInvoice(invoiceID);
                 return null;
@@ -217,8 +217,8 @@ public class InvoiceController extends HttpServlet {
         try {
             String invoiceID = request.getParameter("invoiceID");
             String status = request.getParameter("status");
-//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
-            invoiceService.updateInvoice(invoiceID, "U001", status);
+            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            invoiceService.updateInvoice(invoiceID, userID, status);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);

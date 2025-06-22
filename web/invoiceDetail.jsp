@@ -66,16 +66,16 @@
                                 <!-- Nút Update nằm trong form -->
                                 <input type="submit" value="Update" />
                                 </form> <!-- Đóng form update tại đây -->
-                                
+
                                 <form action="${pageContext.request.contextPath}/main/invoice/deleteInvoiceDetail" method="POST" style="display: inline;">
                                     <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
-                                    <input type="hidden" name="status" value=" ${invoiceViewModel.status}" />
+                                    <input type="hidden" name="status" value="pending" />
                                     <input type="hidden" name="productID" value="${detail.productID}" />
                                     <input type="submit" value="Delete" />
                                 </form>
                             </c:if>
 
-                            
+
                         </td>
                     </tr>
                 </c:forEach>
@@ -93,13 +93,26 @@
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="paid">Paid</button>
             </form>
-
-        </c:if>
-        <c:if test="${requestScope.status == 'pending'}">
             <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
                 <input type="hidden" name="status" value="cancel" />
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
-                <button type="submit" id="paid">Cancel</button>
+                <button type="submit" id="cancel">Cancel</button>
+            </form>
+        </c:if>
+        <c:if test="${requestScope.status == 'paid'}">
+            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
+                <input type="hidden" name="status" value="return" />
+                <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
+                <button type="submit" id="cancel">Return</button>
+            </form>
+
+        </c:if>
+
+        <c:if test="${requestScope.status == 'delivered'}">
+            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
+                <input type="hidden" name="status" value="return" />
+                <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
+                <button type="submit" id="return">Return</button>
             </form>
 
         </c:if>
