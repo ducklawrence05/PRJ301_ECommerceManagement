@@ -4,6 +4,7 @@
  */
 package controllers;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Url;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class InvoiceController extends HttpServlet {
     private final String CREATE = "create";
     private final String UPDATE_INVOICE_DETAIL_QUANTITY = "updateInvoiceDetailQuantity";
     private final String UPDATE_INVOICE_STATUS = "updateInvoiceStatus";
-    private final String DELETE = "delete";
+    private final String DELETE_INVOICE_DETAIL = "deleteInvoiceDetail";
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,7 +47,7 @@ public class InvoiceController extends HttpServlet {
             action = GET_INVOICES_BY_USER_ID_AND_STATUS;
         }
         
-        List<InvoiceViewModel> invoiceViewModels = null;
+        List<InvoiceViewModel> invoiceViewModels = new ArrayList<>();
         String url = Url.INVOICE_LIST_PAGE;
         switch (action) {
             case GET_INVOICES_BY_USER_ID_AND_STATUS: {
@@ -61,6 +62,7 @@ public class InvoiceController extends HttpServlet {
             }
         }
         if (action.equalsIgnoreCase(GET_INVOICE_INFORMATION)) {
+            request.setAttribute("status", invoiceViewModels.get(0).getStatus());
             request.setAttribute("invoiceViewModel", invoiceViewModels.get(0));
         } else {
             request.setAttribute("invoiceViewModels", invoiceViewModels);
@@ -92,14 +94,23 @@ public class InvoiceController extends HttpServlet {
                 }
                 case UPDATE_INVOICE_STATUS: {
                     updateInvoiceStatus(request, response);
-                    invoiceViewModels = getInvoiceByUserIDAndStatus(request, response);
+                    break;
+                }
+                case DELETE_INVOICE_DETAIL:{
+                    InvoiceViewModel in = deleteInvoiceDetail(request, response);
+                    if(in != null){
+                        invoiceViewModels.add(in);
+                        url = Url.INVOICE_DETAIL_PAGE;
+                    }
                     break;
                 }
             }
-            if (action.equalsIgnoreCase(UPDATE_INVOICE_STATUS)) {
+            if (action.equalsIgnoreCase(UPDATE_INVOICE_STATUS) || invoiceViewModels.isEmpty()) {
+                invoiceViewModels = getInvoiceByUserIDAndStatus(request, response);
                 request.setAttribute("invoiceViewModels", invoiceViewModels);
                 request.getRequestDispatcher(url).forward(request, response);
             } else {
+                request.setAttribute("status", invoiceViewModels.get(0).getStatus());
                 request.setAttribute("invoiceViewModel", invoiceViewModels.get(0));
                 request.getRequestDispatcher(url).forward(request, response);
             }
@@ -116,7 +127,7 @@ public class InvoiceController extends HttpServlet {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String status = request.getParameter("status");
-            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
+            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus("U001", status);
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -130,7 +141,7 @@ public class InvoiceController extends HttpServlet {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String _invoiceID = request.getParameter("invoiceID");
-            ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, user.getUserID());
+            ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, "U001");
             request.setAttribute("MSG", sr.getMessage());
             return sr.getData();
         } catch (Exception ex) {
@@ -162,14 +173,38 @@ public class InvoiceController extends HttpServlet {
         try {
             String invoiceID = request.getParameter("invoiceID");
             String productID = request.getParameter("productID");
-            String quantity = request.getParameter("status");
-            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            String quantity = request.getParameter("quantity");
+//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
             ServiceResponse<InvoiceDetailViewModel> sr = invoiceService.updateInvoiceDetail(invoiceID, productID, quantity);
             if (sr.isSuccess()) {
-                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, userID);
+                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, "U001");
             }
             request.setAttribute("MSG", sr.getMessage());
-            return invoiceService.getInvoiceByID(invoiceID, userID).getData();
+            return invoiceService.getInvoiceByID(invoiceID, "U001").getData();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
+    }
+    
+    private InvoiceViewModel deleteInvoiceDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException, NumberFormatException {
+        try {
+            String invoiceID = request.getParameter("invoiceID");
+            String productID = request.getParameter("productID");
+//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            ServiceResponse sr = invoiceService.deleteInvoiceDetailByInvoicveIDAndProductID(invoiceID, productID);
+            if (sr.isSuccess()) {
+                ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, "U001");
+            }
+            request.setAttribute("MSG", sr.getMessage());
+            InvoiceViewModel invoiceViewModel = invoiceService.getInvoiceByID(invoiceID, "U001").getData();
+            if(invoiceViewModel.getTotalAmount() == 0){
+                invoiceService.deleteInvoice(invoiceID);
+                return null;
+            }
+            return invoiceViewModel;
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
@@ -182,8 +217,8 @@ public class InvoiceController extends HttpServlet {
         try {
             String invoiceID = request.getParameter("invoiceID");
             String status = request.getParameter("status");
-            String userID = AuthUtils.getUserSession(request).getData().getUserID();
-            invoiceService.updateInvoice(invoiceID, userID, status);
+//            String userID = AuthUtils.getUserSession(request).getData().getUserID();
+            invoiceService.updateInvoice(invoiceID, "U001", status);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);

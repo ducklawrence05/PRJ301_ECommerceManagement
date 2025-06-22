@@ -51,7 +51,7 @@ public class InvoiceService {
         return srResult;
     }
     public ServiceResponse<Integer> createInvoice(ServiceResponse sr, String userID, String[] quantity, String[] price) throws SQLException, ParseException {
-        LocalDate createDate = LocalDate.now();
+        LocalDate createdDate = LocalDate.now();
         
         sr.setSuccess(false);
         if (!userDao.checkUserExists(userID)) {
@@ -63,7 +63,7 @@ public class InvoiceService {
             return sr;
         }
         float _totalAmount = calcTotalAmountWhenCreate(quantity, price);
-        int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, PENDING, createDate);
+        int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, PENDING, createdDate);
         if (invoiceID == 0) {
             sr.setMessage(Message.CREATE_INVOICE_FAILED);
             return sr;
@@ -97,7 +97,6 @@ public class InvoiceService {
     }
 
     public ServiceResponse<Invoice> updateInvoice(String _invoiceID, String userID, String status) throws SQLException, ParseException {
-        LocalDate createDate = LocalDate.now();
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
         sr = getInvoiceByID(_invoiceID, userID);
@@ -115,7 +114,7 @@ public class InvoiceService {
     }
     
     public ServiceResponse<InvoiceViewModel> updateInvoiceTotalAmount(String _invoiceID, String userID) throws SQLException, ParseException {
-        LocalDate createDate = LocalDate.now();
+        LocalDate createdDate = LocalDate.now();
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
         sr = getInvoiceByID(_invoiceID, userID);
@@ -144,7 +143,7 @@ public class InvoiceService {
         }
         sr.setSuccess(false);
         if (quantity < 0) {
-            quantity = sr.getData().getQuanlity();
+            quantity = sr.getData().getQuantity();
         }
         if (invoiceDao.updateInvoiceDetail(invoiceID, productID, quantity) == 0) {
             sr.setMessage(Message.UPDATE_INVOICE_DETAIL_FAILED);
@@ -175,13 +174,18 @@ public class InvoiceService {
         return Message.DELETE_INVOICE_SUCCESSFULLY;
     }
 
-    public String deleteInvoiceDetailByInvoicveIDAndProductID(String _invoiceID, String _productID) throws SQLException, SQLException {
+    public ServiceResponse deleteInvoiceDetailByInvoicveIDAndProductID(String _invoiceID, String _productID) throws SQLException, SQLException {
         int invoiceID = Integer.parseInt(_invoiceID);
         int productID = Integer.parseInt(_productID);
+        ServiceResponse sr = new ServiceResponse();
         if (invoiceDao.deleteAllInvoiceDetailByIvoiceIDAndProductID(invoiceID, productID) == 0) {
-            return Message.INVOICE_DETAIL_NOT_FOUND;
+            sr.setMessage(Message.INVOICE_DETAIL_NOT_FOUND);
+            sr.setSuccess(false);
+            return sr;
         }
-        return Message.DELETE_INVOICE_SUCCESSFULLY;
+        sr.setMessage(Message.DELETE_INVOICE_DETAIL_SUCCESSFULLY);
+        sr.setSuccess(true);
+        return sr;
     }
 
     public List<InvoiceViewModel> getInvoicesByUserIDAndStatus(String userID, String status) throws SQLException {
@@ -203,7 +207,7 @@ public class InvoiceService {
     }
 
     public ServiceResponse<InvoiceViewModel> getInvoiceByID(String _invoiceID, String userID) throws SQLException, SQLException {
-        ServiceResponse<InvoiceViewModel> sr = null;
+        ServiceResponse<InvoiceViewModel> sr = new ServiceResponse<>();
         int invoiceID = Integer.parseInt(_invoiceID);
         sr.setSuccess(false);
         if(!isCreator(userID, invoiceID)){
@@ -232,7 +236,7 @@ public class InvoiceService {
     public ServiceResponse<InvoiceDetailViewModel> getInvoiceDetailByIDAndProductID(String _invoiceID, String _productID) throws SQLException, ParseException {
         int invoiceID = Integer.parseInt(_invoiceID);
         int productID = Integer.parseInt(_productID);
-        ServiceResponse<InvoiceDetailViewModel> sr = null;
+        ServiceResponse<InvoiceDetailViewModel> sr = new ServiceResponse<>();
         sr.setSuccess(false);
         sr.setData(invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID));
         if (sr.getData() == null) {
