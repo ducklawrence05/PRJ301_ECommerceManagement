@@ -20,7 +20,19 @@
 
         <!-- Thông tin hóa đơn -->
         <p><strong>User Name:</strong> ${invoiceViewModel.userName}</p>
-        <p><strong>Status:</strong> ${invoiceViewModel.status}</p>
+
+        <c:choose>
+            <c:when test="${!empty requestScope.returnStatus}">
+                <p><strong>Status:</strong> ${requestScope.returnStatus}</p>
+                <p><strong>Reason:</strong> ${requestScope.reason}</p>
+            </c:when>
+            <c:otherwise>
+                <p><strong>Status:</strong> ${invoiceViewModel.status}</p>
+            </c:otherwise>
+        </c:choose>
+
+
+
         <p><strong>Create Date:</strong> ${invoiceViewModel.createdDate}</p>
 
         <!-- Hidden fields -->
@@ -106,8 +118,8 @@
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="cancel">Return</button>
             </form>
-                
-                <form  action="${pageContext.request.contextPath}/main/delivery/..." method="POST">
+
+            <form  action="${pageContext.request.contextPath}/main/delivery/..." method="POST">
                 <input type="text" name="reason" value="" />
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="cancel">Cancel</button>

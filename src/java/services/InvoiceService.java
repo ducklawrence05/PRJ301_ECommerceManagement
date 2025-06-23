@@ -112,8 +112,19 @@ public class InvoiceService {
         sr.setMessage(Message.CREATE_INVOICE_DETAIL_SUCCESSFULLY);
         return sr;
     }
-
+    public ServiceResponse updateInvoiceStatus(int invoiceID, String status) throws SQLException, ParseException {
+         ServiceResponse sr = new ServiceResponse();
+        if (invoiceDao.updateInvoice(invoiceID, status) == 0) {
+            sr.setMessage(Message.UPDATE_INVOICE_FAILED);
+            return sr;
+        }
+        sr.setSuccess(true);
+        sr.setMessage(Message.UPDATE_INVOICE_SUCCESSFULLY);
+        return sr;
+    }
+    
     public ServiceResponse<Invoice> updateInvoice(String _invoiceID, String userID, String status) throws SQLException, ParseException {
+        
         ServiceResponse sr = new ServiceResponse();
         int invoiceID = Integer.parseInt(_invoiceID);
         sr = getInvoiceByID(_invoiceID, userID);
