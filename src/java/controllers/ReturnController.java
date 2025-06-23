@@ -6,7 +6,10 @@ package controllers;
 
 import constants.Message;
 import constants.Url;
+import dtos.Delivery;
+import dtos.InvoiceViewModel;
 import dtos.Return;
+import dtos.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,7 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import services.DeliveryService;
+import services.InvoiceService;
 import services.ReturnService;
+import utils.AuthUtils;
 
 /**
  *
@@ -26,8 +32,13 @@ import services.ReturnService;
 @WebServlet(name = "ReturnController", urlPatterns = {"/return"})
 public class ReturnController extends HttpServlet {
 
+    
     private ReturnService returnService = new ReturnService();
+    private DeliveryService deliveryService = new DeliveryService();
+    private InvoiceService invoiceService = new InvoiceService();
+    
     private final String UPDATE = "update";
+    private final String CREATE = "create";
 
     private final String GET_ALL_RETURN = "getAllReturn";
     private final String GET_RETURN_BY_ID = "getReturnByID";
@@ -71,6 +82,15 @@ public class ReturnController extends HttpServlet {
                 case UPDATE: {
                     updateReturn(request, response);
                     url = Url.RETURN_LIST_PAGE;
+                    break;
+                }
+                
+                case CREATE: {
+                    createReturn(request, response);
+                    url = Url.INVOICE_LIST_PAGE;
+                    request.setAttribute("status", "return");
+                    List<InvoiceViewModel> invoiceViewModels = getInvoiceByUserIDAndStatus(request, response);
+                    request.setAttribute("invoiceViewModels", invoiceViewModels);
                     break;
                 }
 
@@ -117,6 +137,44 @@ public class ReturnController extends HttpServlet {
         String status = request.getParameter("status");
         String message = returnService.updateReturn(returnID, status);
           request.setAttribute("MSG",message);
+    }
+    
+    public void createReturn(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, SQLException {
+        
+        
+        String invoiceID = request.getParameter("invoiceID");
+        
+        String reason = request.getParameter("reason");
+        String status = "pending";
+        Delivery delivery = deliveryService.getDeliveryByInvoiceID(Integer.parseInt(invoiceID));
+        if(delivery.getStatus().equalsIgnoreCase("delivering")) return;
+        
+        String message = returnService.createReturn(Integer.parseInt(invoiceID), reason, status);
+        deliveryService.deleteDelivery(Integer.parseInt(invoiceID));
+        
+        String userID = AuthUtils.getUserSession(request).getData().getUserID();
+        try {
+            invoiceService.updateInvoice(invoiceID, userID, "return");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        
+    }
+    
+    private List<InvoiceViewModel> getInvoiceByUserIDAndStatus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            User user = AuthUtils.getUserSession(request).getData();
+            String status = request.getParameter("status");
+            List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
+            return invoiceViewModels;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
     }
 
 }

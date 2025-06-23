@@ -17,6 +17,13 @@ import java.util.List;
 public class ReturnService {
     ReturnDAO returnDAO = new ReturnDAO();
       
+    public String createReturn(int invoiceID, String reason, String status) throws SQLException {
+        Return returnn = new Return();
+        
+        returnDAO.insertReturn(invoiceID, reason, status);
+        return Message.CREATE_RETURN_SUCCESSFULLY;
+    }
+    
     public String updateReturn(int returnID , String status) throws SQLException {
         if(!returnDAO.checkReturnExists(returnID)) {
             return Message.RETURN_NOT_FOUND;
