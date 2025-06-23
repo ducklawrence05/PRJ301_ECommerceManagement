@@ -11,11 +11,10 @@
         <h2>Delivery list (Pending)</h2>
 
         <form action="${pageContext.request.contextPath}/main/delivery/getDeliveryByStatus" method="GET">
-            
             <select name="status">
-                <option  value="Pending">Pending</option>
-                <option  value="Delivering">Delivering</option>
-                <option  value="Delivered">Delivered</option>
+                <option value="pending">Pending</option>
+                <option value="delivering">Delivering</option>
+                <option value="delivered">Delivered</option>
             </select>
             <button type="submit" name="action">Search</button>
         </form>
@@ -57,8 +56,8 @@
                                 <input type="hidden" name="deliveryID" value="${delivery.deliveryID}" />
                                 <input type="hidden" name="invoiceID" value="${delivery.invoiceID}" />
                                 <select name="status">
-                                    <option value="Delivering">Delivering</option>
-                                    <option value="Delivered">Delivered</option>
+                                    <option value="delivering">Delivering</option>
+                                    <option value="delivered">Delivered</option>
                                 </select>
                                 <button type="submit" name="action">Update</button>
                             </form>
