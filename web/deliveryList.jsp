@@ -55,6 +55,7 @@
                             <form action="${pageContext.request.contextPath}/main/delivery/update" method="POST">
                                 
                                 <input type="hidden" name="deliveryID" value="${delivery.deliveryID}" />
+                                <input type="hidden" name="invoiceID" value="${delivery.invoiceID}" />
                                 <select name="status">
                                     <option value="Delivering">Delivering</option>
                                     <option value="Delivered">Delivered</option>
