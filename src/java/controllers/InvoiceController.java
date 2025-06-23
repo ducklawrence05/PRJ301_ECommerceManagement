@@ -4,11 +4,9 @@
  */
 package controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Url;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,10 +16,12 @@ import java.util.List;
 import services.InvoiceService;
 import dtos.InvoiceViewModel;
 import dtos.InvoiceDetailViewModel;
+import dtos.Return;
 import dtos.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import responses.ServiceResponse;
+import services.ReturnService;
 import utils.AuthUtils;
 
 /**
@@ -30,7 +30,7 @@ import utils.AuthUtils;
  */
 @WebServlet(name = "InvoiceController", urlPatterns = {"/invoice"})
 public class InvoiceController extends HttpServlet {
-    
+    private ReturnService returnService = new ReturnService();
     private InvoiceService invoiceService = new InvoiceService();
     private final String GET_INVOICES_BY_USER_ID_AND_STATUS = "getInvoiceByUserIDAndStatus";
     private final String GET_INVOICE_INFORMATION = "getInvoiceInformation";
@@ -143,6 +143,11 @@ public class InvoiceController extends HttpServlet {
             String _invoiceID = request.getParameter("invoiceID");
             ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, user.getUserID());
             request.setAttribute("MSG", sr.getMessage());
+            if(sr.getData().getStatus().trim().equalsIgnoreCase("return")){
+                Return re = returnService.getReturnByInvoiceID(Integer.parseInt(_invoiceID));
+                request.setAttribute("returnStatus", sr.getData().getStatus() + "_" + re.getStatus());
+                request.setAttribute("reason", re.getReason());
+            }
             return sr.getData();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -225,4 +230,6 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
+    
+    
 }
