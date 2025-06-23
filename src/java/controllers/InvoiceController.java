@@ -4,11 +4,9 @@
  */
 package controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import constants.Message;
 import constants.Url;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
