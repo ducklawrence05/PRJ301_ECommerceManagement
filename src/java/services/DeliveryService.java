@@ -45,19 +45,11 @@ public class DeliveryService {
         
         Delivery delivery = new Delivery();
         
-//        if(isNullOrEmptyString(address)){
-//            address = delivery.getAddress();
-//        }
-        
-//        if(deliveryDate == null){
-//            deliveryDate = delivery.getDeliveryDate();
-//        }
-        
         if(isNullOrEmptyString(status)){
             status = delivery.getStatus();
         }
        
-        if (!deliveryDAO.updateDelivery(deliveryID, status)){
+        if (deliveryDAO.updateDelivery(deliveryID, status) == 0){
             return Message.UPDATE_DELIVERY_FAILED;
         }
         
