@@ -35,7 +35,7 @@ public class ReturnService {
             status = returnn.getStatus();
         }
         
-        if(returnDAO.updateReturn(status) == 0){
+        if(returnDAO.updateReturn(returnID, status) == 0){
             return Message.UPDATE_RETURN_FAILED;
         }
         

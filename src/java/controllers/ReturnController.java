@@ -42,6 +42,7 @@ public class ReturnController extends HttpServlet {
 
     private final String GET_ALL_RETURN = "getAllReturn";
     private final String GET_RETURN_BY_ID = "getReturnByID";
+    private final String GET_RETURN_BY_STATUS = "getReturnByStatus";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +63,12 @@ public class ReturnController extends HttpServlet {
                 returns = getReturnID(request, response);
                 break;
             }
+            
+            case GET_RETURN_BY_STATUS: {
+                returns = getReturnByStatus(request, response);
+                break;
+            }
+            
         }
 
         request.setAttribute("returnn", returns);
@@ -130,6 +137,21 @@ public class ReturnController extends HttpServlet {
         }
         return null;
     }
+    
+     private List<Return> getReturnByStatus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException {
+         List<Return> resultList = new ArrayList<>();
+         try {
+//             int returnID = Integer.parseInt(request.getParameter("returnID"));
+             String status = request.getParameter("status");
+             return returnService.getReturnStatus(status);
+         } catch (Exception ex) {
+             ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+         }
+         
+        return null;
+     }
     
     public void updateReturn(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, SQLException {

@@ -61,37 +61,27 @@
     </head>
     <body>
         <div class="navbar">
-            <form class="nav-form" action="${pageContext.request.contextPath}/main/return" method="get">
-                <input type="hidden" name="status" value="pending" />
-                <button type="submit" class="nav-button" id="pending">Pending</button>
+            <form class="nav-form" action="${pageContext.request.contextPath}/main/return/getReturnByStatus" method="GET">
+                <input type="hidden" name="status" value="Pending" />
+                <button type="submit" class="nav-button" id="Pending" name="action">Pending</button>
             </form>
-            <form class="nav-form" action="${pageContext.request.contextPath}/main/return" method="get">
-                <input type="hidden" name="status" value="approve" />
-                <button type="submit" class="nav-button" id="approve">Approve</button>
+            <form class="nav-form" action="${pageContext.request.contextPath}/main/return/getReturnByStatus" method="GET">
+                <input type="hidden" name="status" value="Approve" />
+                <button type="submit" class="nav-button" id="Approve" name="action">Approve</button>
             </form>
-            <form class="nav-form" action="${pageContext.request.contextPath}/main/return" method="get">
-                <input type="hidden" name="status" value="rejected" />
-                <button type="submit" class="nav-button" id="rejected">Rejected</button>
+            <form class="nav-form" action="${pageContext.request.contextPath}/main/return/getReturnByStatus" method="GET">
+                <input type="hidden" name="status" value="Rejected" />
+                <button type="submit" class="nav-button" id="Rejected" name="action">Rejected</button>
             </form>
             <form class="nav-form" action="${pageContext.request.contextPath}/main/return" method="get">
                 <input type="hidden" name="status" value="all" />
                 <button type="submit" class="nav-button" id="all">All</button>
             </form>
-            
-        </div>
-            <c:set var="statusPage" value="${requestScope.status}" />
-            <c:if test="${empty requestScope.status}">
-                <c:set var="statusPage" value="${empty param.status ? 'pending' : param.status}" />
-            </c:if>
-            
-        <script>
-            const page = '${statusPage}';
 
-            const activeButton = document.getElementById(page);
-            if (activeButton) {
-                activeButton.classList.add("active");
-            }
-        </script>
+        </div>
+                
+
+        
 
 
     </body>
