@@ -51,6 +51,10 @@ public class ReturnService {
         return returnDAO.getReturnID(returnID);
     }
     
+    public Return getReturnByInvoiceID(int invoiceID) throws SQLException {
+        return returnDAO.getReturnByInvoiceID(invoiceID);
+    }
+    
     public List<Return> getReturnStatus(String status) throws SQLException {
         return returnDAO.getReturnStatus(status);
     }
