@@ -1,170 +1,132 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controllers;
 
 import constants.Message;
 import constants.Role;
 import constants.Url;
-import dtos.Category;
-import dtos.Promotion;
-import java.io.IOException;
-import java.io.PrintWriter;
+import dtos.PromotionViewModel;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import services.PromotionService;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import services.PromotionService;
 
-/**
- *
- * @author Huy
- */
-@WebServlet(name="PromotionController", urlPatterns={"/promotion"})
+@WebServlet(name = "PromotionController", urlPatterns = {"/promotion"})
 public class PromotionController extends HttpServlet {
-    
-    private PromotionService promotionService = new PromotionService();
-    private final String CREATE = "create";
-    private final String UPDATE = "update";
-    private final String DELETE = "delete";
-    private final String SEARCH_BY_ID ="searchByID";
-    private final String SEARCH_BY_NAME ="searchByName";
-    private final String GET_ALL = "getAll";
-    
+
+    private final PromotionService promotionService = new PromotionService();
+
+    private static final String CREATE = "create";
+    private static final String UPDATE = "update";
+    private static final String DELETE = "delete";
+    private static final String SEARCH_BY_ID = "searchByID";
+    private static final String SEARCH_BY_NAME = "searchByName";
+    private static final String GET_ALL = "getAll";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
+            throws ServletException, IOException {
+
         String action = request.getParameter("action");
-        
-        if(action == null){
-            action = GET_ALL;
-        }
-        
-        List<Promotion> list = null;
+        if (action == null) action = GET_ALL;
+
+        List<PromotionViewModel> list = null;
         String url = Url.PROMOTION_LIST_PAGE;
-        
-        switch (action){
-            case CREATE:{
-                url = Url.CREATE_PROMOTION_PAGE;
-                break;
-            }
-            case UPDATE:{
-                url = Url.UPDATE_PROMOTION_PAGE;
-                break;
-            }
-            case SEARCH_BY_ID:{
-                list = searchByID(request,response);
-                break;
-            }
-            case SEARCH_BY_NAME:{
-                list = searchByName(request,response);
-                break;
-            }
-            case GET_ALL:{
-                list = getAll(request,response);
-                break;
-            }
-            default:
-                throw new AssertionError();
-        }
-        if (action.equals(UPDATE)) {
-            request.setAttribute("promotions", list.get(0));
-        } else {
-            request.setAttribute("promotions", list);
-        }
-    } 
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action == null) {
-            action = "";
-        }
-        String url = Url.PROMOTION_LIST_PAGE;
+
         try {
             switch (action) {
-                case CREATE: {
-                    createPromotion(request,response);
+                case CREATE:
                     url = Url.CREATE_PROMOTION_PAGE;
                     break;
-                }
-                case UPDATE: {
-                    updatePromotion(request,response);
+
+                case UPDATE:
+                    list = searchByID(request, response);
+                    url = Url.UPDATE_PROMOTION_PAGE;
                     break;
-                }
-                case DELETE: {
-                    deletePromotion(request,response);
+
+                case SEARCH_BY_ID:
+                    list = searchByID(request, response);
                     break;
-                }
+
+                case SEARCH_BY_NAME:
+                    list = searchByName(request, response);
+                    break;
+
+                case GET_ALL:
+                default:
+                    list = promotionService.getAll();
+                    break;
             }
 
-            request.setAttribute("promotions", promotionService.getAll());
+            if (UPDATE.equals(action)) {
+                if (list != null && !list.isEmpty()) {
+                    request.setAttribute("promotions", list.get(0));
+                }
+            } else {
+                request.setAttribute("promotions", list);
+            }
+
             request.setAttribute("roleList", Role.values());
             request.getRequestDispatcher(url).forward(request, response);
-        } catch (NumberFormatException | SQLException ex) {
+
+        } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
 
-    private List<Promotion> searchByID(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> list = new ArrayList<>();
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+        if (action == null) action = "";
+
+        String url = Url.PROMOTION_LIST_PAGE;
+
         try {
-            int id = Integer.parseInt(request.getParameter("keySearch"));
-            Promotion promotion = promotionService.searchByID(id);
-            if(promotion != null){
-                list.add(promotion);
+            switch (action) {
+                case CREATE:
+                    createPromotion(request);
+                    url = Url.CREATE_PROMOTION_PAGE;
+                    break;
+
+                case UPDATE:
+                    updatePromotion(request);
+                    url = Url.PROMOTION_LIST_PAGE;
+                    break;
+
+                case DELETE:
+                    deletePromotion(request);
+                    break;
             }
+
+            request.setAttribute("promotions", promotionService.getAll());
+            request.setAttribute("roleList", Role.values());
+            request.getRequestDispatcher(url).forward(request, response);
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.PRODUCT_NOT_FOUND);
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
-        return list;
     }
 
-    private List<Promotion> searchByName(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> list = new ArrayList<>();
-        try {
-            String name = request.getParameter("keySearch");
-            Promotion promotion = promotionService.searchByName(name);
-            if(promotion != null){
-                list.add(promotion);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("MSG", Message.PRODUCT_NOT_FOUND);
-        }
-        return list;
-    }
-
-    private List<Promotion> getAll(HttpServletRequest request, HttpServletResponse response) {
-        List<Promotion> promotions = new ArrayList<>();
-        try {
-            promotions = promotionService.getAll();
-        } catch (Exception e) {
-            e.printStackTrace();;
-            request.setAttribute("MSG", Message.PROMOTION_NOT_FOUND);
-        }
-        return promotions;
-    }
-
-    private void createPromotion(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void createPromotion(HttpServletRequest request) throws SQLException {
         String name = request.getParameter("name");
         float discount = Float.parseFloat(request.getParameter("discount"));
         String status = request.getParameter("status");
         String start = request.getParameter("startDate");
         String end = request.getParameter("endDate");
+
         String message;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -175,16 +137,18 @@ public class PromotionController extends HttpServlet {
             e.printStackTrace();
             message = Message.CREATE_PROMOTION_FAILED;
         }
+
         request.setAttribute("MSG", message);
     }
 
-    private void updatePromotion(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void updatePromotion(HttpServletRequest request) throws SQLException {
         int id = Integer.parseInt(request.getParameter("promoID"));
         String name = request.getParameter("name");
         float discount = Float.parseFloat(request.getParameter("discount"));
         String status = request.getParameter("status");
         String start = request.getParameter("startDate");
         String end = request.getParameter("endDate");
+
         String message;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -195,14 +159,45 @@ public class PromotionController extends HttpServlet {
             e.printStackTrace();
             message = Message.UPDATE_PROMOTION_FAILED;
         }
+
         request.setAttribute("MSG", message);
     }
 
-
-    private void deletePromotion(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    private void deletePromotion(HttpServletRequest request) throws SQLException {
         int id = Integer.parseInt(request.getParameter("promoID"));
         String message = promotionService.delete(id);
         request.setAttribute("MSG", message);
     }
-    
+
+    private List<PromotionViewModel> searchByID(HttpServletRequest request, HttpServletResponse response) {
+        List<PromotionViewModel> list = new ArrayList<>();
+        try {
+            int id = Integer.parseInt(request.getParameter("keySearch"));
+            PromotionViewModel promotion = promotionService.searchByID(id);
+            if (promotion != null) {
+                list.add(promotion);
+            } else {
+                request.setAttribute("MSG", Message.PROMOTION_NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.INVALID_FORMAT);
+        }
+        return list;
+    }
+
+    private List<PromotionViewModel> searchByName(HttpServletRequest request, HttpServletResponse response) {
+        List<PromotionViewModel> list = new ArrayList<>();
+        try {
+            String name = request.getParameter("keySearch");
+            list = promotionService.searchByName(name);
+            if (list == null || list.isEmpty()) {
+                request.setAttribute("MSG", Message.PROMOTION_NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.INVALID_FORMAT);
+        }
+        return list;
+    }
 }

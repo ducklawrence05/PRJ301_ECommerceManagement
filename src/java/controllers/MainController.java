@@ -29,9 +29,13 @@ public class MainController extends HttpServlet {
     private final String RETURN = "return";
     private final String CATEGORY = "category";
     private final String CUSTOMER_CARE = "customerCare";
+
+    private final String PROMOTION = "promotion";
+
     private final String PRODUCT = "product";
     private final String CART = "cart";
     private final String INVOICE = "invoice";
+
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -79,6 +83,10 @@ public class MainController extends HttpServlet {
                     }
                     case INVOICE: {
                         url = Url.INVOICE_CONTROLLER;
+                        break;
+                    }
+                    case PROMOTION: {
+                        url = Url.PROMOTION_CONTROLLER;
                         break;
                     }
                     default: {

@@ -76,13 +76,17 @@ public class PromotionDAO {
     }
 
     //search by name
-    public Promotion searchByName(String name) throws SQLException {
+    public List<Promotion> searchByName(String name) throws SQLException {
+        List<Promotion> promotions = new ArrayList<>();
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_NAME)) {
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-            return rs.next() ? mapRow(rs) : null;
+            while(rs.next()){
+                promotions.add(mapRow(rs));
+            }
         }
+        return promotions;
     }
 
     public List<Promotion> getAll() throws SQLException {

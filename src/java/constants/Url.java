@@ -14,7 +14,6 @@ public class Url {
     public static final String LOGIN_PAGE = "/login.jsp";
     public static final String WELCOME_PAGE = "/welcome.jsp";
     public static final String ADMIN_PAGE = "/admin.jsp";
-
     // User
     public static final String USER_LIST_PAGE = "/userList.jsp";
     public static final String CREATE_USER_PAGE = "/createUser.jsp";
@@ -46,7 +45,7 @@ public class Url {
 
     
     //Promotion
-    public static final String PROMOTION_LIST_PAGE= "/promotion.jsp";
+    public static final String PROMOTION_LIST_PAGE= "/promotionList.jsp";
     public static final String CREATE_PROMOTION_PAGE= "/createPromotion.jsp";
     public static final String UPDATE_PROMOTION_PAGE= "/updatePromotion.jsp";
 
@@ -64,6 +63,7 @@ public class Url {
     public static final String INVOICE_CONTROLLER = "/invoice";
     public static final String CATEGORY_CONTROLLER = "/category";
     public static final String CUSTOMER_CARE_CONTROLLER = "/customerCare";
+    public static final String PROMOTION_CONTROLLER ="/promotion";
     public static final String DELIVERY_CONTROLLER = "/delivery";
     public static final String RETURN_CONTROLLER = "/return";
 }
