@@ -11,7 +11,7 @@
     <body>
         <jsp:include page="navbarReturn.jsp" />
 
-        <c:if test="${not empty returnn}">
+        
             <table border="1" cellpadding="10" cellspacing="0">
                 <thead>
                     <tr>
@@ -25,6 +25,7 @@
                 
                 <tbody>
                     <c:forEach var="rt" items="${returnn}">
+                        <%--<c:if test="${rt.status == 'Approved'}">--%>
                         <tr>
                             <td>${rt.returnID}</td>
                             <td>${rt.invoiceID}</td>
@@ -43,11 +44,14 @@
                             </td>
 
                         </tr>
+                        <%--</c:if>--%>
                     </c:forEach>
                 </tbody>
             </table>
+       
+        <c:if test="${empty returnn}">
+            <p>There are no return to display.</p>
         </c:if>
-
 
     </body>
 

@@ -145,7 +145,7 @@ public class InvoiceController extends HttpServlet {
             request.setAttribute("MSG", sr.getMessage());
             if(sr.getData().getStatus().trim().equalsIgnoreCase("return")){
                 Return re = returnService.getReturnByInvoiceID(Integer.parseInt(_invoiceID));
-                request.setAttribute("returnStatus", sr.getData().getStatus() + "_" + re.getStatus());
+                request.setAttribute("returnStatus", sr.getData().getStatus().toUpperCase() + " " + re.getStatus().toUpperCase());
                 request.setAttribute("reason", re.getReason());
             }
             return sr.getData();

@@ -93,9 +93,10 @@ public class ReturnDAO {
         }
     }
 
-    public int updateReturn(String status) throws SQLException {
+    public int updateReturn(int returnID,String status) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(UPDATE_RETURN)) {
             stm.setString(1, status);
+            stm.setInt(2, returnID);   
             return stm.executeUpdate();
         }
     }
