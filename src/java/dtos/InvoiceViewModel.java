@@ -18,16 +18,16 @@ public class InvoiceViewModel {
     String userName;
     float totalAmount;
     String status;
-    LocalDate createDate;
+    LocalDate createdDate;
     List<InvoiceDetailViewModel> invoiceDetailList;
 
-    public InvoiceViewModel(int invoiceID, String userID, String userName, float totalAmount, String status, LocalDate createDate, List<InvoiceDetailViewModel> invoiceDetailList) {
+    public InvoiceViewModel(int invoiceID, String userID, String userName, float totalAmount, String status, LocalDate createdDate, List<InvoiceDetailViewModel> invoiceDetailList) {
         this.invoiceID = invoiceID;
         this.userID = userID;
         this.userName = userName;
         this.totalAmount = totalAmount;
         this.status = status;
-        this.createDate = createDate;
+        this.createdDate = createdDate;
         this.invoiceDetailList = invoiceDetailList;
     }
 
@@ -74,12 +74,12 @@ public class InvoiceViewModel {
         this.status = status;
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(LocalDate createDate) {
+        this.createdDate = createDate;
     }
 
     public List<InvoiceDetailViewModel> getInvoiceDetailList() {

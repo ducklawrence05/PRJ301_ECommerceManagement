@@ -17,17 +17,17 @@ public class Invoice {
     String userID;
     float totalAmount;
     String status;
-    LocalDate createDate;
+    LocalDate createdDate;
 
     public Invoice() {
     }
 
-    public Invoice(int invoiceID, String userID, float totalAmount, String status, LocalDate createDate) {
+    public Invoice(int invoiceID, String userID, float totalAmount, String status, LocalDate createdDate) {
         this.invoiceID = invoiceID;
         this.userID = userID;
         this.totalAmount = totalAmount;
         this.status = status;
-        this.createDate = createDate;
+        this.createdDate = createdDate;
     }
 
     public int getInvoiceID() {
@@ -62,12 +62,12 @@ public class Invoice {
         this.status = status;
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(LocalDate createDate) {
+        this.createdDate = createDate;
     }
     
 }
