@@ -22,7 +22,7 @@ public class CustomerCareService {
         if (isNullOrEmptyString(subject) || isNullOrEmptyString(content)) {
             return Message.WRONG_FORMAT_CUSTOMERCARE;
         }
-        if (customerCareDAO.create(userID, subject, content, "waiting", null) == 1) {
+        if (customerCareDAO.create(userID, subject, content, "waiting", "pending") == 1) {
             return Message.CREATE_CUSTOMERCARE_SUCCESSFULLY;
         }
         return Message.CREATE_CUSTOMERCARE_FAILED;

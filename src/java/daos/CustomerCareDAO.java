@@ -12,7 +12,6 @@ import utils.DBContext;
 
 public class CustomerCareDAO {
     private final String CREATE = "INSERT INTO [dbo].[tblCustomerCare] ([userID], [subject], [content], [status], [reply]) VALUES (?, ?, ?, ?, ?)";
-    private final String CREATE_FOR_CUSTOMER = "INSERT INTO [dbo].[tblCustomerCare] ([userID], [subject], [content], [status], [reply]) VALUES (?, ?, ?, 'waitting', null)";
     private final String DELETE_BY_ID = "DELETE FROM [dbo].[tblCustomerCare] WHERE ticketID = ?";
     private final String UPDATE = "UPDATE [dbo].[tblCustomerCare] SET [userID] = ?, [subject] = ?, [content] = ?, [status] = ?, [reply] = ? WHERE ticketID = ?";
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblCustomerCare] WHERE ticketID = ?";
@@ -35,17 +34,6 @@ public class CustomerCareDAO {
             return ps.executeUpdate();
         }
     }
-    
-    public int createForCustomer(String userID,String subject, String content) throws SQLException {
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(CREATE_FOR_CUSTOMER)) {
-            ps.setString(1, userID);
-            ps.setString(2, subject);
-            ps.setString(3, content);
-            return ps.executeUpdate();
-        }
-    }
-
     public int deleteByID(int ticketID) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_BY_ID)) {

@@ -96,7 +96,7 @@ public class CustomerCareController extends HttpServlet {
                     break;
                 case UPDATE:
                     updateCustomerCare(request, response);
-                    url = Url.UPDATE_CUSTOMERCARE_PAGE;
+                    url = Url.CUSTOMERCARE_LIST_PAGE;
                     break;
                 case DELETE:
                     deleteCustomerCare(request, response);

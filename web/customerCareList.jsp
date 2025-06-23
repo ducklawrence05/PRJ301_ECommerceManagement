@@ -13,29 +13,38 @@
     <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-link mt-3 d-block">Customer Care CRUD</a>
-        <a href="${pageContext.request.contextPath}/customerCare?action=getAllViewModel" class="btn btn-info mt-2">View All Full Info</a>
+        
+        <a href="${pageContext.request.contextPath}/main/customerCare" 
+           class="btn btn-link mt-3 d-block">Customer Care CRUD</a>
+           
+        <a href="${pageContext.request.contextPath}/main/customerCare?action=getAllViewModel" 
+           class="btn btn-info mt-2">View All Full Info</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
         </form>
     </div>
 
-    <!-- Button: Create -->
-    <form action="${pageContext.request.contextPath}/customerCare" method="GET" class="mb-3">
-        <button type="submit" name="action" value="create" class="btn btn-success">Create Customer Care</button>
+    <form action="${pageContext.request.contextPath}/main/customerCare" method="GET" class="mb-3">
+        <button type="submit" name="action" value="create" class="btn btn-success">
+            Create Customer Care
+        </button>
     </form>
 
     <!-- Search Form -->
-    <form action="${pageContext.request.contextPath}/customerCare" method="GET" class="row g-2 mb-4">
+    <form action="${pageContext.request.contextPath}/main/customerCare" method="GET" 
+          class="row g-2 mb-4">
         <div class="col-md-4">
             <select name="action" class="form-select">
-                <option value="findByID">Search by ID</option>
-                <option value="findBySubject">Search by subject</option>
+                <option value="findByID" 
+                    ${param.action=='findByID'?'selected':''}>Search by ID</option>
+                <option value="findBySubject" 
+                    ${param.action=='findBySubject'?'selected':''}>Search by subject</option>
             </select>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="keySearch" placeholder="Enter keyword..." 
-                   required value="${param.keySearch}" autofocus />
+            <input type="text" class="form-control" name="keySearch" 
+                   placeholder="Enter keyword..." required 
+                   value="${param.keySearch}" autofocus />
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -58,13 +67,13 @@
             <thead class="table-light">
                 <tr>
                     <th>No</th>
-                    <th>ticketID</th>
-                    <th>userID</th>
-                    <th>subject</th>
-                    <th>content</th>
-                    <th>status</th>
-                    <th>reply</th>
-                    <th>Action</th>
+                    <th>Ticket ID</th>
+                    <th>User ID</th>
+                    <th>Subject</th>
+                    <th>Content</th>
+                    <th>Status</th>
+                    <th>Reply</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,10 +87,22 @@
                         <td>${customerCare.status}</td>
                         <td>${customerCare.reply}</td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/customerCare" method="POST" class="d-inline"
+                            
+                            <a href="${pageContext.request.contextPath}/main/customerCare"
+                               class="btn btn-sm btn-primary"
+                               onclick="event.preventDefault();
+                                        this.closest('form').action='${pageContext.request.contextPath}/main/customerCare?action=update&ticketID=${customerCare.ticketID}';
+                                        this.closest('form').method='GET';
+                                        this.closest('form').submit();">
+                                Update
+                            </a>
+                                        
+                            <form action="${pageContext.request.contextPath}/main/customerCare" 
+                                  method="POST" class="d-inline"
                                   onsubmit="return confirm('Are you sure to delete this customer care?');">
                                 <input type="hidden" name="action" value="delete" />
-                                <input type="hidden" name="ticketID" value="${customerCare.ticketID}" />
+                                <input type="hidden" name="ticketID" 
+                                       value="${customerCare.ticketID}" />
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                         </td>
@@ -94,10 +115,12 @@
     <!-- Back -->
     <c:choose>
         <c:when test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-            <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
+            <a href="${pageContext.request.contextPath}/admin.jsp" 
+               class="btn btn-outline-primary mt-3">Back to admin page</a>
         </c:when>
-        <c:when test="${sessionScope.currentUser.role.name() == 'STAFF'}">
-            <a href="${pageContext.request.contextPath}/welcome.jsp" class="btn btn-outline-primary mt-3">Back to home</a>
+        <c:when test="${sessionScope.request.currentUser.role.name() == 'STAFF'}">
+            <a href="${pageContext.request.contextPath}/welcome.jsp" 
+               class="btn btn-outline-primary mt-3">Back to home</a>
         </c:when>
     </c:choose>
 </div>

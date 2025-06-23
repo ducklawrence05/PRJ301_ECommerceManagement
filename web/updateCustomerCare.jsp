@@ -1,5 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,29 +20,37 @@
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="ticketID" value="${requestScope.customerCare.ticketID}" />
 
+        <input type="hidden" name="userID" value="${sessionScope.currentUser.userID}" />
         <div class="mb-3">
-            <label for="userID" class="form-label">User ID</label>
-            <input type="text" id="userID" name="userID" class="form-control" value="${requestScope.customerCare.userID}" required>
+            <label class="form-label">User</label>
+            <input type="text" class="form-control" readonly 
+                   value="${sessionScope.currentUser.fullName}" />
         </div>
 
         <div class="mb-3">
             <label for="subject" class="form-label">Subject</label>
-            <input type="text" id="subject" name="subject" class="form-control" value="${requestScope.customerCare.subject}" required>
+            <input type="text" id="subject" name="subject" class="form-control" 
+                   value="${requestScope.customerCare.subject}" required />
         </div>
 
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
-            <textarea id="content" name="content" class="form-control" rows="4" required>${requestScope.customerCare.content}</textarea>
+            <textarea id="content" name="content" class="form-control" rows="4" required>
+                ${requestScope.customerCare.content}
+            </textarea>
         </div>
 
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <input type="text" id="status" name="status" class="form-control" value="${requestScope.customerCare.status}" required>
+            <input type="text" id="status" name="status" class="form-control" 
+                   value="${requestScope.customerCare.status}" required />
         </div>
 
         <div class="mb-3">
             <label for="reply" class="form-label">Reply</label>
-            <textarea id="reply" name="reply" class="form-control" rows="3">${requestScope.customerCare.reply}</textarea>
+            <textarea id="reply" name="reply" class="form-control" rows="3">
+                ${requestScope.customerCare.reply}
+            </textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>
