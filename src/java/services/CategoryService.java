@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package services;
 
 import constants.Message;
@@ -10,7 +6,6 @@ import dtos.Category;
 import java.sql.SQLException;
 import java.util.List;
 import static utils.ServiceUtils.isNullOrEmptyString;
-
 
 public class CategoryService {
     CategoryDAO dAO = new CategoryDAO();

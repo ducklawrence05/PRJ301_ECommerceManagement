@@ -86,17 +86,7 @@
                         <td>${customerCare.content}</td>
                         <td>${customerCare.status}</td>
                         <td>${customerCare.reply}</td>
-                        <td>
-                            
-                            <a href="${pageContext.request.contextPath}/main/customerCare"
-                               class="btn btn-sm btn-primary"
-                               onclick="event.preventDefault();
-                                        this.closest('form').action='${pageContext.request.contextPath}/main/customerCare?action=update&ticketID=${customerCare.ticketID}';
-                                        this.closest('form').method='GET';
-                                        this.closest('form').submit();">
-                                Update
-                            </a>
-                                        
+                        <td>    
                             <form action="${pageContext.request.contextPath}/main/customerCare" 
                                   method="POST" class="d-inline"
                                   onsubmit="return confirm('Are you sure to delete this customer care?');">

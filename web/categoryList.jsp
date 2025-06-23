@@ -7,39 +7,37 @@
     <title>Category List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        body {
-            padding: 30px;
-        }
-    </style>
 </head>
 <body>
 <div class="container bg-white p-4 rounded shadow-sm">
     <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-link mt-3 d-block">Category CRUD</a>
+        <a href="${pageContext.request.contextPath}/main/category" 
+           class="btn btn-link mt-3 d-block">Category CRUD</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
         </form>
     </div>
 
-    <!-- Button: Create Category -->
-    <form action="${pageContext.request.contextPath}/category" method="GET" class="mb-3">
-        <button type="submit" name="action" value="create" class="btn btn-success">Create Category</button>
+    <form action="${pageContext.request.contextPath}/main/category" method="GET" class="mb-3">
+        <button type="submit" name="action" value="create" class="btn btn-success">
+            Create Category
+        </button>
     </form>
 
     <!-- Search Form -->
-    <form action="${pageContext.request.contextPath}/category" method="GET" class="row g-2 mb-4">
+    <form action="${pageContext.request.contextPath}/main/category" method="GET" class="row g-2 mb-4">
         <div class="col-md-4">
             <select name="action" class="form-select">
-                <option value="findByID">Search by ID</option>
-                <option value="findByName">Search by name</option>
+                <option value="findByID" ${param.action=='findByID'?'selected':''}>Search by ID</option>
+                <option value="findByName" ${param.action=='findByName'?'selected':''}>Search by Name</option>
             </select>
         </div>
         <div class="col-md-4">
-            <input type="text" class="form-control" name="keySearch" placeholder="Enter keyword..." 
-                   required value="${param.keySearch}" autofocus />
+            <input type="text" class="form-control" name="keySearch"
+                   placeholder="Enter keyword..." required
+                   value="${param.keySearch}" autofocus />
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-primary w-100">Search</button>
@@ -69,25 +67,24 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="category" items="${requestScope.categories}" varStatus="st">
+                <c:forEach var="cat" items="${requestScope.categories}" varStatus="st">
                     <tr>
                         <td>${st.count}</td>
-                        <td>${category.categoryID}</td>
-                        <td>${category.categoryName}</td>
-                        <td>${category.description}</td>
+                        <td>${cat.categoryID}</td>
+                        <td>${cat.categoryName}</td>
+                        <td>${cat.description}</td>
                         <td class="table-actions">
-                            <!-- Update Button -->
-                            <form action="${pageContext.request.contextPath}/category" method="GET" class="d-inline">
+                            <!-- Update -->
+                            <form action="${pageContext.request.contextPath}/main/category" method="GET" class="d-inline">
                                 <input type="hidden" name="action" value="update" />
-                                <input type="hidden" name="keySearch" value="${category.categoryID}" />
+                                <input type="hidden" name="keySearch" value="${cat.categoryID}" />
                                 <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                            </form> 
-
-                            <!-- Delete Button -->
-                            <form action="${pageContext.request.contextPath}/category" method="POST" class="d-inline"
+                            </form>
+                            <!-- Delete -->
+                            <form action="${pageContext.request.contextPath}/main/category" method="POST" class="d-inline"
                                   onsubmit="return confirm('Are you sure to delete this category?');">
                                 <input type="hidden" name="action" value="delete" />
-                                <input type="hidden" name="categoryID" value="${category.categoryID}" />
+                                <input type="hidden" name="categoryID" value="${cat.categoryID}" />
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                         </td>
@@ -100,10 +97,14 @@
     <!-- Back -->
     <c:choose>
         <c:when test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-            <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
+            <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">
+                Back to Admin Page
+            </a>
         </c:when>
         <c:when test="${sessionScope.currentUser.role.name() == 'STAFF'}">
-            <a href="${pageContext.request.contextPath}/welcome.jsp" class="btn btn-outline-primary mt-3">Back to home</a>
+            <a href="${pageContext.request.contextPath}/welcome.jsp" class="btn btn-outline-primary mt-3">
+                Back to Home
+            </a>
         </c:when>
     </c:choose>
 </div>
