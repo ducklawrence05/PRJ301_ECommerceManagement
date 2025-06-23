@@ -52,6 +52,7 @@ public class Message {
     public static final String UPDATE_INVOICE_DETAIL_FAILED = "Update invoice detail failed";
     public static final String DELETE_INVOICE_DETAIL_SUCCESSFULLY = "Delete invoice detail successfully";
     public static final String INVOICE_DETAIL_NOT_FOUND = "invoice detail not found";
+    public static final String YOUR_INVOICE_IS_EMPTY = "Your invoice is empty";
 
     // Product
     public static final String PRODUCT_NOT_FOUND = "Product not found";
@@ -124,6 +125,7 @@ public class Message {
 
     //Delivery
     public static final String CREATE_DELIVERY_SUCCESSFULLY = "Create Delivery successfully";
+    public static final String CREATE_DELIVERY_FAILED = "Create Delivery failed";
     public static final String UPDATE_DELIVERY_SUCCESSFULLY = "Update Delivery successfully";
     public static final String DELETE_DELIVERY_SUCCESSFULLY = "Delete Delivery successfully";
     public static final String UPDATE_DELIVERY_FAILED = "Update Delivery failed";

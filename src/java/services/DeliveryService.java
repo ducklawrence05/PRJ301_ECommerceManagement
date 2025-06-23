@@ -4,11 +4,13 @@
  */
 package services;
 
+import static com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl.createDate;
 import constants.Message;
 import daos.DeliveryDAO;
 import dtos.Delivery;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,54 +28,56 @@ public class DeliveryService {
             || isNullOrEmptyString(status)) {
             return Message.ALL_FIELDS_ARE_REQUIRED;
         }
+
+        LocalDate newDate = deliveryDate.plusDays(3);
+        
+        if(deliveryDAO.insertDelivery(invoiceID, address, newDate, status) == 0){
+            return Message.CREATE_DELIVERY_FAILED;
+        }
         return Message.CREATE_DELIVERY_SUCCESSFULLY;
         
     }   
     
-    public String updateDelivery(Integer deliveryID,String address, LocalDate deliveryDate, String status) throws  SQLException {
+    public String updateDelivery(Integer deliveryID, String status) throws  SQLException {
         if(!deliveryDAO.checkDelivertyExists(deliveryID)){
             return Message.DELIVERY_NOT_FOUND;
         }
         
         Delivery delivery = new Delivery();
         
-        if(isNullOrEmptyString(address)){
-            address = delivery.getAddress();
-        }
-        
-        if(deliveryDate == null){
-            deliveryDate = delivery.getDeliveryDate();
-        }
-        
         if(isNullOrEmptyString(status)){
             status = delivery.getStatus();
         }
-        
-        if (deliveryDAO.updateDelivery(address, deliveryDate, status) == 0){
+       
+        if (deliveryDAO.updateDelivery(deliveryID, status) == 0){
             return Message.UPDATE_DELIVERY_FAILED;
         }
         
         return Message.UPDATE_DELIVERY_SUCCESSFULLY;
     }
     
-    public String deleteDelivery(int deliveryID) throws SQLException {
-        if(deliveryDAO.deleteDelivery(deliveryID) == 0){
+    public String deleteDelivery(int invoiceID) throws SQLException {
+        if(deliveryDAO.deleteDelivery(invoiceID) == 0){
             return Message.DELIVERY_NOT_FOUND;
         }
         return  Message.DELETE_DELIVERY_SUCCESSFULLY;
     }
     
     public List<Delivery> getAllDelivery() throws SQLException {
-        return deliveryDAO.getAllDeliveries();
+        return deliveryDAO.getAllDelivery();
     }
     
     public List<Delivery> getDeliveryByStatus(String status) throws SQLException {
         return deliveryDAO.getDeliveryStatus(status);
     }
     
-    public List<Delivery> getDeleveryDate(LocalDate deliveryDate) throws SQLException {
-        return deliveryDAO.getDeliveryByDate(deliveryDate);
+    public Delivery getDeliveryByInvoiceID(int invoiceID) throws SQLException {
+        return deliveryDAO.getDeliveryByInvoiceID(invoiceID);
     }
+    
+//    public List<Delivery> getDeleveryDate(LocalDate deliveryDate) throws SQLException {
+//        return deliveryDAO.getDeliveryByDate(deliveryDate);
+//    }
         
     private boolean isNullOrEmptyString(String str){
         return str == null || str.isEmpty();

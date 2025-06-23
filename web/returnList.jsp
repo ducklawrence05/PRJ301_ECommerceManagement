@@ -1,85 +1,58 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
+
     <head>
-        <meta charset="UTF-8">
-        <title>Return</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Return List</title>
     </head>
-    
-    
+
     <body>
-        <h2>Return list</h2>
+        <jsp:include page="navbarReturn.jsp" />
 
-        <p>
-        <form action="ReturnController" method="get">
-            <input type="hidden" name="action" value="ViewReturns"/>
-            <input type="hidden" name="status" value="Pending"/>
-            <button type="submit">Pending</button>
-        </form>
-        <form action="ReturnController" method="get">
-            <input type="hidden" name="action" value="ViewReturns"/>
-            <input type="hidden" name="status" value="Approved"/>
-            <button type="submit">Approved</button>
-        </form>
-        <form action="ReturnController" method="get" >
-            <input type="hidden" name="action" value="ViewReturns"/>
-            <input type="hidden" name="status" value="Rejected"/>
-            <button type="submit">Rejected</button>
-        </form>
-        <form action="ReturnController" method="get">
-            <input type="hidden" name="action" value="ViewReturns"/>
-            <button type="submit">All</button>
-        </form>
-    </p>
+        
+            <table border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Return ID</th>
+                        <th>Invoice ID</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <c:forEach var="rt" items="${returnn}">
+                        <%--<c:if test="${rt.status == 'Approved'}">--%>
+                        <tr>
+                            <td>${rt.returnID}</td>
+                            <td>${rt.invoiceID}</td>
+                            <td>${rt.reason}</td>
+                            <td>${rt.status}</td>
 
+                            <td>
+                                <form action="${pageContext.request.contextPath}/main/return/update" method="POST">
+                                    <input type="hidden" name="returnID" value="${rt.returnID}" />
+                                    <select name="status">
+                                        <option value="Approved">Approve</option>
+                                        <option value="Rejected">Reject</option>
+                                    </select>
+                                    <button type="submit" name="action">Update</button>
+                                </form>
+                            </td>
 
-    <form action="${pageContext.request.contextPath}/main/delivery" method="GET">
-        <input type="hidden" name="action" value="getReturnByID"/>
-        <input type="text" name="id" placeholder="Enter return id..."/>
-        <button type="submit">Search</button>
-    </form>
+                        </tr>
+                        <%--</c:if>--%>
+                    </c:forEach>
+                </tbody>
+            </table>
+       
+        <c:if test="${empty returnn}">
+            <p>There are no return to display.</p>
+        </c:if>
 
+    </body>
 
-    <table border="1">
-        <thead>
-        <th>Return ID</th>
-        <th>Delivery ID</th>
-        <th>Reason</th>
-        <th>Status</th>
-
-    </thead>
-    <tbody>
-        <c:forEach var="returnItem" items="${requestScope.returns}">
-            <tr>
-                <td>${returnItem.returnID}</td>
-                <td>${returnItem.invoiceID}</td>
-                <td>${returnItem.reason}</td>
-                <td>${returnItem.status}</td>
-
-                <td>
-                    <form action="${pageContext.request.contextPath}/main/return/update" method="POST">
-                        <input type="hidden" name="id" value="${returnItem.returnID}">
-                        <select name="status">
-                            <option value="Approved">Approved</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                        <button type="sumbit" name="action" value="update">Update</button>
-                    </form>
-                </td>
-            </tr>
-
-        </c:forEach> 
-    </tbody>
-    </table>    
-
-    <c:if test="${empty transactions}">
-        <div class="alert alert-warning">No matching return found!</div>
-    </c:if>    
-    <c:if test="${empty requestScope.returns}">
-    <tr>
-        <td>Don't have returns.</td>
-    </tr>
-    </c:if>   
-    
-</body>
 </html>

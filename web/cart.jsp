@@ -75,7 +75,10 @@
                                 <input type="number" name="quantity" value="${item.quantity}"
                                        min="1" class="form-control form-control-sm" style="width: 90px;" required />
                             </td>
-                            <td>$${item.salePrice}</td>
+                            <td>
+                                <input type="hidden" name="price" value="${item.salePrice}" />
+                                $${item.salePrice}
+                            </td>
                             <td><span style="text-decoration: line-through;">$${item.basePrice}</span></td>
                             <td>$${item.subTotal}</td>
                             <td>
