@@ -29,8 +29,9 @@ public class DeliveryDAO {
     private final String INSERT_DELIVERY = "INSERT INTO tblDeliveries"
             + "(invoiceID, address, deliveryDate, status)"
             + " VALUES (?, ?, ?, ?)";
-    private final String UPDATE_DELIVERY = "UPDATE tblDeliveries SET deliveryID = ?  WHERE status = ?";
-
+    private final String UPDATE_DELIVERY = "UPDATE tblDeliveries SET  status = ?  WHERE deliveryID = ?";
+    private final String DELETE_DELIVERY = "DELETE  from tblDeliveries where invoiceID = ?";
+    
     public List<Delivery> getAllDelivery() throws SQLException {
         List<Delivery> resultList = new ArrayList<>();
         try ( Connection conn = DBContext.getConnection();
@@ -105,17 +106,26 @@ public class DeliveryDAO {
         }
     }
 
-    public boolean updateDelivery(int deliveryID, String status) throws SQLException {
-        boolean isUpdate = false;
+    public int updateDelivery(int deliveryID, String status) throws SQLException {  
         try ( Connection conn = DBContext.getConnection(); 
                 PreparedStatement stm = conn.prepareStatement(UPDATE_DELIVERY)) {
-            
-            stm.setInt(1, deliveryID);
-            stm.setString(2, status);
-            isUpdate = stm.executeUpdate() > 0;
+            stm.setString(1, status);
+            stm.setInt(2, deliveryID);
+             
+            return stm.executeUpdate();
         }
-        return isUpdate;
+        
     }
+    
+     public int deleteDelivery(int invoiceID) throws SQLException{
+         try ( Connection conn = DBContext.getConnection(); 
+                PreparedStatement stm = conn.prepareStatement(DELETE_DELIVERY)) {
+            
+            stm.setInt(1, invoiceID);
+            
+            return stm.executeUpdate();
+        }
+     }
 
     public boolean checkDelivertyExists(Integer deliveryID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_DELIVERY_BY_ID)) {

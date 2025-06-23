@@ -125,6 +125,7 @@ public class Message {
 
     //Delivery
     public static final String CREATE_DELIVERY_SUCCESSFULLY = "Create Delivery successfully";
+    public static final String CREATE_DELIVERY_FAILED = "Create Delivery failed";
     public static final String UPDATE_DELIVERY_SUCCESSFULLY = "Update Delivery successfully";
     public static final String DELETE_DELIVERY_SUCCESSFULLY = "Delete Delivery successfully";
     public static final String UPDATE_DELIVERY_FAILED = "Update Delivery failed";
