@@ -22,6 +22,7 @@ public class ReturnDAO {
     private final String GET_ALL_RETURN = "SELECT * FROM tblReturns";
     private final String GET_RETURN_BY_ID = "SELECT * FROM tblReturns WHERE returnID LIKE ?";
     private final String GET_RETURN_BY_STATUS = "SELECT * FROM tblReturns WHERE status LIKE ?";
+    private final String GET_RETURN_BY_INVOICEID = "SELECT * FROM tblReturns WHERE invoiceID LIKE ?";
     private final String INSERT_RETURN = "INSERT INTO tblReturns"
             + "(invoiceID, reason, status)"
             + " VALUES (?, ?, ?)";
@@ -44,6 +45,18 @@ public class ReturnDAO {
     public Return getReturnID(int returnID) throws SQLException {
         try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_RETURN_BY_ID)) {
             stm.setInt(1, returnID);
+            try ( ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Return getReturnByInvoiceID(int invoiceID) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  PreparedStatement stm = conn.prepareStatement(GET_RETURN_BY_ID)) {
+            stm.setInt(1, invoiceID);
             try ( ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);

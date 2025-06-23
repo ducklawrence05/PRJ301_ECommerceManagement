@@ -32,14 +32,13 @@ public class DeliveryController extends HttpServlet {
 
     private DeliveryService deliveryService = new DeliveryService();
     private InvoiceService invoiceService = new InvoiceService();
-    
+
     private final String CREATE = "create";
     private final String UPDATE = "update";
 
     private final String GET_ALL_DELIVERY = "getAllDelivery";
     private final String GET_DELIVERY_BY_STATUS = "getDeliveryByStatus";
     private final String GET_INVOICE_BY_STATUS = "getInvoiceByStatus";
-    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,7 +61,7 @@ public class DeliveryController extends HttpServlet {
                 break;
             }
         }
-        
+
         request.setAttribute("delivery", deliverys);
         request.getRequestDispatcher(url).forward(request, response);
     }
@@ -70,7 +69,7 @@ public class DeliveryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String action = request.getParameter("action");
         if (action == null) {
             action = GET_ALL_DELIVERY;
@@ -79,7 +78,7 @@ public class DeliveryController extends HttpServlet {
 
         try {
             switch (action) {
-                
+
                 case CREATE: {
                     createDelivery(request, response);
                     url = Url.INVOICE_LIST_PAGE;
@@ -89,27 +88,24 @@ public class DeliveryController extends HttpServlet {
                     break;
                 }
                 case UPDATE: {
-                    updateDelivery(request,response);
+                    updateDelivery(request, response);
                     url = Url.DELIVERY_LIST_PAGE;
+                    request.setAttribute("status", "delivered");
                     break;
                 }
-                
-                
             }
-            
+
             request.setAttribute("delivery", deliveryService.getAllDelivery());
             request.getRequestDispatcher(url).forward(request, response);
-            
-        }catch (Exception ex) {
+
+        } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
-        
-        
     }
-    
-    private  List<Delivery> getAllDelivery(HttpServletRequest request, HttpServletResponse response)
+
+    private List<Delivery> getAllDelivery(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
         try {
             return deliveryService.getAllDelivery();
@@ -119,28 +115,28 @@ public class DeliveryController extends HttpServlet {
         }
         return null;
     }
-    
-    private  List<Delivery> getDeliveryByStatus(HttpServletRequest request, HttpServletResponse response)
+
+    private List<Delivery> getDeliveryByStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException {
-            try {
-                String status = request.getParameter("status");
-                return deliveryService.getDeliveryByStatus(status);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                request.setAttribute("MSG", Message.SYSTEM_ERROR);
-            }
-            return null;
+        try {
+            String status = request.getParameter("status");
+            return deliveryService.getDeliveryByStatus(status);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
+        return null;
     }
-    
+
     public void createDelivery(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, SQLException {
-        
+
         int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
         String invoiceID_ = request.getParameter("invoiceID");
         String address = request.getParameter("address");
         LocalDate deliveryDate = LocalDate.now();
         String status = "pending";
-        
+
         String message = deliveryService.createDelivery(invoiceID, address, deliveryDate, status);
         String userID = AuthUtils.getUserSession(request).getData().getUserID();
         try {
@@ -149,18 +145,26 @@ public class DeliveryController extends HttpServlet {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.SYSTEM_ERROR);
         }
-        
-        
+
     }
-    
+
     public void updateDelivery(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, SQLException {
-          int id = Integer.parseInt(request.getParameter("deliveryID"));
-          String status = request.getParameter("status");
-          String message = deliveryService.updateDelivery(id, status);
-          request.setAttribute("MSG",message);
+        int id = Integer.parseInt(request.getParameter("deliveryID"));
+        String invoiceID = request.getParameter("invoiceID");
+        String status = request.getParameter("status");
+
+        String message = deliveryService.updateDelivery(id, status);
+        request.setAttribute("MSG", message);
+
+        try {
+            invoiceService.updateInvoiceStatus(Integer.parseInt(invoiceID), status);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+        }
     }
-    
+
     private List<InvoiceViewModel> getInvoiceByUserIDAndStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -174,5 +178,5 @@ public class DeliveryController extends HttpServlet {
         }
         return null;
     }
-          
+
 }
