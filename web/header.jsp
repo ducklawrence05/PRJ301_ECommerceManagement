@@ -42,10 +42,10 @@
                             <a class="nav-link px-2" href="${pageContext.request.contextPath}/main/return">Return List</a>
                         </c:if>
 
-                        <c:if test="${!empty sessionScope.currentUser}">
+                        <c:if test="${empty sessionScope.currentUser}">
                             <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary me-2 mb-3">Login</a>
                         </c:if>
-                        <c:if test="${empty sessionScope.currentUser}">
+                        <c:if test="${!empty sessionScope.currentUser}">
                             <div class="mb-3">
                                 <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
                                     <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
