@@ -38,10 +38,10 @@
                                 <td>${rt.invoiceID}</td>
                                 <td>${rt.reason}</td>
                                 <td>${rt.status}</td>
-                                <c:if test="${rt.status eq 'pending'}">
-                                    <td class="table-actions">
+                                <td class="table-actions">
+                                    <c:if test="${rt.status eq 'pending'}">
                                         <form action="${pageContext.request.contextPath}/main/return/update" method="POST"
-                                              class="mb-0">
+                                              class="mb-0 w-100">
                                             <input type="hidden" name="returnID" value="${rt.returnID}" />
                                             <div class="d-flex align-items-center gap-2">
                                                 <select name="status" class="form-select form-select-sm mb-0">
@@ -51,8 +51,8 @@
                                                 <button type="submit" class="btn btn-sm btn-warning">Update</button>
                                             </div>
                                         </form>
-                                    </td>
-                                </c:if>
+                                    </c:if>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

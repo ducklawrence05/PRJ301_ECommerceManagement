@@ -20,7 +20,7 @@
         <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <jsp:include page="navbarInvoice.jsp" />
             
-            <h2>INVOICE LIST</h2>
+            <h2 class="mt-3">INVOICE LIST</h2>
             <c:if test="${not empty invoiceViewModels}">
                 <table class="table table-bordered table-hover mt-3">
                     <thead class="table-light">

@@ -56,7 +56,8 @@
                                 <td>${delivery.deliveryDate}</td>
                                 <td>${delivery.status}</td>
                                 <td class="table-actions">
-                                    <form action="${pageContext.request.contextPath}/main/delivery/update" method="POST">
+                                    <form action="${pageContext.request.contextPath}/main/delivery/update" method="POST"
+                                          class="mb-0 w-100">
                                         <input type="hidden" name="deliveryID" value="${delivery.deliveryID}" />
                                         <input type="hidden" name="invoiceID" value="${delivery.invoiceID}" />
                                         <c:if test="${delivery.status == 'pending'}">
