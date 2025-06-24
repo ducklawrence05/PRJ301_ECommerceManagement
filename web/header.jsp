@@ -12,7 +12,9 @@
     <body>
         <!-- Main Content -->
         <div class="container bg-white p-4 rounded shadow-sm">
-            <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
+            <c:if test="${not empty sessionScope.currentUser}">
+                <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
+            </c:if>
             <!-- Navigation Bar -->
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-3 py-1">
                 <div class="container-fluid">

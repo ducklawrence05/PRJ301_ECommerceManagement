@@ -7,11 +7,18 @@
         <meta charset="UTF-8">
         <title>Promotion List Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container mt-4">
             <h2 class="mb-3">Promotion List</h2>
+
+            <c:if test="${sessionScope.currentUser.role == 'MARKETING'}">
+                <form action="${pageContext.request.contextPath}/main/promotion/create" method="GET" class="mb-3">
+                    <button type="submit" class="btn btn-success">Create new promotion</button>
+                </form>
+            </c:if>
 
             <form action="${pageContext.request.contextPath}/main/promotion" method="GET" class="row g-2 mb-3">
                 <div class="col-md-6">
@@ -27,9 +34,6 @@
                 <div class="alert alert-info">${requestScope.MSG}</div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/main/promotion/create" method="GET" class="mb-3">
-                <button type="submit" class="btn btn-success">Create new promotion</button>
-            </form>
 
             <c:choose>
                 <c:when test="${not empty requestScope.promotions}">
@@ -61,16 +65,18 @@
                                 </li>
                             </ul>
 
-                            <div class="mb-2">
-                                <form action="${pageContext.request.contextPath}/main/promotion/update" method="GET" style="display:inline;">
-                                    <input type="hidden" name="keySearch" value="${promotion.promoID}"/>
-                                    <button class="btn btn-sm btn-outline-primary">Update</button>
-                                </form>
-                                <form action="${pageContext.request.contextPath}/main/promotion/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure to delete this promotion?');">
-                                    <input type="hidden" name="promoID" value="${promotion.promoID}"/>
-                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                </form>
-                            </div>
+                            <c:if test="${sessionScope.currentUser.role == 'MARKETING'}">
+                                <div class="mb-2">
+                                    <form action="${pageContext.request.contextPath}/main/promotion/update" method="GET" style="display:inline;">
+                                        <input type="hidden" name="keySearch" value="${promotion.promoID}"/>
+                                        <button class="btn btn-sm btn-outline-primary">Update</button>
+                                    </form>
+                                    <form action="${pageContext.request.contextPath}/main/promotion/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure to delete this promotion?');">
+                                        <input type="hidden" name="promoID" value="${promotion.promoID}"/>
+                                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </c:if>
 
                             <c:if test="${empty promotion.products}">
                                 <div class="alert alert-warning">No matching products found!</div>

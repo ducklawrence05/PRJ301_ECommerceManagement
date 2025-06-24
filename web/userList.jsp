@@ -7,21 +7,10 @@
         <title>User List</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-        <style>
-            body {
-                padding: 30px;
-            }
-        </style>
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
-            <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
-
-            <div class="mb-3">
-                <a href="${pageContext.request.contextPath}/main/user" class="btn btn-primary me-2">User CRUD</a>
-            </div>
-
             <form action="${pageContext.request.contextPath}/main/user" method="GET" class="mb-3">
                 <button type="submit" name="action" value="create" class="btn btn-success">Create User</button>
             </form>

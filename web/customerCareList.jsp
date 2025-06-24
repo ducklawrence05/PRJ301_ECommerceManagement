@@ -13,23 +13,18 @@
         <div class="container bg-white p-4 rounded shadow-sm">
             <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
             <div class="mb-3">
-
-                <a href="${pageContext.request.contextPath}/main/customerCare" 
-                   class="btn btn-link mt-3 d-block">Customer Care CRUD</a>
-
                 <a href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel" 
                    class="btn btn-info mt-2">View All Full Info</a>
-                <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
-                    <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
-                </form>
             </div>
 
-            <form action="${pageContext.request.contextPath}/main/customerCare/create" method="GET" class="mb-3">
-                <button type="submit" class="btn btn-success">
-                    Create Customer Care
-                </button>
-            </form>
-
+            <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
+                <form action="${pageContext.request.contextPath}/main/customerCare/create" method="GET" class="mb-3">
+                    <button type="submit" class="btn btn-success">
+                        Create Customer Care
+                    </button>
+                </form>
+            </c:if>
+                   
             <!-- Search Form -->
             <form action="${pageContext.request.contextPath}/main/customerCare" method="GET" 
                   class="row g-2 mb-4">
@@ -105,6 +100,6 @@
             <c:if test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
                 <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
-    </div>
+        </div>
     </body>
 </html>

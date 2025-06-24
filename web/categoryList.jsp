@@ -11,12 +11,13 @@
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
-            <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
-            <form action="${pageContext.request.contextPath}/main/category/create" method="GET" class="mb-3">
-                <button type="submit" class="btn btn-success">
-                    Create Category
-                </button>
-            </form>
+            <h2 class="mb-3">Category List</h2>
+
+            <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                <form action="${pageContext.request.contextPath}/main/category/create" method="GET" class="mb-3">
+                    <button type="submit" class="btn btn-success">Create Category</button>
+                </form>
+            </c:if>
 
             <!-- Search Form -->
             <form action="${pageContext.request.contextPath}/main/category" method="GET" class="row g-2 mb-4">
@@ -66,17 +67,19 @@
                                 <td>${cat.categoryName}</td>
                                 <td>${cat.description}</td>
                                 <td class="table-actions">
-                                    <!-- Update -->
-                                    <form action="${pageContext.request.contextPath}/main/category/update" method="GET" class="d-inline">
-                                        <input type="hidden" name="keySearch" value="${cat.categoryID}" />
-                                        <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                                    </form>
-                                    <!-- Delete -->
-                                    <form action="${pageContext.request.contextPath}/main/category/delete" method="POST" class="d-inline"
-                                          onsubmit="return confirm('Are you sure to delete this category?');">
-                                        <input type="hidden" name="categoryID" value="${cat.categoryID}" />
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
+                                    <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
+                                        <!-- Update -->
+                                        <form action="${pageContext.request.contextPath}/main/category/update" method="GET" class="d-inline">
+                                            <input type="hidden" name="keySearch" value="${cat.categoryID}" />
+                                            <button type="submit" class="btn btn-sm btn-warning">Update</button>
+                                        </form>
+                                        <!-- Delete -->
+                                        <form action="${pageContext.request.contextPath}/main/category/delete" method="POST" class="d-inline"
+                                              onsubmit="return confirm('Are you sure to delete this category?');">
+                                            <input type="hidden" name="categoryID" value="${cat.categoryID}" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:forEach>

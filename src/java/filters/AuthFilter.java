@@ -107,7 +107,9 @@ public class AuthFilter implements Filter {
 
     private boolean isPublic(String path, String method) {
         // GET /main/product thì public
-        if ((path.equals("/main/product") || path.equals("/main/promotion")) 
+        if ((path.startsWith("/main/product") 
+                || path.startsWith("/main/promotion") 
+                || path.startsWith("/main/category")) 
                 && method.equalsIgnoreCase("POST")) {
             return false;
         }
