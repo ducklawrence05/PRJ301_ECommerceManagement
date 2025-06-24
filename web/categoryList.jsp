@@ -13,13 +13,20 @@
     <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/category" 
-           class="btn btn-link mt-3 d-block">Category CRUD</a>
+        <a href="${pageContext.request.contextPath}/main/category" class="btn btn-success mt-3 me-2">
+            Category CRUD
+        </a>
+        <a href="${pageContext.request.contextPath}/main/product" class="btn btn-success mt-3">
+            Product CRUD
+        </a>
+    </div>
+    <div class="mb-3">
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
-            <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
+            <button type="submit" name="action" value="Logout" class="btn btn-danger">
+                Logout
+            </button>
         </form>
     </div>
-
     <form action="${pageContext.request.contextPath}/main/category" method="GET" class="mb-3">
         <button type="submit" name="action" value="create" class="btn btn-success">
             Create Category

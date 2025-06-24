@@ -3,8 +3,8 @@ package services;
 import constants.Message;
 import daos.ProductDAO;
 import daos.PromotionDAO;
-import dtos.ProductViewModel;
 import dtos.Promotion;
+import dtos.ProductViewModel;
 import dtos.PromotionViewModel;
 
 import java.sql.SQLException;
@@ -17,16 +17,15 @@ import java.util.List;
 import static utils.ServiceUtils.isNullOrEmptyString;
 
 public class PromotionService {
-    PromotionDAO pdao = new PromotionDAO();
-    ProductDAO productDAO = new ProductDAO();
+    private final PromotionDAO pdao = new PromotionDAO();
+    private final ProductDAO productDAO = new ProductDAO();
 
-    // create
+    // Create a new promotion
     public String create(String name, float discount, Date startDate, Date endDate, String status) throws SQLException {
         if (isNullOrEmptyString(name) || discount < 0 || discount > 100 || isNullOrEmptyString(status)) {
             return Message.RONGE_FOMAT_PROMOTION;
         }
 
-        // Lấy ngày hôm nay
         LocalDate today = LocalDate.now();
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -42,20 +41,16 @@ public class PromotionService {
             return Message.IS_EXIT_PROMOTION;
         }
 
-        if (pdao.create(name, discount, startDate, endDate, status) == 1) {
-            return Message.CREATE_PROMOTION_SUCCESSFULLY;
-        } else {
-            return Message.CREATE_PROMOTION_FAILED;
-        }
+        int rows = pdao.create(name, discount, startDate, endDate, status);
+        return rows == 1 ? Message.CREATE_PROMOTION_SUCCESSFULLY : Message.CREATE_PROMOTION_FAILED;
     }
 
-    // update
+    // Update an existing promotion
     public String update(int id, String name, float discount, Date startDate, Date endDate, String status) throws SQLException {
         if (isNullOrEmptyString(name) || discount < 0 || discount > 100 || isNullOrEmptyString(status)) {
             return Message.RONGE_FOMAT_PROMOTION;
         }
 
-        // Lấy ngày hôm nay
         LocalDate today = LocalDate.now();
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -68,81 +63,70 @@ public class PromotionService {
         }
 
         Promotion existing = pdao.searchByID(id);
-        if (existing == null ) {
+        if (existing == null) {
             return Message.PROMOTION_NOT_FOUND;
         }
 
-        if (pdao.update(id, name, discount, startDate, endDate, status) == 1) {
-            return Message.UPDATE_PROMOTION_SUCCESSFULLY;
-        } else {
-            return Message.UPDATE_PROMOTION_FAILED;
-        }
+        int rows = pdao.update(id, name, discount, startDate, endDate, status);
+        return rows == 1 ? Message.UPDATE_PROMOTION_SUCCESSFULLY : Message.UPDATE_PROMOTION_FAILED;
     }
 
-    // delete
+    // Delete a promotion by ID
     public String delete(int id) throws SQLException {
-        if (pdao.delete(id) == 1) {
-            return Message.DELETE_PROMOTION_SUCCESSFULLY;
-        }
-        return null;
+        int rows = pdao.delete(id);
+        return rows == 1 ? Message.DELETE_PROMOTION_SUCCESSFULLY : Message.DELETE_PROMOTION_FAILED;
     }
 
-    // search by id
+    // Search promotion by ID and include associated products
     public PromotionViewModel searchByID(int id) throws SQLException {
-        Promotion promotion = pdao.searchByID(id);
-        List<ProductViewModel> productViewModels = productDAO.getProductsByPromoID(promotion.getPromoID());
-        PromotionViewModel promotionViewModel = new PromotionViewModel(
-                    promotion.getPromoID(), 
-                    promotion.getName(), 
-                    promotion.getDiscountPercent(), 
-                    promotion.getStartDate(), 
-                    promotion.getEndDate(), 
-                    promotion.getStatus(),
-                    productViewModels );
-            
-        return promotionViewModel;
+        Promotion promo = pdao.searchByID(id);
+        if (promo == null) {
+            return null; // or throw custom NotFoundException
+        }
+        List<ProductViewModel> products = productDAO.getProductsByPromoID(promo.getPromoID());
+        return new PromotionViewModel(
+                promo.getPromoID(),
+                promo.getName(),
+                promo.getDiscountPercent(),
+                promo.getStartDate(),
+                promo.getEndDate(),
+                promo.getStatus(),
+                products
+        );
     }
 
-    // search by name
+    // Search promotions by name (partial match)
     public List<PromotionViewModel> searchByName(String name) throws SQLException {
-        List<Promotion> list =  pdao.searchByName(name);
         List<PromotionViewModel> result = new ArrayList<>();
-        if(list.isEmpty()){
-            return  result;
-        }
-        for (Promotion promotion : list) {
-            List<ProductViewModel> productViewModels = productDAO.getProductsByPromoID(promotion.getPromoID());
-            PromotionViewModel promotionViewModel = new PromotionViewModel(
-                    promotion.getPromoID(), 
-                    promotion.getName(), 
-                    promotion.getDiscountPercent(), 
-                    promotion.getStartDate(), 
-                    promotion.getEndDate(), 
-                    promotion.getStatus(),
-                    productViewModels );
-            result.add(promotionViewModel);
+        for (Promotion promo : pdao.searchByName(name)) {
+            List<ProductViewModel> products = productDAO.getProductsByPromoID(promo.getPromoID());
+            result.add(new PromotionViewModel(
+                    promo.getPromoID(),
+                    promo.getName(),
+                    promo.getDiscountPercent(),
+                    promo.getStartDate(),
+                    promo.getEndDate(),
+                    promo.getStatus(),
+                    products
+            ));
         }
         return result;
     }
 
-    // get all
+    // Get all promotions with their products
     public List<PromotionViewModel> getAll() throws SQLException {
-        List<Promotion> list =  pdao.getAll();
         List<PromotionViewModel> result = new ArrayList<>();
-        if(list.isEmpty()){
-            return  result;
-        }
-        for (Promotion promotion : list) {
-            List<ProductViewModel> productViewModels = productDAO.getProductsByPromoID(promotion.getPromoID());
-            PromotionViewModel promotionViewModel = new PromotionViewModel(
-                    promotion.getPromoID(), 
-                    promotion.getName(), 
-                    promotion.getDiscountPercent(), 
-                    promotion.getStartDate(), 
-                    promotion.getEndDate(), 
-                    promotion.getStatus(),
-                    productViewModels );
-            result.add(promotionViewModel);
+        for (Promotion promo : pdao.getAll()) {
+            List<ProductViewModel> products = productDAO.getProductsByPromoID(promo.getPromoID());
+            result.add(new PromotionViewModel(
+                    promo.getPromoID(),
+                    promo.getName(),
+                    promo.getDiscountPercent(),
+                    promo.getStartDate(),
+                    promo.getEndDate(),
+                    promo.getStatus(),
+                    products
+            ));
         }
         return result;
     }

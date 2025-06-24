@@ -14,10 +14,16 @@
 
     <div class="mb-3">
         
-        <a href="${pageContext.request.contextPath}/main/customerCare" 
-           class="btn btn-link mt-3 d-block">Customer Care CRUD</a>
+    <div class="mb-3">
+        <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-success mt-3 me-2">
+            Category CRUD
+        </a>
+        <a href="${pageContext.request.contextPath}/main/product" class="btn btn-success mt-3">
+            Product CRUD
+        </a>
+    </div>
            
-        <a href="${pageContext.request.contextPath}/main/customerCare?action=getAllViewModel" 
+        <a href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel" 
            class="btn btn-info mt-2">View All Full Info</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>

@@ -11,7 +11,12 @@
 <body>
 <div class="container mt-4">
     <h2 class="mb-3">Promotion List</h2>
-
+    <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-success mt-3 me-2">
+       Promotion CRUD
+    </a>
+    <a href="${pageContext.request.contextPath}/main/product" class="btn btn-success mt-3">
+       Product CRUD
+    </a>
     <form action="${pageContext.request.contextPath}/promotion" method="GET" class="row g-2 mb-3">
         <div class="col-md-6">
             <input type="text" name="keySearch" class="form-control" placeholder="Enter promotion name..." value="${param.keySearch}" />
