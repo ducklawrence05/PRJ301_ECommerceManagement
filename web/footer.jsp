@@ -30,7 +30,7 @@
       <div class="container">
         <div class="row">
           <!-- Logo và giới thiệu -->
-          <div class="col-md-6 mb-4">
+          <div class="col-md-9 mb-4">
             <h2 class="h4 fw-bold mb-3">Group 3 Shop</h2>
             <p class="small mb-3">
               Chuyên cung cấp sản phẩm chất lượng, giá tốt, dịch vụ tận tâm.
@@ -46,16 +46,19 @@
          
 
           <!-- Mạng xã hội -->
-          <div class="col-md-6 mb-4">
+          <div class="col-md-3 mb-4 d-flex flex-column align-items-start">
             <h3 class="h5 fw-semibold mb-3">Kết nối với chúng tôi</h3>
-            <div class="d-flex gap-3 mb-3 d-flex flex-column align-items-center">
+            <div class="d-flex gap-3 mb-3 d-flex flex-column">
               <a href="#" class="text-white text-decoration-none">Facebook</a>
               <a href="#" class="text-white text-decoration-none">Instagram</a>
               <a href="#" class="text-white text-decoration-none">Zalo</a>
             </div>
-            <p class="small mb-0" style="margin-left:189px">© 2025 Group 3 Shop. All rights reserved.</p>
+            
           </div>
         </div>
+          <div class="d-flex  justify-content-center">
+              <p class="small mb-0" ">© 2025 Group 3 Shop. All rights reserved.</p>
+          </div>
       </div>
     </footer>
 
