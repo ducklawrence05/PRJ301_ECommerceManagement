@@ -13,29 +13,13 @@
             }
         </style>
     </head>
-    <jsp:include page="/header.jsp" flush="true" />
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
             <a href="${pageContext.request.contextPath}/main/product" class="btn btn-primary me-2 mb-3">Product list</a>
 
-            <c:if test="${empty sessionScope.currentUser}">
-                <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary me-2 mb-3">Login</a>
-            </c:if>
-
             <c:if test="${not empty sessionScope.currentUser}">
                 <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
-
-                <div class="mb-3">
-                    <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
-                        <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
-                    </form>
-                </div>
-                        
-                <div class="mb-3">
-                    <form action="${pageContext.request.contextPath}/main/cart" method="GET" class="d-inline">
-                        <button type="submit" class="btn btn-success">View cart</button>
-                    </form>
-                </div>
             </c:if>
 
             <c:if test="${sessionScope.currentUser.role == 'SELLER'}">
@@ -150,11 +134,6 @@
                         </c:forEach>
                     </tbody>
                 </table>
-            </c:if>
-
-            <!-- Back to home -->
-            <c:if test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
         </div>
 

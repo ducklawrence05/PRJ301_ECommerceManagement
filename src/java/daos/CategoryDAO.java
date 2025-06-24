@@ -73,17 +73,18 @@ public class CategoryDAO {
         return null;
     }
 
-    public Category searchByCategory(String category) throws SQLException {
+    public List<Category> searchByCategory(String category) throws SQLException {
+        List<Category> list = new ArrayList<>();
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_CATEGORIES)) {
             ps.setString(1, "%" + category + "%");
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapRow(rs);
+                while (rs.next()) {
+                    list.add(mapRow(rs));
                 }
+                return list;
             }
         }
-        return null;
     }
 
     public List<Category> getAll() throws SQLException {

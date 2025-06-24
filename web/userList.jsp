@@ -14,15 +14,12 @@
         </style>
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
             <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
 
             <div class="mb-3">
                 <a href="${pageContext.request.contextPath}/main/user" class="btn btn-primary me-2">User CRUD</a>
-
-                <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
-                    <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
-                </form>
             </div>
 
             <form action="${pageContext.request.contextPath}/main/user" method="GET" class="mb-3">
@@ -46,7 +43,7 @@
             <c:if test="${!empty requestScope.MSG}">
                 <div class="alert alert-success">${requestScope.MSG}</div>
             </c:if>
-                
+
             <c:if test="${empty users}">
                 <div class="alert alert-warning">No matching users found!</div>
             </c:if>
@@ -91,16 +88,6 @@
                     </tbody>
                 </table>
             </c:if>
-
-            <!-- Back to home -->
-            <c:choose>
-                <c:when test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-                    <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
-                </c:when>
-                <c:when test="${sessionScope.currentUser.role.name() == 'STAFF'}">
-                    <a href="${pageContext.request.contextPath}/welcome.jsp" class="btn btn-outline-primary mt-3">Back to home</a>
-                </c:when>
-            </c:choose>
         </div>
     </body>
 </html>

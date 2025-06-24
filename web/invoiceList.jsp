@@ -16,6 +16,7 @@
 
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <jsp:include page="navbarInvoice.jsp" />
 
         <h2>INVOICE LIST</h2>

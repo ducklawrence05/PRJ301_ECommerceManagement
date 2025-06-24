@@ -8,17 +8,17 @@ import java.util.List;
 import static utils.ServiceUtils.isNullOrEmptyString;
 
 public class CategoryService {
-    CategoryDAO dAO = new CategoryDAO();
+    CategoryDAO categoryDAO = new CategoryDAO();
     
     //create
     public String create(String name,String description) throws SQLException{
-        if(dAO.isExit(name)){
+        if(categoryDAO.isExit(name)){
             return Message.IS_EXIT_CATAGORY;
         }
         if(isNullOrEmptyString(name) || isNullOrEmptyString(description)){
             return Message.RONGE_FOMAT_CATEGORY;
         }
-        if(dAO.create(name, description)==1){
+        if(categoryDAO.create(name, description)==1){
             return Message.CREATE_CATEGORY_SUCCESSFULLY;
         }
         else{
@@ -32,12 +32,12 @@ public class CategoryService {
             return Message.RONGE_FOMAT_CATEGORY;
         }
 
-        Category existing = dAO.searchByID(id);
+        Category existing = categoryDAO.searchByID(id);
         if (existing == null) {
             return Message.CATEGORY_NOT_FOUND;
         }
 
-        if (dAO.update(id, name, description) == 1) {
+        if (categoryDAO.update(id, name, description) == 1) {
             return Message.UPDATE_CATEGORY_SUCCESSFULLY;
         } else {
             return Message.UPDATE_CATEGORY_FAILED;
@@ -46,7 +46,7 @@ public class CategoryService {
     
     //delete
     public String delete(int id) throws SQLException{
-        if(dAO.deleteByID(id)==1){
+        if(categoryDAO.deleteByID(id)==1){
             return Message.DELETE_CATEGORY_SUCCESSFULLY;
         }
         return Message.UPDATE_CATEGORY_FAILED;
@@ -54,19 +54,19 @@ public class CategoryService {
     
     //find by id
     public Category findByID(int id) throws SQLException{
-        return dAO.searchByID(id);
+        return categoryDAO.searchByID(id);
     }
     
     //find by name
-    public Category findByName(String name) throws SQLException{
+    public List<Category> findByName(String name) throws SQLException{
         if(isNullOrEmptyString(name)){
             return null;
         }
-        return dAO.searchByCategory(name);
+        return categoryDAO.searchByCategory(name);
     }
     
     //get all
     public List<Category> getAll() throws SQLException{
-        return dAO.getAll();
+        return categoryDAO.getAll();
     }
 }

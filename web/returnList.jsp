@@ -9,47 +9,48 @@
     </head>
 
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <jsp:include page="navbarReturn.jsp" />
 
-        
-            <table border="1" cellpadding="10" cellspacing="0">
-                <thead>
+
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Return ID</th>
+                    <th>Invoice ID</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <c:forEach var="rt" items="${returns}">
+                    <%--<c:if test="${rt.status == 'Approved'}">--%>
                     <tr>
-                        <th>Return ID</th>
-                        <th>Invoice ID</th>
-                        <th>Reason</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <td>${rt.returnID}</td>
+                        <td>${rt.invoiceID}</td>
+                        <td>${rt.reason}</td>
+                        <td>${rt.status}</td>
+
+                        <td>
+                            <form action="${pageContext.request.contextPath}/main/return/update" method="POST">
+                                <input type="hidden" name="returnID" value="${rt.returnID}" />
+                                <select name="status">
+                                    <option value="Approved">Approve</option>
+                                    <option value="Rejected">Reject</option>
+                                </select>
+                                <button type="submit" name="action">Update</button>
+                            </form>
+                        </td>
+
                     </tr>
-                </thead>
-                
-                <tbody>
-                    <c:forEach var="rt" items="${returnn}">
-                        <%--<c:if test="${rt.status == 'Approved'}">--%>
-                        <tr>
-                            <td>${rt.returnID}</td>
-                            <td>${rt.invoiceID}</td>
-                            <td>${rt.reason}</td>
-                            <td>${rt.status}</td>
+                    <%--</c:if>--%>
+                </c:forEach>
+            </tbody>
+        </table>
 
-                            <td>
-                                <form action="${pageContext.request.contextPath}/main/return/update" method="POST">
-                                    <input type="hidden" name="returnID" value="${rt.returnID}" />
-                                    <select name="status">
-                                        <option value="Approved">Approve</option>
-                                        <option value="Rejected">Reject</option>
-                                    </select>
-                                    <button type="submit" name="action">Update</button>
-                                </form>
-                            </td>
-
-                        </tr>
-                        <%--</c:if>--%>
-                    </c:forEach>
-                </tbody>
-            </table>
-       
-        <c:if test="${empty returnn}">
+        <c:if test="${empty returns}">
             <p>There are no return to display.</p>
         </c:if>
 

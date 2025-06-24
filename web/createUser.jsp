@@ -9,12 +9,9 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="post-container">
             <h3>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h3>
-
-            <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST">
-                <input type="submit" class="btn btn-danger logout-btn" value="LOGOUT" />
-            </form>
 
             <h3>Create New User</h3>
 
@@ -29,7 +26,7 @@
 
                 <label for="phone">Phone</label>
                 <input type="text" id="phone" name="phone" placeholder="Enter phone" required class="form-control" />
-                
+
                 <label for="roleID">Role</label>
                 <select id="roleID" name="roleID" required class="form-select">
                     <c:forEach var="r" items="${roleList}">

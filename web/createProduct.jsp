@@ -9,19 +9,11 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="post-container">
-            <c:if test="${empty sessionScope.currentUser}">
-                <a href="${pageContext.request.contextPath}/login.jsp">Login</a>
-            </c:if>
-            
+
             <c:if test="${not empty sessionScope.currentUser}">
                 <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
-
-                <div class="mb-3">
-                    <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST">
-                        <input type="submit" class="btn btn-danger logout-btn" value="LOGOUT" />
-                    </form>
-                </div>
             </c:if>
 
             <h3>Create New Product</h3>
@@ -34,22 +26,22 @@
 
                 <label for="categoryID">Category ID</label>
                 <input type="number" id="categoryID" name="categoryID" placeholder="Enter category ID" required class="form-control" min="1" />
-                
+
                 <label for="price">Price</label>
                 <input type="number" id="price" name="price" placeholder="Enter price" required class="form-control" min="0" step="0.01"/>
-                
+
                 <label for="quantity">Quantity</label>
                 <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required class="form-control" min="1" />
-                
+
                 <label for="status">Status</label>
                 <select id="status" name="status" required class="form-select">
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
-                
+
                 <label for="promoID">Promotion ID</label>
                 <input type="number" id="promoID" name="promoID" placeholder="Enter promotion ID" class="form-control"/>
-                
+
                 <button type="submit" class="btn btn-primary w-100">Create</button>
             </form>
 

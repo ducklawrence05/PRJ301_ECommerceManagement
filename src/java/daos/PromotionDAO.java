@@ -15,7 +15,7 @@ public class PromotionDAO {
     private final String UPDATE = "UPDATE [dbo].[tblPromotions] SET [name] = ?,[discountPercent] = ?,[startDate] = ?,[endDate] = ?,[status] = ? WHERE promoID =?";
     private final String DELETE = "DELETE FROM [dbo].[tblPromotions] WHERE promoID =?";
     private final String SEARCH_BY_ID = "SELECT * FROM [dbo].[tblPromotions] WHERE promoID =?";
-    private final String SEARCH_BY_NAME = "SELECT * FROM [dbo].[tblPromotions] WHERE [name] =?";
+    private final String SEARCH_BY_NAME = "SELECT * FROM [dbo].[tblPromotions] WHERE [name] LIKE ?";
     private final String GET_ALL ="SELECT * FROM [dbo].[tblPromotions]";
     private final String CHECK_EXIST = "SELECT 1 FROM [dbo].[tblPromotions] WHERE [name] = ?";
 
