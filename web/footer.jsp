@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -11,87 +13,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Group 3 Shop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap 5 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body class="flex flex-col min-h-screen">
-    <footer class="bg-gray-900 text-white py-10">
-      <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-        <!-- Logo và giới thiệu -->
-        <div>
-          <h2 class="text-2xl font-bold mb-4">Group 3 Shop</h2>
-          <p class="text-sm mb-4">
-            Chuyên cung cấp sản phẩm chất lượng, giá tốt, dịch vụ tận tâm.
-          </p>
-          <p class="text-sm">
-            Email:
-            <a href="mailto:group3.edu.vn" class="text-blue-400 hover:underline"
-              >group3.edu.vn</a
-            >
-          </p>
-          <p class="text-sm">Phone: 0937******</p>
-        </div>
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Nội dung trang -->
+    <main class="flex-grow-1 p-4">
+      <!-- Nội dung chính sẽ ở đây -->
+    </main>
 
-        <!-- Liên kết nhanh -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">Liên kết nhanh</h3>
-          <ul class="space-y-2 text-sm">
-            <li>
-              <a href="#" class="hover:text-blue-400" style="padding-left: 32px"
-                >Trang chủ</a
-              >
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400" style="padding-left: 32px"
-                >Sản phẩm</a
-              >
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400" style="padding-left: 32px"
-                >Giới thiệu</a
-              >
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400" style="padding-left: 37px"
-                >Liên hệ</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <!-- Chính sách -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">Chính sách</h3>
-          <ul class="space-y-2 text-sm">
-            <li>
-              <a href="#" class="hover:text-blue-400">Chính sách bảo hành</a>
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400">Chính sách đổi trả</a>
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400">Chính sách vận chuyển</a>
-            </li>
-            <li>
-              <a href="#" class="hover:text-blue-400">Chính sách bảo mật</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Mạng xã hội -->
-        <div>
-          <h3 class="text-xl font-semibold mb-4">Kết nối với chúng tôi</h3>
-          <div class="flex space-x-4">
-            <a href="#" class="hover:text-blue-400">Facebook</a>
-            <a href="#" class="hover:text-blue-400">Instagram</a>
-            <a href="#" class="hover:text-blue-400">Zalo</a>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+      <div class="container">
+        <div class="row">
+          <!-- Logo và giới thiệu -->
+          <div class="col-md-6 mb-4">
+            <h2 class="h4 fw-bold mb-3">Group 3 Shop</h2>
+            <p class="small mb-3">
+              Chuyên cung cấp sản phẩm chất lượng, giá tốt, dịch vụ tận tâm.
+            </p>
+            <p class="small mb-1">
+              Email: <a href="mailto:group3.edu.vn" class="text-info text-decoration-none">group3.edu.vn</a>
+            </p>
+            <p class="small">Phone: 0937******</p>
           </div>
-          <p class="text-sm mt-4">© 2025 Group 3 Shop. All rights reserved.</p>
+
+         
+
+         
+
+          <!-- Mạng xã hội -->
+          <div class="col-md-6 mb-4">
+            <h3 class="h5 fw-semibold mb-3">Kết nối với chúng tôi</h3>
+            <div class="d-flex gap-3 mb-3 d-flex flex-column align-items-center">
+              <a href="#" class="text-white text-decoration-none">Facebook</a>
+              <a href="#" class="text-white text-decoration-none">Instagram</a>
+              <a href="#" class="text-white text-decoration-none">Zalo</a>
+            </div>
+            <p class="small mb-0" style="margin-left:189px">© 2025 Group 3 Shop. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-
-
-
-
