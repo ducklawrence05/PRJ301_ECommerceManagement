@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="post-container">
+        <div class="post-container" style="min-height: 80vh">
 
             <c:if test="${not empty sessionScope.currentUser}">
                 <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}"/></h2>
@@ -54,5 +54,6 @@
 
             <a href="${pageContext.request.contextPath}/main/product" class="back-link">Back to product list</a>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

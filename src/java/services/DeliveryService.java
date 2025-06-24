@@ -4,13 +4,11 @@
  */
 package services;
 
-import static com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl.createDate;
 import constants.Message;
 import daos.DeliveryDAO;
 import dtos.Delivery;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

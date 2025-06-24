@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container bg-white p-4 rounded shadow-sm">
+        <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <h2 class="mb-3">Product List</h2>
 
             <c:if test="${sessionScope.currentUser.role == 'SELLER'}">
@@ -91,7 +91,7 @@
                                 <td>${product.quantity}</td>
                                 <td>${product.sellerFullName}</td>
                                 <td>${product.status}</td>
-                                <td class="table-actions">
+                                <td class="table-actions gap-2">
                                     <c:choose>
                                         <c:when test="${sessionScope.currentUser.role == 'SELLER' and sessionScope.currentUser.userID eq product.sellerID}">
                                             <form 
@@ -112,10 +112,13 @@
                                             <form 
                                                 action="${pageContext.request.contextPath}/main/cart/addToCart" 
                                                 method="POST"
-                                                >
+                                                class="table-actions gap-2"
+                                            >
                                                 <input type="hidden" name="returnUrl" value="/main/product" readonly />
                                                 <input type="hidden" name="returnMethod" value="GET" readonly />
-                                                <input type="number" name="quantity" placeholder="Enter quantity..." min="1" max="${product.quantity}" required />
+                                                <input type="number" name="quantity" class="form-control" 
+                                                       placeholder="Enter quantity..." style="width:150px"
+                                                       min="1" max="${product.quantity}" required />
                                                 <button type="submit" name="productID" value="${product.productID}" class="btn btn-sm btn-warning">Add to cart</button>
                                             </form>
                                         </c:when>
@@ -127,6 +130,7 @@
                 </table>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
 
         <script>
             const searchBy = document.getElementById('searchBy');

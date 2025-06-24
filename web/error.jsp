@@ -14,9 +14,10 @@
         %>
 
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="error-container">
+        <div class="error-container" style="min-height: 80vh">
             <h2>Error</h2>
             <p class="error-msg"><%= error %></p>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

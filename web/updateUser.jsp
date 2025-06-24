@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="post-container">
+        <div class="post-container" style="min-height: 80vh">
             <h3>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h3>
 
             <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST">
@@ -60,6 +60,7 @@
                 <a href="${pageContext.request.contextPath}/main/product" class="back-link">Back to product page</a>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
 
         <script>
             const oldpwd = document.getElementById('oldPassword');

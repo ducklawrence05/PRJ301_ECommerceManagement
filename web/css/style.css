@@ -52,12 +52,14 @@ h1, h3 {
 }
 
 /* user list */
-.table-actions form {
-    display: inline;
+.table-actions{
+    display: flex;
+    align-items: center;
 }
 .table th, .table td {
     vertical-align: middle;
     white-space: nowrap;
+    height: 50px;
 }
 .table td.actions {
     text-align: center;
@@ -85,9 +87,6 @@ h1, h3 {
 /* user */
 label {
     font-weight: 600;
-}
-input, select {
-    margin-bottom: 20px;
 }
 a.back-link {
     display: block;

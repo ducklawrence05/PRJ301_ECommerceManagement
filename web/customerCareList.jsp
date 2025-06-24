@@ -10,8 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container bg-white p-4 rounded shadow-sm">
-            <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
+        <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <div class="mb-3">
                 <a href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel" 
                    class="btn btn-info mt-2">View All Full Info</a>
@@ -101,5 +100,6 @@
                 <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

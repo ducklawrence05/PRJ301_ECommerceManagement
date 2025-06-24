@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container mt-5">
+        <div class="container mt-5" style="min-height: 80vh">
             <h2>Update Promotion</h2>
 
             <c:if test="${not empty MSG}">
@@ -51,5 +51,6 @@
                 <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />s
     </body>
 </html>

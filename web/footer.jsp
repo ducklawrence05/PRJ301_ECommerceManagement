@@ -14,12 +14,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="flex flex-col min-h-screen">
-    <!-- Nội dung trang -->
-    
-    <main class="flex-grow p-4">
-      
-        </main>
-    <!-- Footer -->
     <footer class="bg-gray-900 text-white py-10">
       <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- Logo và giới thiệu -->

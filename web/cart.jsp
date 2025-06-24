@@ -8,7 +8,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container py-4">
+        <div class="container py-4" style="min-height: 80vh">
             <form 
                 method="GET" 
                 action="${pageContext.request.contextPath}/main/product"
@@ -119,6 +119,7 @@
                 </form>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
 
         <!-- Scripts -->
         <script>

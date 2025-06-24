@@ -11,7 +11,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container mt-4">
+        <div class="container mt-4" style="min-height: 80vh">
             <h2 class="mb-3">Promotion List</h2>
 
             <c:if test="${sessionScope.currentUser.role == 'MARKETING'}">
@@ -141,5 +141,6 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

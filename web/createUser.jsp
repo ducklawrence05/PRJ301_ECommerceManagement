@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="post-container">
+        <div class="post-container" style="min-height: 80vh">
             <h3>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h3>
 
             <h3>Create New User</h3>
@@ -45,5 +45,6 @@
 
             <a href="${pageContext.request.contextPath}/main/user" class="back-link">Back to user CRUD</a>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

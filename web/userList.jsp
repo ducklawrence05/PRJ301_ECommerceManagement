@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container bg-white p-4 rounded shadow-sm">
+        <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <form action="${pageContext.request.contextPath}/main/user" method="GET" class="mb-3">
                 <button type="submit" name="action" value="create" class="btn btn-success">Create User</button>
             </form>
@@ -29,6 +29,7 @@
                     <button type="submit" class="btn btn-primary w-100">Search</button>
                 </div>
             </form>
+                
             <c:if test="${!empty requestScope.MSG}">
                 <div class="alert alert-success">${requestScope.MSG}</div>
             </c:if>
@@ -57,7 +58,7 @@
                                 <td>${user.fullName}</td>
                                 <td>${user.phone}</td>
                                 <td>${user.role}</td>
-                                <td class="table-actions">
+                                <td class="table-actions gap-2">
                                     <form 
                                         action="${pageContext.request.contextPath}/main/user/update" 
                                         method="GET"
@@ -78,5 +79,6 @@
                 </table>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

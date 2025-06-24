@@ -16,7 +16,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container bg-white p-4 rounded shadow-sm">
+        <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <h2>Customer Care Full Info</h2>
 
             <!-- Notification -->
@@ -75,5 +75,6 @@
                 <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container bg-white p-4 rounded shadow-sm">
+        <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <h2 class="mb-3">Category List</h2>
 
             <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
@@ -66,7 +66,7 @@
                                 <td>${cat.categoryID}</td>
                                 <td>${cat.categoryName}</td>
                                 <td>${cat.description}</td>
-                                <td class="table-actions">
+                                <td class="table-actions gap-2">
                                     <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                                         <!-- Update -->
                                         <form action="${pageContext.request.contextPath}/main/category/update" method="GET" class="d-inline">
@@ -87,5 +87,6 @@
                 </table>
             </c:if>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>

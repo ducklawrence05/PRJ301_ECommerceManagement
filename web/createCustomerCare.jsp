@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
-        <div class="container mt-5 bg-light p-4 rounded shadow-sm">
+        <div class="container mt-5 bg-light p-4 shadow-sm" style="min-height: 80vh">
             <h3 class="mb-3">Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h3>
 
             <h3 class="mb-3">Create Customer Care Ticket</h3>
@@ -42,5 +42,6 @@
 
             <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-link mt-3">Back to Customer Care List</a>
         </div>
+        <jsp:include page="/footer.jsp" flush="true" />
     </body>
 </html>
