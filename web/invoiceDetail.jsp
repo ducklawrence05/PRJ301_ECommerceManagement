@@ -14,6 +14,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <jsp:include page="navbarInvoice.jsp" />
 
         <h2>INVOICE DETAIL</h2>
@@ -111,30 +112,13 @@
                 <button type="submit" id="cancel">Cancel</button>
             </form>
         </c:if>
-        <c:if test="${requestScope.status == 'paid'}">
+        <c:if test="${requestScope.status == 'paid' or requestScope.status == 'delivered'}">
             <form  action="${pageContext.request.contextPath}/main/return/create" method="POST">
                 <input type="hidden" name="status" value="return" />
                 <input type="text" name="reason" placeholder="Sao mày dám huy don cua taoooooooo" required="">
                 <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                 <button type="submit" id="cancel">Return</button>
             </form>
-
-            <form  action="${pageContext.request.contextPath}/main/delivery/..." method="POST">
-                <input type="text" name="reason" value="" />
-                <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
-                <button type="submit" id="cancel">Cancel</button>
-            </form>
-
         </c:if>
-
-        <c:if test="${requestScope.status == 'delivered'}">
-            <form  action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
-                <input type="hidden" name="status" value="return" />
-                <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
-                <button type="submit" id="return">Return</button>
-            </form>
-
-        </c:if>
-
     </body>
 </html>

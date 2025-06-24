@@ -111,10 +111,7 @@ public class CategoryController extends HttpServlet {
         List<Category> list = new ArrayList<>();
         try {
             String name = request.getParameter("keySearch");
-            Category category = categoryService.findByName(name);
-            if (category != null) {
-                list.add(category);
-            }
+            list = categoryService.findByName(name);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
@@ -128,7 +125,6 @@ public class CategoryController extends HttpServlet {
             categories = categoryService.getAll();
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
         }
         return categories;
     }
@@ -184,7 +180,6 @@ public class CategoryController extends HttpServlet {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
         }
         return list;
     }

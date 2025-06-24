@@ -11,6 +11,7 @@ import java.util.List;
 import utils.DBContext;
 
 public class PromotionDAO {
+
     private static final String CREATE =
         "INSERT INTO [dbo].[tblPromotions]([name],[discountPercent],[startDate],[endDate],[status]) VALUES (?,?,?,?,?)";
     private static final String UPDATE =

@@ -7,42 +7,65 @@ import dtos.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.*;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/aaa"})
+@WebFilter(filterName = "AuthFilter", urlPatterns = {"/*"})
 public class AuthFilter implements Filter {
 
-    private static final Map<String, Role[]> protectedUrls = new HashMap<>();
-    private static final Set<String> publicUrls = new HashSet<>(Arrays.asList(
-            "/welcome.jsp",
-            "/login.jsp",
-            "/register.jsp",
-            "/main/auth/login",
-            "/main/auth/register",
-            "/main/product" // được GET công khai
+    public static final Set<String> publicUrls = new HashSet<>(Arrays.asList(
+        "/welcome.jsp",
+        "/login.jsp",
+        "/register.jsp",
+        "/main/auth/login",
+        "/main/auth/logout",
+        "/main/auth/register",
+        "/main/product",
+        "/main/promotion",
+        "/main/category"
     ));
 
+    public static final Map<String, Role[]> exactUrls = new HashMap<>();
+    public static final Map<String, Role[]> prefixUrls = new LinkedHashMap<>(); // Linked để ưu tiên prefix dài hơn
+
     static {
-        protectedUrls.put("/admin.jsp", new Role[]{Role.ADMIN});
-        protectedUrls.put("/main/user", new Role[]{Role.ADMIN});
-        protectedUrls.put("/main/product", new Role[]{Role.ADMIN, Role.SELLER});
-        protectedUrls.put("/main/accountant", new Role[]{Role.ACCOUNTANT});
-        protectedUrls.put("/main/marketing", new Role[]{Role.MARKETING});
-        protectedUrls.put("/main/delivery", new Role[]{Role.DELIVERY});
-        protectedUrls.put("/main/support", new Role[]{Role.CUSTOMER_SUPPORT});
-        protectedUrls.put("/main/product", new Role[]{Role.BUYER});
+        // ==== Buyer ====
+        prefixUrls.put("/main/cart", new Role[]{Role.BUYER});
+        prefixUrls.put("/main/invoice", new Role[]{Role.BUYER});
+        exactUrls.put("/main/delivery/create", new Role[]{Role.BUYER});
+        exactUrls.put("/main/return/create", new Role[]{Role.BUYER});
+        exactUrls.put("/main/customerCare/create", new Role[]{Role.BUYER});
+
+        // ==== Customer Support ====
+        exactUrls.put("/main/customerCare/update", new Role[]{Role.CUSTOMER_SUPPORT});
+        exactUrls.put("/main/customerCare/delete", new Role[]{Role.CUSTOMER_SUPPORT});
+
+        // ==== Buyer & Support đều có quyền GET ở /main/customerCare ====
+        prefixUrls.put("/main/customerCare", new Role[]{Role.BUYER, Role.CUSTOMER_SUPPORT});
+
+        // ==== Seller ====
+        prefixUrls.put("/main/product", new Role[]{Role.SELLER});
+
+        // ==== Marketing ====
+        prefixUrls.put("/main/promotion", new Role[]{Role.MARKETING});
+
+        // ==== Admin ====
+        prefixUrls.put("/main/category", new Role[]{Role.ADMIN});
+        prefixUrls.put("/main/return", new Role[]{Role.ADMIN});
+        prefixUrls.put("/main/user", new Role[]{Role.ADMIN});
+
+        // ==== Delivery ====
+        prefixUrls.put("/main/delivery", new Role[]{Role.DELIVERY}); // đã tách create ở trên cho Buyer
     }
+
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
 
         String fullPath = request.getRequestURI();
         String contextPath = request.getContextPath();
@@ -84,8 +107,9 @@ public class AuthFilter implements Filter {
 
     private boolean isPublic(String path, String method) {
         // GET /main/product thì public
-        if (path.equals("/main/product") && method.equalsIgnoreCase("GET")) {
-            return true;
+        if ((path.equals("/main/product") || path.equals("/main/promotion")) 
+                && method.equalsIgnoreCase("POST")) {
+            return false;
         }
 
         if (path.equals("/") || path.isEmpty()) {
@@ -102,17 +126,20 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isAuthorized(String path, String method, Role userRole) {
-        for (Map.Entry<String, Role[]> entry : protectedUrls.entrySet()) {
-            if (path.startsWith(entry.getKey())) {
-                for (Role role : entry.getValue()) {
-                    if (role == userRole) {
-                        return true;
-                    }
-                }
-                return false; // matched URL nhưng sai role
-            }
+        // Check exact match
+        if (exactUrls.containsKey(path)) {
+            Role[] roles = exactUrls.get(path);
+            return userRole != null && Arrays.asList(roles).contains(userRole);
         }
 
-        return true; // Không nằm trong vùng bảo vệ
+        // 3. Check prefix match (ưu tiên prefix dài hơn)
+        for (Map.Entry<String, Role[]> entry : prefixUrls.entrySet()) {
+            if (path.startsWith(entry.getKey())) {
+                Role[] roles = entry.getValue();
+                return userRole != null && Arrays.asList(roles).contains(userRole);
+            }
+        }
+        
+        return false;
     }
 }

@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
     <body>
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="post-container">
             <h3>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h3>
 

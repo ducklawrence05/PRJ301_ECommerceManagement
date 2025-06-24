@@ -71,7 +71,7 @@ public class ReturnController extends HttpServlet {
             
         }
 
-        request.setAttribute("returnn", returns);
+        request.setAttribute("returns", returns);
         request.getRequestDispatcher(url).forward(request, response);
     }
 
@@ -103,7 +103,7 @@ public class ReturnController extends HttpServlet {
 
             }
 
-            request.setAttribute("return", returnService.getAllReturn());
+            request.setAttribute("returns", returnService.getAllReturn());
             request.getRequestDispatcher(url).forward(request, response);
 
         } catch (Exception ex) {

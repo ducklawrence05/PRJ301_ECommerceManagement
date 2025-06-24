@@ -13,6 +13,7 @@
             if (error == null) error = "Unknown error occurred.";
         %>
 
+        <jsp:include page="/header.jsp" flush="true" />
         <div class="error-container">
             <h2>Error</h2>
             <p class="error-msg"><%= error %></p>
