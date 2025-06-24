@@ -16,7 +16,7 @@
         <div class="alert alert-info">${requestScope.MSG}</div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/customerCare" method="POST">
+    <form action="${pageContext.request.contextPath}/main/customerCare" method="POST">
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="ticketID" value="${requestScope.customerCare.ticketID}" />
 

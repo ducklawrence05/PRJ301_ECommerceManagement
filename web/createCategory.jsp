@@ -25,7 +25,7 @@
         </c:if>
 
         <!-- Create Form -->
-        <form action="${pageContext.request.contextPath}/category?action=create" method="POST">
+        <form action="${pageContext.request.contextPath}/main/category/create" method="POST">
             <div class="mb-3">
                 <label for="categoryName" class="form-label">Category Name</label>
                 <input type="text" id="categoryName" name="categoryName"

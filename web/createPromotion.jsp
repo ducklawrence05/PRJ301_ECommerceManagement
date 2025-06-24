@@ -16,7 +16,7 @@
         <div class="alert alert-info">${requestScope.MSG}</div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/promotion" method="POST">
+    <form action="${pageContext.request.contextPath}/main/promotion" method="POST">
         <input type="hidden" name="action" value="create" />
 
         <div class="mb-3">
@@ -48,7 +48,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Create</button>
-        <a href="${pageContext.request.contextPath}/promotion" class="btn btn-outline-secondary">Back</a>
+        <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-outline-secondary">Back</a>
     </form>
 </div>
 </body>

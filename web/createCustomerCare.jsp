@@ -25,7 +25,7 @@
         </c:if>
 
         <!-- Create Form -->
-        <form action="${pageContext.request.contextPath}/customerCare?action=create" method="POST">
+        <form action="${pageContext.request.contextPath}/main/customerCare/create" method="POST">
             
             <input type="hidden" name="userID" value="${sessionScope.currentUser.userID}" />
 
@@ -44,7 +44,7 @@
             <button type="submit" class="btn btn-primary w-100">Create</button>
         </form>
 
-        <a href="${pageContext.request.contextPath}/customerCare" class="btn btn-link mt-3">Back to Customer Care List</a>
+        <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-link mt-3">Back to Customer Care List</a>
     </div>
 </body>
 </html>

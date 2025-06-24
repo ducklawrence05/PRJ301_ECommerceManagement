@@ -19,7 +19,7 @@
     <h2>Customer Care Full Info</h2>
 
     <div class="mb-3">
-        <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-outline-secondary">Back to CustomerCare CRUD</a>
+        <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-outline-secondary">Back to Customer Care CRUD</a>
         <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline float-end">
             <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
         </form>
@@ -64,7 +64,7 @@
                             <td>${care.status}</td>
                             <td>${care.reply}</td>
                             <td>
-                                <form action="${pageContext.request.contextPath}/customerCare" method="GET" class="d-inline">
+                                <form action="${pageContext.request.contextPath}/main/customerCare" method="GET" class="d-inline">
                                     <input type="hidden" name="action" value="update" />
                                     <input type="hidden" name="keySearch" value="${care.ticketID}" />
                                     <button type="submit" class="btn btn-sm btn-warning">Update</button>

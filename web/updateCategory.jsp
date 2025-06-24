@@ -25,7 +25,7 @@
         </c:if>
 
         <!-- Update Form -->
-        <form action="${pageContext.request.contextPath}/category?action=update" method="POST">
+        <form action="${pageContext.request.contextPath}/main/category/update" method="POST">
             <input type="hidden" name="categoryID" value="${requestScope.category.categoryID}" />
 
             <div class="mb-3">

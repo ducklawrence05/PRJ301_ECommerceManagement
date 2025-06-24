@@ -15,7 +15,7 @@
         <div class="alert alert-info">${MSG}</div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/promotion?action=update" method="post">
+    <form action="${pageContext.request.contextPath}/main/promotion/update" method="post">
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="promoID" value="${promotions.promoID}" />
 
@@ -48,7 +48,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="${pageContext.request.contextPath}/promotion" class="btn btn-secondary">Cancel</a>
+        <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 </body>
