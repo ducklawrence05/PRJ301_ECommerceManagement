@@ -13,6 +13,7 @@
             }
         </style>
     </head>
+    <jsp:include page="/header.jsp" flush="true" />
     <body>
         <div class="container bg-white p-4 rounded shadow-sm">
             <a href="${pageContext.request.contextPath}/main/product" class="btn btn-primary me-2 mb-3">Product list</a>

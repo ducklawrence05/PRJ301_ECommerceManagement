@@ -5,6 +5,7 @@ import constants.Role;
 import constants.Url;
 import dtos.CustomerCare;
 import dtos.CustomerCareViewModel;
+import dtos.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import responses.ServiceResponse;
+import utils.AuthUtils;
 
 @WebServlet(name = "CustomerCareController", urlPatterns = {"/customerCare"})
 public class CustomerCareController extends HttpServlet {
@@ -96,7 +99,7 @@ public class CustomerCareController extends HttpServlet {
                     break;
                 case UPDATE:
                     updateCustomerCare(request, response);
-                    url = Url.UPDATE_CUSTOMERCARE_PAGE;
+                    url = Url.CUSTOMERCARE_LIST_PAGE;
                     break;
                 case DELETE:
                     deleteCustomerCare(request, response);
@@ -113,20 +116,33 @@ public class CustomerCareController extends HttpServlet {
         }
     }
 
-    private void createCustomerCare(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-        String userID = request.getParameter("userID");
+    private void createCustomerCare(HttpServletRequest request, HttpServletResponse response) 
+        throws ServletException, IOException, SQLException {
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if (!srUser.isSuccess()) {
+            request.setAttribute("MSG", srUser.getMessage());
+            request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
+                   .forward(request, response);
+            return;
+        }
+
+        User currentUser = srUser.getData();
         String subject = request.getParameter("subject");
         String content = request.getParameter("content");
 
         String message;
         try {
-            message = customerCareService.create(userID, subject, content);
+            message = customerCareService.create(
+                currentUser.getUserID(), subject, content);
         } catch (IllegalArgumentException ex) {
             message = Message.CREATE_CUSTOMERCARE_FAILED;
         }
 
         request.setAttribute("MSG", message);
+        request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
+               .forward(request, response);
     }
+
 
     private void updateCustomerCare(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         int id = Integer.parseInt(request.getParameter("ticketID"));

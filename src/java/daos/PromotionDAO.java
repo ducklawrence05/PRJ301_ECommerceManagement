@@ -80,7 +80,7 @@ public class PromotionDAO {
         List<Promotion> promotions = new ArrayList<>();
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_NAME)) {
-            ps.setString(1, name);
+            ps.setString(1,"%" + name + "%");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 promotions.add(mapRow(rs));
