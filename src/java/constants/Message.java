@@ -111,6 +111,7 @@ public class Message {
     public static final String INVALID_DATE_PROMOTION = "start date higher than end date";
     public static String START_DATE_MUST_BE_TODAY_OR_FUTURE = "Start date must be today or future";
     public static Object INVALID_FORMAT = "Invalid format";
+    public static String DELETE_PROMOTION_FAILED = "Delete promotion fail";
     //Customer care
     public static final String IS_EXIT_CUSTOMERCARE = "Customer care is exited";
     public static final String CREATE_CUSTOMERCARE_SUCCESSFULLY = "Create Customer care successfully";
@@ -137,6 +138,7 @@ public class Message {
     public static final String DELETE_RETURN_SUCCESSFULLY = "Delete Return successfully";
     public static final String UPDATE_RETURN_FAILED = "Update Return failed";
     public static final String RETURN_NOT_FOUND = "Return not found";
+    
     
     
 }

@@ -12,12 +12,6 @@
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
             <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
-
-            <div class="mb-3">
-                <a href="${pageContext.request.contextPath}/main/category" 
-                   class="btn btn-link mt-3 d-block">Category CRUD</a>
-            </div>
-
             <form action="${pageContext.request.contextPath}/main/category/create" method="GET" class="mb-3">
                 <button type="submit" class="btn btn-success">
                     Create Category

@@ -12,7 +12,6 @@
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 rounded shadow-sm">
             <h2>Welcome, <c:out value="${sessionScope.currentUser.fullName}" /></h2>
-
             <div class="mb-3">
 
                 <a href="${pageContext.request.contextPath}/main/customerCare" 

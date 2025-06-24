@@ -28,7 +28,6 @@
                            class="form-control" placeholder="Enter category name"
                            required value="${param.categoryName}" />
                 </div>
-
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea id="description" name="description"

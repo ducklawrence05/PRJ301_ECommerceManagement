@@ -19,13 +19,6 @@
         <div class="container bg-white p-4 rounded shadow-sm">
             <h2>Customer Care Full Info</h2>
 
-            <div class="mb-3">
-                <a href="${pageContext.request.contextPath}/main/customerCare" class="btn btn-outline-secondary">Back to CustomerCare CRUD</a>
-                <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline float-end">
-                    <button type="submit" name="action" value="Logout" class="btn btn-danger">Logout</button>
-                </form>
-            </div>
-
             <!-- Notification -->
             <c:if test="${not empty requestScope.MSG}">
                 <div class="alert alert-info">${requestScope.MSG}</div>
