@@ -16,16 +16,16 @@
             .custom-hover {
                 position: relative;
                 text-decoration: none;
-                color: white;
+                color: white !important;
                 z-index: 1;
-                display: flex;
+                display: flex !important;
                 align-items: center;
                 justify-content: center;
                 height: 100%;
                 width: 100%;
             }
             .custom-hover:hover {
-                color: #e0e0e0; /* giữ nguyên màu khi hover */
+                color: #e0e0e0 !important; /* giữ nguyên màu khi hover */
             }
             .custom-hover::after {
                 content: '';
@@ -38,7 +38,6 @@
                 transition: width 0.3s ease-in-out;
                 z-index: -1; /* nằm dưới chữ */
             }
-
             .custom-hover:hover::after {
                 width: 100%;
             }
