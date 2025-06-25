@@ -29,7 +29,7 @@
                         <div>
                             <h2 class="h4 fw-bold mb-3">Group 3 Shop</h2>
                             <p class="small mb-3">
-                                Chuyên cung cấp sản phẩm chất lượng, giá tốt, dịch vụ tận tâm.
+                                We specialize in providing high-quality products, competitive prices, and dedicated service.
                             </p>
                             <p class="small mb-1">
                                 Email: <a href="mailto:group3.edu.vn" class="text-info text-decoration-none">group3.edu.vn</a>
@@ -39,7 +39,7 @@
 
                         <!-- Mạng xã hội -->
                         <div class="col-md-3 d-flex flex-column align-items-start">
-                            <h3 class="h5 fw-semibold mb-3">Kết nối với chúng tôi</h3>
+                            <h3 class="h5 fw-semibold mb-3">Connect with us</h3>
                             <div class="d-flex gap-3 mb-3 d-flex flex-column">
                                 <a href="#" class="text-white text-decoration-none">Facebook</a>
                                 <a href="#" class="text-white text-decoration-none">Instagram</a>
