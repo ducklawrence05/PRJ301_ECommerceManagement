@@ -90,7 +90,7 @@
                             <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm fw-bold">Login</a>
                         </c:if>
                         <c:if test="${!empty sessionScope.currentUser}">
-                            <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
+                            <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="m-0">
                                 <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">Logout</button>
                             </form>
                         </c:if>
