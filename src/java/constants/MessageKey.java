@@ -45,7 +45,9 @@ public class MessageKey {
     public static final String DELETE_INVOICE_DETAIL_SUCCESS = "delete.invoice.detail.success";
     public static final String INVOICE_DETAIL_NOT_FOUND = "invoice.detail.not.found";
     public static final String INVOICE_EMPTY = "invoice.empty";
-
+    public static final String INVOICE_ADD_ERROR = "invoice.add.error";
+    public static final String INVOICE_REMOVE_ERROR = "invoice.remove.error";
+            
     // Product
     public static final String PRODUCT_NOT_FOUND = "product.not.found";
     public static final String PRODUCT_INACTIVE_OR_OUT = "product.inactive.or.out";
@@ -80,6 +82,7 @@ public class MessageKey {
     public static final String CLEAR_CART_FAILED = "clear.cart.fail";
     public static final String NO_ITEMS_SELECTED = "no.items.selected";
     public static final String CART_EMPTY = "cart.empty";
+    public static final String CART_REMOVE_ERROR = "cart.remove.error";
 
     // Category
     public static final String CATEGORY_EXISTED = "category.existed";

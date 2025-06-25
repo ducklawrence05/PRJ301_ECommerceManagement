@@ -60,8 +60,7 @@ public class InvoiceService {
 
             // check success
             if (!success) {
-                return ServiceResponse.failure(
-                        "Error occur when add product " + i + 1 + " to invoice detail");
+                return ServiceResponse.failure(MessageKey.INVOICE_ADD_ERROR);
             }
         }
 
@@ -264,7 +263,7 @@ public class InvoiceService {
         for (int i = 0; i < productIDs.size(); i++) {
             sr = deleteInvoiceDetailByInvoicveIDAndProductID(_invoiceID, String.valueOf(productIDs.get(i)));
             if (!sr.isSuccess()) {
-                return "Error occurred when removing item " + (i + 1) + " from invoice.";
+                return MessageKey.INVOICE_REMOVE_ERROR;
             }
         }
 

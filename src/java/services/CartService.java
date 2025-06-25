@@ -201,7 +201,7 @@ public class CartService {
         for (int i = 0; i < productIDs.size(); i++){
             sr = deleteItemFromCart(cartID, productIDs.get(i));
             if(!sr.isSuccess()){
-                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
+                return ServiceResponse.failure(MessageKey.DELETE_ITEMS_FROM_CART_FAILED);
             }
         }
         
@@ -223,7 +223,7 @@ public class CartService {
         for (int i = 0; i < productIDs.size(); i++){
             sr = deleteItemFromCart(cartID, productIDs.get(i));
             if(!sr.isSuccess()){
-                return ServiceResponse.failure("Error occurred when removing item " + (i + 1) + " from cart.");
+                return ServiceResponse.failure(MessageKey.CLEAR_CART_FAILED);
             }
         }
         
