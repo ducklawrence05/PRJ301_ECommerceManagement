@@ -48,7 +48,7 @@ public class CustomerCareService {
         if (customerCareDAO.update(id, userID, subject, content, status, reply) == 1) {
             return MessageKey.CREATE_CUSTOMERCARE_SUCCESS;
         }
-        return MessageKey.CREATE_CUSTOMERCARE_FAILED;
+        return MessageKey.UPDATE_CUSTOMERCARE_FAILED;
     }
 
     //search by id

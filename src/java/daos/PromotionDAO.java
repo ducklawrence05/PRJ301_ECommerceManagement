@@ -32,7 +32,7 @@ public class PromotionDAO {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(CREATE)) {
             ps.setString(1, name);
-            ps.setFloat(2, discount);
+            ps.setFloat(2, discount/100.0f);
             ps.setDate(3, new java.sql.Date(startDate.getTime()));
             ps.setDate(4, new java.sql.Date(endDate.getTime()));
             ps.setString(5, status);
@@ -56,7 +56,7 @@ public class PromotionDAO {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE)) {
             ps.setString(1, name);
-            ps.setFloat(2, discount);
+            ps.setFloat(2, discount/100.0f);
             ps.setDate(3, new java.sql.Date(startDate.getTime()));
             ps.setDate(4, new java.sql.Date(endDate.getTime()));
             ps.setString(5, status);

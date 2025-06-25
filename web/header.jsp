@@ -58,42 +58,42 @@
             <!-- Left nav items -->
             <div class="navbar-nav" style="min-width: 70%">
                 <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/product">
-                    <fmt:message key="nav.product" />
+                    <fmt:message key="product" />
                 </a>
                 <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/category">
-                    <fmt:message key="nav.category" />
+                    <fmt:message key="category" />
                 </a>
                 <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/promotion">
-                    <fmt:message key="nav.promotion" />
+                    <fmt:message key="promotion" />
                 </a>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/cart">
-                        <fmt:message key="nav.cart" />
+                        <fmt:message key="cart" />
                     </a>
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/invoice">
-                        <fmt:message key="nav.invoice" />
+                        <fmt:message key="invoice" />
                     </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER' or sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/customerCare">
-                        <fmt:message key="nav.customer.care" />
+                        <fmt:message key="customer.care" />
                     </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'DELIVERY'}">
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/delivery">
-                        <fmt:message key="nav.delivery" />
+                        <fmt:message key="delivery" />
                     </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/user">
-                        <fmt:message key="nav.user" />
+                        <fmt:message key="user" />
                     </a>
                     <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/return">
-                        <fmt:message key="nav.return" />
+                        <fmt:message key="return" />
                     </a>
                 </c:if>
             </div>
@@ -102,13 +102,13 @@
             <div class="d-flex align-items-center">
                 <c:if test="${empty sessionScope.currentUser}">
                     <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm fw-bold">
-                        <fmt:message key="button.login" />
+                        <fmt:message key="login" />
                     </a>
                 </c:if>
                 <c:if test="${!empty sessionScope.currentUser}">
                     <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="m-0">
                         <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">
-                            <fmt:message key="button.logout" />
+                            <fmt:message key="logout" />
                         </button>
                     </form>
                 </c:if>

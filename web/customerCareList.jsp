@@ -1,10 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="i18n.label" />
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Customer Care List</title>
+        <title><fmt:message key="customercare.list" /></title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
@@ -13,13 +18,13 @@
         <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
             <div class="mb-3">
                 <a href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel" 
-                   class="btn btn-info mt-2">View All Full Info</a>
+                   class="btn btn-info mt-2"><fmt:message key="customercare.view.all" /></a>
             </div>
 
             <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
                 <form action="${pageContext.request.contextPath}/main/customerCare/create" method="GET" class="mb-3">
                     <button type="submit" class="btn btn-success">
-                        Create Customer Care
+                        <fmt:message key="customercare.create" />
                     </button>
                 </form>
             </c:if>
@@ -30,18 +35,18 @@
                 <div class="col-md-4">
                     <select name="action" class="form-select">
                         <option value="findByID" 
-                                ${param.action=='findByID'?'selected':''}>Search by ID</option>
+                                ${param.action=='findByID'?'selected':''}><fmt:message key="search.id" /></option>
                         <option value="findBySubject" 
-                                ${param.action=='findBySubject'?'selected':''}>Search by subject</option>
+                                ${param.action=='findBySubject'?'selected':''}><fmt:message key="search.subject" /></option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <input type="text" class="form-control" name="keySearch" 
-                           placeholder="Enter keyword..." required 
+                           placeholder="<fmt:message key="search" />..." required 
                            value="${param.keySearch}" autofocus />
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                    <button type="submit" class="btn btn-primary w-100"><fmt:message key="search" /></button>
                 </div>
             </form>
 
@@ -52,7 +57,7 @@
 
             <!-- No result -->
             <c:if test="${empty requestScope.customerCares}">
-                <div class="alert alert-warning">No matching customer care found!</div>
+                <div class="alert alert-warning"><fmt:message key="customercare.not.found" /></div>
             </c:if>
 
             <!-- Table -->
@@ -60,14 +65,14 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>No</th>
-                            <th>Ticket ID</th>
-                            <th>User ID</th>
-                            <th>Subject</th>
-                            <th>Content</th>
-                            <th>Status</th>
-                            <th>Reply</th>
-                            <th>Actions</th>
+                            <th><fmt:message key="no" /></th>
+                            <th><fmt:message key="ticket.id" /></th>
+                            <th><fmt:message key="user.id" /></th>
+                            <th><fmt:message key="subject" /></th>
+                            <th><fmt:message key="content" /></th>
+                            <th><fmt:message key="status" /></th>
+                            <th><fmt:message key="reply" /></th>
+                            <th><fmt:message key="action" /></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,18 +91,13 @@
                                           onsubmit="return confirm('Are you sure to delete this customer care?');">
                                         <input type="hidden" name="ticketID" 
                                                value="${customerCare.ticketID}" />
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-sm btn-danger"><fmt:message key="delete" /></button>
                                     </form>
                                 </td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
-            </c:if>
-
-            <!-- Back -->
-            <c:if test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
         </div>
         <jsp:include page="/footer.jsp" flush="true" />

@@ -175,11 +175,7 @@ public class PromotionController extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("keySearch"));
             PromotionViewModel promotion = promotionService.searchByID(id);
-            if (promotion != null) {
-                list.add(promotion);
-            } else {
-                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.PROMOTION_NOT_FOUND));
-            }
+            if (promotion != null) list.add(promotion);
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INVALID_FORMAT));
@@ -192,9 +188,6 @@ public class PromotionController extends HttpServlet {
         try {
             String name = request.getParameter("keySearch");
             list = promotionService.searchByName(name);
-            if (list == null || list.isEmpty()) {
-                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.PROMOTION_NOT_FOUND));
-            }
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INVALID_FORMAT));
