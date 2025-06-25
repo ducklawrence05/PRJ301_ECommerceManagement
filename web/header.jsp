@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <fmt:setLocale value="${sessionScope.locale}" />
-<fmt:setBundle basename="i18n.labels" />
+<fmt:setBundle basename="i18n.label" />
 
 <style>
     .navbar-nav, .nav-link{
@@ -49,7 +49,7 @@
      style="background-color: #111827; color: white; padding: 0 80px">
     <c:if test="${not empty sessionScope.currentUser}">
         <h2 class="pt-3" style="text-align: center">
-            Welcome, <c:out value="${sessionScope.currentUser.fullName}"/>
+            <fmt:message key="welcome" />, <c:out value="${sessionScope.currentUser.fullName}"/>
         </h2>
     </c:if>
     <!-- Navigation Bar -->
@@ -57,37 +57,59 @@
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <!-- Left nav items -->
             <div class="navbar-nav" style="min-width: 70%">
-                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/product">Product List</a>
-                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/category">Category List</a>
-                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/promotion">Promotion List</a>
+                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/product">
+                    <fmt:message key="nav.product" />
+                </a>
+                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/category">
+                    <fmt:message key="nav.category" />
+                </a>
+                <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/promotion">
+                    <fmt:message key="nav.promotion" />
+                </a>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/cart">Cart List</a>
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/invoice">Invoice List</a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/cart">
+                        <fmt:message key="nav.cart" />
+                    </a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/invoice">
+                        <fmt:message key="nav.invoice" />
+                    </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER' or sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/customerCare">Customer Care</a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/customerCare">
+                        <fmt:message key="nav.customer.care" />
+                    </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'DELIVERY'}">
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/delivery">Delivery List</a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/delivery">
+                        <fmt:message key="nav.delivery" />
+                    </a>
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/user">User List</a>
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/return">Return List</a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/user">
+                        <fmt:message key="nav.user" />
+                    </a>
+                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/return">
+                        <fmt:message key="nav.return" />
+                    </a>
                 </c:if>
             </div>
 
             <!-- Right auth buttons -->
             <div class="d-flex align-items-center">
                 <c:if test="${empty sessionScope.currentUser}">
-                    <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm fw-bold">Login</a>
+                    <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm fw-bold">
+                        <fmt:message key="button.login" />
+                    </a>
                 </c:if>
                 <c:if test="${!empty sessionScope.currentUser}">
                     <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="m-0">
-                        <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">Logout</button>
+                        <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">
+                            <fmt:message key="button.logout" />
+                        </button>
                     </form>
                 </c:if>
                 <div class="d-inline-block">

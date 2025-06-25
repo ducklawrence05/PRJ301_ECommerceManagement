@@ -1,52 +1,45 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="vi">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Group 3 Shop</title>
-        <!-- Bootstrap 5 CDN -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            />
-    </head>
-    <body class="min-vh-100">
-        <!-- Footer -->
-        <footer class="bg-dark text-white py-5">
-            <div class="container">
-                <div class="row">
-                    <!-- Introduce -->
-                    <div class="d-flex justify-content-around mb-3">
-                        <div>
-                            <h2 class="h4 fw-bold mb-3">Group 3 Shop</h2>
-                            <p class="small mb-3">
-                                We specialize in providing high-quality products, competitive prices, and dedicated service.
-                            </p>
-                            <p class="small mb-1">
-                                Email: <a href="mailto:group3.edu.vn" class="text-info text-decoration-none">group3.edu.vn</a>
-                            </p>
-                            <p class="small">Phone: 0937******</p>
-                        </div>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-                        <!-- social -->
-                        <div class="col-md-3 d-flex flex-column align-items-start">
-                            <h3 class="h5 fw-semibold mb-3">Connect with us</h3>
-                            <div class="d-flex gap-3 mb-3 d-flex flex-column">
-                                <a href="#" class="text-white text-decoration-none">Facebook</a>
-                                <a href="#" class="text-white text-decoration-none">Instagram</a>
-                                <a href="#" class="text-white text-decoration-none">Zalo</a>
-                            </div>
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="i18n.label" />
 
-                        </div>
-                    </div>
-                    <div class="d-flex  justify-content-center">
-                        <p class="small mb-0" ">© 2025 Group 3 Shop. All rights reserved.</p>
-                    </div>
+<!-- Footer -->
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Introduce -->
+            <div class="d-flex justify-content-around mb-3">
+                <div>
+                    <h2 class="h4 fw-bold mb-3"><fmt:message key="shop.name" /></h2>
+                    <p class="small mb-3">
+                        <fmt:message key="introduce" />
+                    </p>
+                    <p class="small mb-1">
+                        <fmt:message key="email.value" var="emailAddress" />
+                        <fmt:message key="email" />: <a href="mailto:${emailAddress}" class="text-info text-decoration-none">
+                            ${emailAddress}
+                        </a>
+                    </p>
+                    <fmt:message key="phone.value" var="phoneNumber" />
+                    <p class="small"><fmt:message key="phone" />: ${phoneNumber}</p>
                 </div>
-        </footer>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+                <!-- social -->
+                <div class="col-md-3 d-flex flex-column align-items-start">
+                    <h3 class="h5 fw-semibold mb-3"><fmt:message key="connect.with.us" /></h3>
+                    <div class="d-flex gap-3 mb-3 d-flex flex-column">
+                        <a href="#" class="text-white text-decoration-none"><fmt:message key="facebook" /></a>
+                        <a href="#" class="text-white text-decoration-none"><fmt:message key="instagram" /></a>
+                        <a href="#" class="text-white text-decoration-none"><fmt:message key="zalo" /></a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="d-flex  justify-content-center">
+                <p class="small mb-0" "><fmt:message key="copyright" /></p>
+            </div>
+        </div>
+    </div>
+</footer>
