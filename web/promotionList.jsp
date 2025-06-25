@@ -29,6 +29,11 @@
                     <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-secondary">Clear</a>
                 </div>
             </form>
+
+            <c:if test="${not empty requestScope.MSG}">
+                <div class="alert alert-info">${requestScope.MSG}</div>
+            </c:if>
+                
             <c:choose>
                 <c:when test="${not empty requestScope.promotions}">
                     <c:forEach var="promotion" items="${requestScope.promotions}" varStatus="status">
