@@ -29,12 +29,6 @@
                     <a href="${pageContext.request.contextPath}/main/promotion" class="btn btn-secondary">Clear</a>
                 </div>
             </form>
-
-            <c:if test="${not empty requestScope.MSG}">
-                <div class="alert alert-info">${requestScope.MSG}</div>
-            </c:if>
-
-
             <c:choose>
                 <c:when test="${not empty requestScope.promotions}">
                     <c:forEach var="promotion" items="${requestScope.promotions}" varStatus="status">
@@ -77,11 +71,6 @@
                                     </form>
                                 </div>
                             </c:if>
-
-                            <c:if test="${empty promotion.products}">
-                                <div class="alert alert-warning">No matching products found!</div>
-                            </c:if>
-
                             <c:if test="${not empty promotion.products}">
                                 <table class="table table-bordered table-hover">
                                     <thead class="table-light">
