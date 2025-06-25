@@ -1,25 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="i18n.label" />
+
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cart Details</title>
+        <title><fmt:message key="cart.title" /></title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container py-4" style="min-height: 80vh">
-            <form 
-                method="GET" 
-                action="${pageContext.request.contextPath}/main/product"
-                class="mb-3"
-                >
-                <button type="submit" class="btn btn-success">Back to product page</button>
-            </form>
-
             <c:if test="${cart == null}">
                 <form method="POST" action="${pageContext.request.contextPath}/main/cart/create">
-                    <button type="submit" class="btn btn-success">Create cart</button>
+                    <button type="submit" class="btn btn-success"><fmt:message key="create.cart" /></button>
                 </form>
             </c:if>
 
@@ -33,15 +30,15 @@
                         href="${pageContext.request.contextPath}/main/cart" 
                         class="me-2 mb-3"
                         style="text-decoration: none; color: black">
-                        Your cart
+                        <fmt:message key="your.cart" />
                     </a>
                 </h2>
 
                 <!-- User Info -->
                 <div class="card mb-4">
                     <div class="card-body">
-                        <p><strong>Full Name:</strong> ${cart.userFullName}</p>
-                        <p><strong>Created Date:</strong> ${cart.createdDate}</p>
+                        <p><strong><fmt:message key="fullname" />:</strong> ${cart.userFullName}</p>
+                        <p><strong><fmt:message key="created.date" />:</strong> ${cart.createdDate}</p>
                     </div>
                 </div>
 
@@ -54,13 +51,13 @@
                         <thead class="table-light">
                             <tr>
                                 <th><input type="checkbox" onclick="toggleAll(this)" /></th>
-                                <th>No</th>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Sale Price</th>
-                                <th>Base Price</th>
-                                <th>Subtotal</th>
-                                <th>Action</th>
+                                <th><fmt:message key="no" /></th>
+                                <th><fmt:message key="product" /></th>
+                                <th><fmt:message key="quantity" /></th>
+                                <th><fmt:message key="sale.price" /></th>
+                                <th><fmt:message key="base.price" /></th>
+                                <th><fmt:message key="subtotal" /></th>
+                                <th><fmt:message key="action" /></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,12 +84,12 @@
                                         <button type="submit" class="btn btn-sm btn-success me-1"
                                                 data-action="${pageContext.request.contextPath}/main/cart/updateItem"
                                                 data-productid="${item.productID}"
-                                                onclick="setActionAndProductID(this)">Update</button>
+                                                onclick="setActionAndProductID(this)"><fmt:message key="update" /></button>
 
                                         <button type="submit" class="btn btn-sm btn-danger"
                                                 data-action="${pageContext.request.contextPath}/main/cart/deleteItem"
                                                 data-productid="${item.productID}"
-                                                onclick="setActionAndProductID(this)">Delete</button>
+                                                onclick="setActionAndProductID(this)"><fmt:message key="delete" /></button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -105,15 +102,15 @@
                         <div>
                             <button type="submit" class="btn btn-danger me-2"
                                     data-action="${pageContext.request.contextPath}/main/cart/deleteItems"
-                                    onclick="setAction(this)">Delete Selected</button>
+                                    onclick="setAction(this)"><fmt:message key="delete.selected" /></button>
 
                             <button type="submit" class="btn btn-warning me-2"
                                     data-action="${pageContext.request.contextPath}/main/cart/clear"
-                                    onclick="setAction(this)">Clear Cart</button>
+                                    onclick="setAction(this)"><fmt:message key="clear.cart" /></button>
 
                             <button type="submit" class="btn btn-success"
                                     data-action="${pageContext.request.contextPath}/main/invoice/create"
-                                    onclick="setAction(this)">Create Invoice</button>
+                                    onclick="setAction(this)"><fmt:message key="create.invoice" /></button>
                         </div>
                     </div>
                 </form>

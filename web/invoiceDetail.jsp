@@ -22,7 +22,7 @@
             
             <h2 class="mt-3">INVOICE DETAIL</h2>
             <!-- Thông tin hóa đơn -->
-            <p><strong>User Name:</strong> ${invoiceViewModel.userName}</p>
+            <p><strong>Full name:</strong> ${invoiceViewModel.userName}</p>
 
             <c:choose>
                 <c:when test="${!empty requestScope.returnStatus}">
