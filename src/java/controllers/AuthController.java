@@ -5,8 +5,7 @@
 
 package controllers;
 
-import constants.Message;
-import constants.Role;
+import constants.MessageKey;
 import constants.Url;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -19,6 +18,7 @@ import dtos.User;
 import responses.ServiceResponse;
 import services.UserService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -67,9 +67,9 @@ public class AuthController extends HttpServlet {
             url = serRes.isSuccess() ? Url.LOGIN_PAGE : Url.REGISTER_PAGE;
             message = serRes.getMessage();
         } catch (SQLException ex){
-            message = Message.SYSTEM_ERROR;
+            message = MessageKey.SYSTEM_ERROR;
         }
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
         request.getRequestDispatcher(url).forward(request, response);
     }
     
@@ -82,7 +82,7 @@ public class AuthController extends HttpServlet {
         try {
             User user = userService.login(userID, password);
             if(user == null){
-                request.setAttribute("MSG", Message.INVALID_USER_ID_OR_PASSWORD);
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INVALID_USER_OR_PASSWORD));
                 request.getRequestDispatcher(Url.LOGIN_PAGE).forward(request, response);
                 return;
             } 
@@ -111,7 +111,7 @@ public class AuthController extends HttpServlet {
             }
             response.sendRedirect(request.getContextPath() + url);
         } catch (SQLException ex){
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.LOGIN_PAGE).forward(request, response);
         }
     }

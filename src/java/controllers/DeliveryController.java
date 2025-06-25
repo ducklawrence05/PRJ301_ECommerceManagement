@@ -4,10 +4,9 @@
  */
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Url;
 import dtos.Delivery;
-import dtos.InvoiceDetailViewModel;
 import dtos.InvoiceViewModel;
 import dtos.User;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.List;
 import services.DeliveryService;
 import services.InvoiceService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -100,7 +100,7 @@ public class DeliveryController extends HttpServlet {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -111,7 +111,7 @@ public class DeliveryController extends HttpServlet {
             return deliveryService.getAllDelivery();
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -123,7 +123,7 @@ public class DeliveryController extends HttpServlet {
             return deliveryService.getDeliveryByStatus(status);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -143,7 +143,7 @@ public class DeliveryController extends HttpServlet {
             invoiceService.updateInvoice(invoiceID_, userID, "paid");
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
 
     }
@@ -155,13 +155,13 @@ public class DeliveryController extends HttpServlet {
         String status = request.getParameter("status");
 
         String message = deliveryService.updateDelivery(id, status);
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
 
         try {
             invoiceService.updateInvoiceStatus(Integer.parseInt(invoiceID), status);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
     }
 
@@ -174,7 +174,7 @@ public class DeliveryController extends HttpServlet {
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }

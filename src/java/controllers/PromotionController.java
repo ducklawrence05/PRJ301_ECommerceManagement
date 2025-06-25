@@ -1,8 +1,9 @@
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Role;
 import constants.Url;
+import utils.Message;
 import dtos.PromotionViewModel;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -78,7 +79,7 @@ public class PromotionController extends HttpServlet {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -115,7 +116,7 @@ public class PromotionController extends HttpServlet {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -135,10 +136,10 @@ public class PromotionController extends HttpServlet {
             message = promotionService.create(name, discount, startDate, endDate, status);
         } catch (Exception e) {
             e.printStackTrace();
-            message = Message.CREATE_PROMOTION_FAILED;
+            message = MessageKey.CREATE_PROMOTION_FAILED;
         }
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void updatePromotion(HttpServletRequest request) throws SQLException {
@@ -157,16 +158,16 @@ public class PromotionController extends HttpServlet {
             message = promotionService.update(id, name, discount, startDate, endDate, status);
         } catch (Exception e) {
             e.printStackTrace();
-            message = Message.UPDATE_PROMOTION_FAILED;
+            message = MessageKey.UPDATE_PROMOTION_FAILED;
         }
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void deletePromotion(HttpServletRequest request) throws SQLException {
         int id = Integer.parseInt(request.getParameter("promoID"));
         String message = promotionService.delete(id);
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private List<PromotionViewModel> searchByID(HttpServletRequest request, HttpServletResponse response) {
@@ -177,11 +178,11 @@ public class PromotionController extends HttpServlet {
             if (promotion != null) {
                 list.add(promotion);
             } else {
-                request.setAttribute("MSG", Message.PROMOTION_NOT_FOUND);
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.PROMOTION_NOT_FOUND));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.INVALID_FORMAT);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INVALID_FORMAT));
         }
         return list;
     }
@@ -192,11 +193,11 @@ public class PromotionController extends HttpServlet {
             String name = request.getParameter("keySearch");
             list = promotionService.searchByName(name);
             if (list == null || list.isEmpty()) {
-                request.setAttribute("MSG", Message.PROMOTION_NOT_FOUND);
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.PROMOTION_NOT_FOUND));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.INVALID_FORMAT);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INVALID_FORMAT));
         }
         return list;
     }

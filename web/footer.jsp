@@ -1,11 +1,3 @@
-<%-- 
-    Document   : navbarInvoice
-    Created on : Jun 21, 2025, 4:36:18 PM
-    Author     : ADMIN
---%>
-
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -24,7 +16,7 @@
         <footer class="bg-dark text-white py-5">
             <div class="container">
                 <div class="row">
-                    <!-- Logo và giới thiệu -->
+                    <!-- Introduce -->
                     <div class="d-flex justify-content-around mb-3">
                         <div>
                             <h2 class="h4 fw-bold mb-3">Group 3 Shop</h2>
@@ -37,7 +29,7 @@
                             <p class="small">Phone: 0937******</p>
                         </div>
 
-                        <!-- Mạng xã hội -->
+                        <!-- social -->
                         <div class="col-md-3 d-flex flex-column align-items-start">
                             <h3 class="h5 fw-semibold mb-3">Connect with us</h3>
                             <div class="d-flex gap-3 mb-3 d-flex flex-column">

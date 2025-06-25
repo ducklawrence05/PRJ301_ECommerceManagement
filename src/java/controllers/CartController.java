@@ -5,7 +5,7 @@
 
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Url;
 import dtos.CartViewModel;
 import dtos.User;
@@ -21,6 +21,7 @@ import java.util.List;
 import responses.ServiceResponse;
 import services.CartService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -65,7 +66,7 @@ public class CartController extends HttpServlet {
         } catch (Exception ex){
             ex.printStackTrace();
             url = Url.ERROR_PAGE;
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         
         request.setAttribute("cart", cart);
@@ -83,7 +84,7 @@ public class CartController extends HttpServlet {
             action = "";
         }
         CartViewModel cart = new CartViewModel();
-        String message = Message.SYSTEM_ERROR;
+        String message = MessageKey.SYSTEM_ERROR;
         String url = Url.CART_PAGE;
         boolean isSendRedirect = method == null ? false : method.equalsIgnoreCase("GET");
         if (returnUrl != null && !returnUrl.isEmpty()) {
@@ -127,7 +128,7 @@ public class CartController extends HttpServlet {
             url = Url.ERROR_PAGE;
         }
         request.setAttribute("cart", cart);
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
         if(isSendRedirect){
             response.sendRedirect(request.getContextPath() + url + "?msg=" + message);
         } else {
@@ -148,7 +149,7 @@ public class CartController extends HttpServlet {
         throws ServletException, IOException, SQLException{
         ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
         if(!srUser.isSuccess()){
-            request.setAttribute("MSG", srUser.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
             return null;
         }
         User currentUser = srUser.getData();
@@ -255,7 +256,7 @@ public class CartController extends HttpServlet {
         String[] _productIDs = request.getParameterValues("productID");
     
         if (_productIDs == null) {
-            return Message.YOU_DIDNT_SELECT_ANY_ITEMS_TO_DELETE;
+            return MessageKey.NO_ITEMS_SELECTED;
         }
         
         for (String _productID : _productIDs) {
@@ -282,7 +283,7 @@ public class CartController extends HttpServlet {
     //helper
     private <T> T handleServiceResponse(HttpServletRequest request, ServiceResponse<T> sr){
         if(!sr.isSuccess()){
-            request.setAttribute("MSG", sr.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
         }
         return sr.getData();
     }

@@ -4,7 +4,7 @@
  */
 package utils;
 
-import constants.Message;
+import constants.MessageKey;
 import dtos.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -25,13 +25,13 @@ public class AuthUtils {
     public static ServiceResponse<User> getUserSession(HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return ServiceResponse.failure(Message.UNAUTHENTICATION);
+            return ServiceResponse.failure(MessageKey.UNAUTHENTICATED);
         }
         User currentUser = (User) session.getAttribute(USER_SESSION);
         if (currentUser == null) {
-            return ServiceResponse.failure(Message.UNAUTHENTICATION);
+            return ServiceResponse.failure(MessageKey.UNAUTHENTICATED);
         }
-        return ServiceResponse.success(Message.SUCCESS, currentUser);
+        return ServiceResponse.success(MessageKey.SUCCESS, currentUser);
     }
     
     public static void setUserSession(HttpServletRequest request, User user) {

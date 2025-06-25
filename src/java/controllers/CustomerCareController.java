@@ -1,6 +1,6 @@
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Role;
 import constants.Url;
 import dtos.CustomerCare;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import responses.ServiceResponse;
 import utils.AuthUtils;
+import utils.Message;
 
 @WebServlet(name = "CustomerCareController", urlPatterns = {"/customerCare"})
 public class CustomerCareController extends HttpServlet {
@@ -111,7 +112,7 @@ public class CustomerCareController extends HttpServlet {
             request.getRequestDispatcher(url).forward(request, response);
         } catch (NumberFormatException | SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -120,7 +121,7 @@ public class CustomerCareController extends HttpServlet {
         throws ServletException, IOException, SQLException {
         ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
         if (!srUser.isSuccess()) {
-            request.setAttribute("MSG", srUser.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
             request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
                    .forward(request, response);
             return;
@@ -135,10 +136,10 @@ public class CustomerCareController extends HttpServlet {
             message = customerCareService.create(
                 currentUser.getUserID(), subject, content);
         } catch (IllegalArgumentException ex) {
-            message = Message.CREATE_CUSTOMERCARE_FAILED;
+            message = MessageKey.CREATE_CUSTOMERCARE_FAILED;
         }
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
         request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
                .forward(request, response);
     }
@@ -155,23 +156,23 @@ public class CustomerCareController extends HttpServlet {
         CustomerCare customerCare = customerCareService.searchByID(id);
         String message;
         if (customerCare == null) {
-            request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             return;
         }
 
         try {
             message = customerCareService.update(id, userID, subject, content, status, reply);
         } catch (IllegalArgumentException ex) {
-            message = Message.UPDATE_CUSTOMERCARE_FAILED;
+            message = MessageKey.UPDATE_CUSTOMERCARE_FAILED;
         }
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void deleteCustomerCare(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         int id = Integer.parseInt(request.getParameter("ticketID"));
         String message = customerCareService.deleteByID(id);
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private List<CustomerCare> findByID(HttpServletRequest request, HttpServletResponse response) {
@@ -184,7 +185,7 @@ public class CustomerCareController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
         }
         return list;
     }
@@ -199,7 +200,7 @@ public class CustomerCareController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
         }
         return list;
     }
@@ -210,7 +211,7 @@ public class CustomerCareController extends HttpServlet {
             list = customerCareService.getAll();
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
         }
         return list;
     }
@@ -220,7 +221,7 @@ public class CustomerCareController extends HttpServlet {
             return customerCareService.getAllViewModels();
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CUSTOMERCARE_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             return null;
         }
     }

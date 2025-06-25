@@ -1,7 +1,7 @@
 
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Role;
 import constants.Url;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 import dtos.User;
+import utils.Message;
 import java.util.ArrayList;
 import services.UserService;
 
@@ -105,7 +106,7 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher(url).forward(request, response);
         } catch (NumberFormatException | SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -117,12 +118,12 @@ public class UserController extends HttpServlet {
             User user = userService.getUserByID(userID);
             if (user == null) {
                 user = new User();
-                request.setAttribute("MSG", Message.USER_NOT_FOUND);
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.USER_NOT_FOUND));
             }
             return user;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -133,7 +134,7 @@ public class UserController extends HttpServlet {
             return userService.getAllUsers();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -145,7 +146,7 @@ public class UserController extends HttpServlet {
             return userService.getUsersByID(userID);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -157,7 +158,7 @@ public class UserController extends HttpServlet {
             return userService.getUsersByName(name);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -175,9 +176,9 @@ public class UserController extends HttpServlet {
             message = userService.createUser(userID, fullName,
                     Role.fromValue(roleID), password, confirmPassword, phone);
         } catch (IllegalArgumentException ex) {
-            message = Message.ROLE_ID_NOT_FOUND;
+            message = MessageKey.ROLE_ID_NOT_FOUND;
         }
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
@@ -194,9 +195,9 @@ public class UserController extends HttpServlet {
             message = userService.updateUser(userID, fullName,
                     Role.fromValue(roleID), oldPassword, password, confirmPassword, phone);
         } catch (IllegalArgumentException ex) {
-            message = Message.ROLE_ID_NOT_FOUND;
+            message = MessageKey.ROLE_ID_NOT_FOUND;
         }
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
@@ -204,6 +205,6 @@ public class UserController extends HttpServlet {
         String userID = request.getParameter("userID");
         String message = userService.deleteUser(userID);
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 }

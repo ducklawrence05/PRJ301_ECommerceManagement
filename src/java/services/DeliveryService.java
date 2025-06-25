@@ -4,7 +4,7 @@
  */
 package services;
 
-import constants.Message;
+import constants.MessageKey;
 import daos.DeliveryDAO;
 import dtos.Delivery;
 import java.sql.SQLException;
@@ -24,21 +24,21 @@ public class DeliveryService {
             || isNullOrEmptyString(address)
             || deliveryDate == null
             || isNullOrEmptyString(status)) {
-            return Message.ALL_FIELDS_ARE_REQUIRED;
+            return MessageKey.ALL_FIELDS_REQUIRED;
         }
 
         LocalDate newDate = deliveryDate.plusDays(3);
         
         if(deliveryDAO.insertDelivery(invoiceID, address, newDate, status) == 0){
-            return Message.CREATE_DELIVERY_FAILED;
+            return MessageKey.CREATE_DELIVERY_FAILED;
         }
-        return Message.CREATE_DELIVERY_SUCCESSFULLY;
+        return MessageKey.CREATE_DELIVERY_SUCCESS;
         
     }   
     
     public String updateDelivery(Integer deliveryID, String status) throws  SQLException {
         if(!deliveryDAO.checkDelivertyExists(deliveryID)){
-            return Message.DELIVERY_NOT_FOUND;
+            return MessageKey.DELIVERY_NOT_FOUND;
         }
         
         Delivery delivery = new Delivery();
@@ -48,17 +48,17 @@ public class DeliveryService {
         }
        
         if (deliveryDAO.updateDelivery(deliveryID, status) == 0){
-            return Message.UPDATE_DELIVERY_FAILED;
+            return MessageKey.UPDATE_DELIVERY_FAILED;
         }
         
-        return Message.UPDATE_DELIVERY_SUCCESSFULLY;
+        return MessageKey.UPDATE_DELIVERY_SUCCESS;
     }
     
     public String deleteDelivery(int invoiceID) throws SQLException {
         if(deliveryDAO.deleteDelivery(invoiceID) == 0){
-            return Message.DELIVERY_NOT_FOUND;
+            return MessageKey.DELIVERY_NOT_FOUND;
         }
-        return  Message.DELETE_DELIVERY_SUCCESSFULLY;
+        return  MessageKey.DELETE_DELIVERY_SUCCESS;
     }
     
     public List<Delivery> getAllDelivery() throws SQLException {

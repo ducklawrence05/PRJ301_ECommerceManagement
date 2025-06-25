@@ -1,6 +1,6 @@
 package services;
 
-import constants.Message;
+import constants.MessageKey;
 import daos.ProductDAO;
 import daos.PromotionDAO;
 import dtos.Promotion;
@@ -23,58 +23,58 @@ public class PromotionService {
     // Create a new promotion
     public String create(String name, float discount, Date startDate, Date endDate, String status) throws SQLException {
         if (isNullOrEmptyString(name) || discount < 0 || discount > 100 || isNullOrEmptyString(status)) {
-            return Message.RONGE_FOMAT_PROMOTION;
+            return MessageKey.INVALID_PROMOTION_FORMAT;
         }
 
         LocalDate today = LocalDate.now();
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         if (startLocalDate.isBefore(today)) {
-            return Message.START_DATE_MUST_BE_TODAY_OR_FUTURE;
+            return MessageKey.START_DATE_FUTURE;
         }
 
         if (startDate.after(endDate)) {
-            return Message.INVALID_DATE_PROMOTION;
+            return MessageKey.INVALID_PROMOTION_DATE;
         }
 
         if (pdao.isExist(name)) {
-            return Message.IS_EXIT_PROMOTION;
+            return MessageKey.PROMOTION_EXISTED;
         }
 
         int rows = pdao.create(name, discount, startDate, endDate, status);
-        return rows == 1 ? Message.CREATE_PROMOTION_SUCCESSFULLY : Message.CREATE_PROMOTION_FAILED;
+        return rows == 1 ? MessageKey.CREATE_PROMOTION_SUCCESS : MessageKey.CREATE_PROMOTION_FAILED;
     }
 
     // Update an existing promotion
     public String update(int id, String name, float discount, Date startDate, Date endDate, String status) throws SQLException {
         if (isNullOrEmptyString(name) || discount < 0 || discount > 100 || isNullOrEmptyString(status)) {
-            return Message.RONGE_FOMAT_PROMOTION;
+            return MessageKey.INVALID_PROMOTION_FORMAT;
         }
 
         LocalDate today = LocalDate.now();
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         if (startLocalDate.isBefore(today)) {
-            return Message.START_DATE_MUST_BE_TODAY_OR_FUTURE;
+            return MessageKey.INVALID_PROMOTION_DATE;
         }
 
         if (startDate.after(endDate)) {
-            return Message.INVALID_DATE_PROMOTION;
+            return MessageKey.INVALID_PROMOTION_DATE;
         }
 
         Promotion existing = pdao.searchByID(id);
         if (existing == null) {
-            return Message.PROMOTION_NOT_FOUND;
+            return MessageKey.PROMOTION_NOT_FOUND;
         }
 
         int rows = pdao.update(id, name, discount, startDate, endDate, status);
-        return rows == 1 ? Message.UPDATE_PROMOTION_SUCCESSFULLY : Message.UPDATE_PROMOTION_FAILED;
+        return rows == 1 ? MessageKey.UPDATE_PROMOTION_SUCCESS : MessageKey.UPDATE_PROMOTION_FAILED;
     }
 
     // Delete a promotion by ID
     public String delete(int id) throws SQLException {
         int rows = pdao.delete(id);
-        return rows == 1 ? Message.DELETE_PROMOTION_SUCCESSFULLY : Message.DELETE_PROMOTION_FAILED;
+        return rows == 1 ? MessageKey.DELETE_PROMOTION_SUCCESS : MessageKey.DELETE_PROMOTION_FAILED;
     }
 
     // Search promotion by ID and include associated products

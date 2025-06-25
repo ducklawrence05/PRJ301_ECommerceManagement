@@ -1,6 +1,6 @@
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Role;
 import constants.Url;
 import dtos.Category;
@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import services.CategoryService;
+import utils.Message;
 
 @WebServlet(name="CategoryController", urlPatterns={"/category"})
 public class CategoryController extends HttpServlet {
@@ -102,7 +103,7 @@ public class CategoryController extends HttpServlet {
 
         } catch (NumberFormatException | SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -114,7 +115,7 @@ public class CategoryController extends HttpServlet {
             list = categoryService.findByName(name);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CATEGORY_NOT_FOUND));
         }
         return list;
     }
@@ -136,9 +137,9 @@ public class CategoryController extends HttpServlet {
         try {
             message = categoryService.create(categoryName, description);
         } catch (IllegalArgumentException ex) {
-            message = Message.CREATE_CATEGORY_FAILED;
+            message = MessageKey.CREATE_CATEGORY_FAILED;
         }
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
@@ -150,24 +151,24 @@ public class CategoryController extends HttpServlet {
         String message;
 
         if (category == null) {
-            request.setAttribute("MSG", Message.CATEGORY_NOT_FOUND);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CATEGORY_NOT_FOUND));
             return;
         }
 
         try {
             message = categoryService.update(id, categoryName, description);
         } catch (IllegalArgumentException ex) {
-            message = Message.UPDATE_CATEGORY_FAILED;
+            message = MessageKey.UPDATE_CATEGORY_FAILED;
         }
 
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
         request.setAttribute("categories", categoryService.getAll());
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         int id = Integer.parseInt(request.getParameter("categoryID"));
         String message = categoryService.delete(id);
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
     private List<Category> findByID(HttpServletRequest request, HttpServletResponse response) {

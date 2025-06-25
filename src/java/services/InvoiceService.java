@@ -6,10 +6,8 @@ package services;
 
 import responses.ServiceResponse;
 import dtos.Invoice;
-import dtos.InvoiceDetail;
 import java.time.LocalDate;
-import constants.Message;
-import daos.CartDAO;
+import constants.MessageKey;
 import daos.InvoiceDAO;
 import daos.ProductDAO;
 import daos.UserDAO;
@@ -45,7 +43,7 @@ public class InvoiceService {
         // create invoice
         ServiceResponse<Integer> sr = createInvoice(userID, quantity, price);
         if (!sr.isSuccess()) {
-            return ServiceResponse.failure(Message.CREATE_INVOICE_FAILED);
+            return ServiceResponse.failure(MessageKey.CREATE_INVOICE_FAILED);
         }
 
         // get invoiceID to create invoice item base on it
@@ -67,7 +65,7 @@ public class InvoiceService {
             }
         }
 
-        return ServiceResponse.success(Message.SUCCESS,
+        return ServiceResponse.success(MessageKey.SUCCESS,
                 getInvoiceByID(String.valueOf(invoiceID), userID).getData());
     }
 
@@ -75,20 +73,20 @@ public class InvoiceService {
         LocalDate createdDate = LocalDate.now();
 
         if (!userDao.checkUserExists(userID)) {
-            return ServiceResponse.failure(Message.USER_NOT_EXIST);
+            return ServiceResponse.failure(MessageKey.USER_NOT_EXIST);
         }
 
         if (ServiceUtils.isNullOrEmptyString(userID)) {
-            return ServiceResponse.failure(Message.ALL_FIELDS_ARE_REQUIRED);
+            return ServiceResponse.failure(MessageKey.ALL_FIELDS_REQUIRED);
         }
 
         float _totalAmount = calcTotalAmountWhenCreate(quantity, price);
         int invoiceID = invoiceDao.createInvoice(userID, _totalAmount, PENDING, createdDate);
         if (invoiceID == 0) {
-            return ServiceResponse.failure(Message.CREATE_INVOICE_FAILED);
+            return ServiceResponse.failure(MessageKey.CREATE_INVOICE_FAILED);
         }
 
-        return ServiceResponse.success(Message.CREATE_INVOICE_SUCCESSFULLY, invoiceID);
+        return ServiceResponse.success(MessageKey.CREATE_INVOICE_SUCCESS, invoiceID);
     }
 
     public ServiceResponse<List<InvoiceDetailViewModel>> createInvoiceDetail(ServiceResponse sr, int invoiceID, String _productID, String _quantity, String _price) throws SQLException, ParseException {
@@ -97,29 +95,29 @@ public class InvoiceService {
         int quantity = Integer.parseInt(_quantity);
         float price = Float.parseFloat(_price);
         if (!isExistProduct(productID)) {
-            sr.setMessage(Message.PRODUCT_IS_NOT_EXIST);
+            sr.setMessage(MessageKey.PRODUCT_NOT_EXIST);
             return sr;
         }
         if (productID < 0 || quantity < 0 || price < 0) {
-            sr.setMessage(Message.INPUT_POSITIVE_NUMBER);
+            sr.setMessage(MessageKey.INPUT_POSITIVE_NUMBER);
             return sr;
         }
         if (invoiceDao.createInvoiceDetail(invoiceID, productID, quantity, price) == 0) {
-            sr.setMessage(Message.CREATE_INVOICE_DETAIL_FAILED);
+            sr.setMessage(MessageKey.CREATE_INVOICE_DETAIL_FAILED);
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(Message.CREATE_INVOICE_DETAIL_SUCCESSFULLY);
+        sr.setMessage(MessageKey.CREATE_INVOICE_DETAIL_SUCCESS);
         return sr;
     }
     public ServiceResponse updateInvoiceStatus(int invoiceID, String status) throws SQLException, ParseException {
          ServiceResponse sr = new ServiceResponse();
         if (invoiceDao.updateInvoice(invoiceID, status) == 0) {
-            sr.setMessage(Message.UPDATE_INVOICE_FAILED);
+            sr.setMessage(MessageKey.UPDATE_INVOICE_FAILED);
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(Message.UPDATE_INVOICE_SUCCESSFULLY);
+        sr.setMessage(MessageKey.UPDATE_INVOICE_SUCCESS);
         return sr;
     }
     
@@ -138,13 +136,13 @@ public class InvoiceService {
             List<Integer> productIDs = invoiceDao.getProductIDsByInvoiceID(invoiceID);
 
             if (productIDs.isEmpty()) {
-                return ServiceResponse.failure(Message.YOUR_INVOICE_IS_EMPTY);
+                return ServiceResponse.failure(MessageKey.INVOICE_EMPTY);
             }
 
             for (Integer productID : productIDs) {
                 InvoiceDetailViewModel item = invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID);
                 if (item == null) {
-                    return ServiceResponse.failure(Message.INVOICE_DETAIL_NOT_FOUND);
+                    return ServiceResponse.failure(MessageKey.INVOICE_DETAIL_NOT_FOUND);
                 }
 
                 // Update product quantity và status
@@ -156,11 +154,11 @@ public class InvoiceService {
         }
 
         if (invoiceDao.updateInvoice(invoiceID, status) == 0) {
-            sr.setMessage(Message.UPDATE_INVOICE_FAILED);
+            sr.setMessage(MessageKey.UPDATE_INVOICE_FAILED);
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(Message.UPDATE_INVOICE_SUCCESSFULLY);
+        sr.setMessage(MessageKey.UPDATE_INVOICE_SUCCESS);
         return sr;
     }
 
@@ -175,11 +173,11 @@ public class InvoiceService {
         sr.setSuccess(false);
         float totalAmount = calcTotalAmountWhenUpdate(_invoiceID, userID);
         if (invoiceDao.updateInvoiceTotalAmount(invoiceID, totalAmount) == 0) {
-            sr.setMessage(Message.UPDATE_INVOICE_FAILED);
+            sr.setMessage(MessageKey.UPDATE_INVOICE_FAILED);
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(Message.UPDATE_INVOICE_SUCCESSFULLY);
+        sr.setMessage(MessageKey.UPDATE_INVOICE_SUCCESS);
         return sr;
     }
 
@@ -198,18 +196,18 @@ public class InvoiceService {
 
         // check quantity input
         if (quantity <= 0) {
-            return ServiceResponse.failure(Message.INVALID_QUANTITY);
+            return ServiceResponse.failure(MessageKey.INVALID_QUANTITY);
         }
 
         // check product exist
         ProductViewModel product = productDAO.getProductByID(productID);
         if (product == null) {
-            return ServiceResponse.failure(Message.PRODUCT_NOT_FOUND);
+            return ServiceResponse.failure(MessageKey.PRODUCT_NOT_FOUND);
         }
 
         if (product.getStatus().equalsIgnoreCase(INACTIVE)
                 || product.getStatus().equalsIgnoreCase(OUT_OF_STOCK)) {
-            return ServiceResponse.failure(Message.PRODUCT_IS_INACTIVE_OR_OUT_OF_STOCK);
+            return ServiceResponse.failure(MessageKey.PRODUCT_INACTIVE_OR_OUT);
         }
 
         // back to quantity in stock
@@ -217,7 +215,7 @@ public class InvoiceService {
 
         // check new stock
         if (quantity > product.getQuantity()) {
-            return ServiceResponse.failure(Message.QUANTITY_EXCEEDS_AVAILABLE);
+            return ServiceResponse.failure(MessageKey.QUANTITY_EXCEEDS_AVAILABLE);
         }
 
         // update quantity in stock
@@ -228,14 +226,14 @@ public class InvoiceService {
 
         // update product
         if (productDAO.updateProductQuantityAndStatus(productID, product.getQuantity(), product.getStatus()) == 0) {
-            return ServiceResponse.failure(Message.UPDATE_PRODUCT_FAILED);
+            return ServiceResponse.failure(MessageKey.UPDATE_PRODUCT_FAILED);
         }
 
         if (invoiceDao.updateInvoiceDetail(invoiceID, productID, quantity) == 0) {
-            return ServiceResponse.failure(Message.UPDATE_INVOICE_DETAIL_FAILED);
+            return ServiceResponse.failure(MessageKey.UPDATE_INVOICE_DETAIL_FAILED);
         }
 
-        return ServiceResponse.success(Message.UPDATE_INVOICE_DETAIL_SUCCESSFULLY);
+        return ServiceResponse.success(MessageKey.UPDATE_INVOICE_DETAIL_SUCCESS);
     }
 
     // use when invoice detail is unavailable
@@ -244,11 +242,11 @@ public class InvoiceService {
         int invoiceID = Integer.parseInt(_invoiceID);
         sr.setSuccess(false);
         if (invoiceDao.deleteInvoice(invoiceID) == 0) {
-            sr.setMessage(Message.INVOICE_NOT_FOUND);
+            sr.setMessage(MessageKey.INVOICE_NOT_FOUND);
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(Message.DELETE_INVOICE_SUCCESSFULLY);
+        sr.setMessage(MessageKey.DELETE_INVOICE_SUCCESS);
         return sr;
     }
 
@@ -259,7 +257,7 @@ public class InvoiceService {
         List<Integer> productIDs = invoiceDao.getProductIDsByInvoiceID(invoiceID);
 
         if (productIDs.isEmpty()) {
-            return Message.YOUR_INVOICE_IS_EMPTY;
+            return MessageKey.INVOICE_EMPTY;
         }
 
         // delete one by one
@@ -271,7 +269,7 @@ public class InvoiceService {
         }
 
 //        invoiceDao.deleteAllInvoiceDetailByID(invoiceID);
-        return Message.DELETE_INVOICE_SUCCESSFULLY;
+        return MessageKey.DELETE_INVOICE_SUCCESS;
     }
 
     public ServiceResponse deleteInvoiceDetailByInvoicveIDAndProductID(String _invoiceID, String _productID) throws SQLException, SQLException {
@@ -280,7 +278,7 @@ public class InvoiceService {
 
         InvoiceDetailViewModel item = invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID);
         if (item == null) {
-            return ServiceResponse.failure(Message.INVOICE_DETAIL_NOT_FOUND);
+            return ServiceResponse.failure(MessageKey.INVOICE_DETAIL_NOT_FOUND);
         }
 
         // Update product quantity và status
@@ -291,10 +289,10 @@ public class InvoiceService {
 
         // delete item
         if (invoiceDao.deleteAllInvoiceDetailByIvoiceIDAndProductID(invoiceID, productID) == 0) {
-            return ServiceResponse.failure(Message.INVOICE_DETAIL_NOT_FOUND);
+            return ServiceResponse.failure(MessageKey.INVOICE_DETAIL_NOT_FOUND);
         }
 
-        return ServiceResponse.success(Message.DELETE_INVOICE_DETAIL_SUCCESSFULLY);
+        return ServiceResponse.success(MessageKey.DELETE_INVOICE_DETAIL_SUCCESS);
     }
 
     public List<InvoiceViewModel> getInvoicesByUserIDAndStatus(String userID, String status) throws SQLException {
@@ -306,7 +304,7 @@ public class InvoiceService {
         List<InvoiceDetailViewModel> invoiceDetailViewModels = new ArrayList<>();
         if (!isCreator(userID, invoiceID)) {
             sr.setSuccess(false);
-            sr.setMessage(Message.YOU_ARE_NOT_CREATOR_OF_THIS_INVOICE);
+            sr.setMessage(MessageKey.INVOICE_NOT_CREATOR);
             return sr;
         }
         invoiceDetailViewModels = invoiceDao.getInvoiceDetailsByInvoiceID(invoiceID);
@@ -320,13 +318,13 @@ public class InvoiceService {
         int invoiceID = Integer.parseInt(_invoiceID);
         sr.setSuccess(false);
         if (!isCreator(userID, invoiceID)) {
-            sr.setMessage(Message.YOU_ARE_NOT_CREATOR_OF_THIS_INVOICE);
+            sr.setMessage(MessageKey.INVOICE_NOT_CREATOR);
             return sr;
         }
 
         sr.setData(invoiceDao.getInvoiceByID(invoiceID));
         if (sr.getData() == null) {
-            sr.setMessage(Message.INVOICE_NOT_FOUND);
+            sr.setMessage(MessageKey.INVOICE_NOT_FOUND);
             return sr;
         }
         sr.setSuccess(true);
@@ -347,7 +345,7 @@ public class InvoiceService {
         sr.setSuccess(false);
         sr.setData(invoiceDao.getInvoiceDetailByIDAndProductID(invoiceID, productID));
         if (sr.getData() == null) {
-            sr.setMessage(Message.INVOICE_DETAIL_NOT_FOUND);
+            sr.setMessage(MessageKey.INVOICE_DETAIL_NOT_FOUND);
             return sr;
         }
         sr.setSuccess(true);

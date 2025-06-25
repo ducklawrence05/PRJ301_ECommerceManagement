@@ -1,9 +1,10 @@
 package filters;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Role;
 import constants.Url;
 import dtos.User;
+import utils.Message;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/*"})
+// @WebFilter(filterName = "AuthFilter", urlPatterns = {"/*"}) - đã config trong web.xml rồi
 public class AuthFilter implements Filter {
 
     public static final Set<String> publicUrls = new HashSet<>(Arrays.asList(
@@ -88,7 +89,7 @@ public class AuthFilter implements Filter {
 
         // Kiểm tra login
         if (session == null || session.getAttribute("currentUser") == null) {
-            request.setAttribute("MSG", Message.UNAUTHENTICATION);
+            request.setAttribute("MSG", Message.get(session, MessageKey.UNAUTHENTICATED));
             request.getRequestDispatcher(Url.LOGIN_PAGE).forward(req, res);
             return;
         }
@@ -100,7 +101,7 @@ public class AuthFilter implements Filter {
         if (isAuthorized(path, method, userRole)) {
             chain.doFilter(req, res);
         } else {
-            request.setAttribute("MSG", Message.UNAUTHORIZED);
+            request.setAttribute("MSG", Message.get(session, MessageKey.UNAUTHORIZED));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(req, res);
         }
     }

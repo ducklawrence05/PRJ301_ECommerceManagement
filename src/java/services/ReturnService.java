@@ -4,7 +4,7 @@
  */
 package services;
 
-import constants.Message;
+import constants.MessageKey;
 import daos.ReturnDAO;
 import dtos.Return;
 import java.sql.SQLException;
@@ -21,12 +21,12 @@ public class ReturnService {
         Return returnn = new Return();
         
         returnDAO.insertReturn(invoiceID, reason, status);
-        return Message.CREATE_RETURN_SUCCESSFULLY;
+        return MessageKey.CREATE_RETURN_SUCCESS;
     }
     
     public String updateReturn(int returnID , String status) throws SQLException {
         if(!returnDAO.checkReturnExists(returnID)) {
-            return Message.RETURN_NOT_FOUND;
+            return MessageKey.RETURN_NOT_FOUND;
         }
         
         Return returnn = new Return();
@@ -36,10 +36,10 @@ public class ReturnService {
         }
         
         if(returnDAO.updateReturn(returnID, status) == 0){
-            return Message.UPDATE_RETURN_FAILED;
+            return MessageKey.UPDATE_RETURN_FAILED;
         }
         
-        return Message.UPDATE_RETURN_SUCCESSFULLY;
+        return MessageKey.UPDATE_RETURN_SUCCESS;
         
     }
     

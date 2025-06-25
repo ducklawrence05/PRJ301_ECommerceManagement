@@ -4,7 +4,7 @@
  */
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Url;
 import dtos.Delivery;
 import dtos.InvoiceViewModel;
@@ -24,6 +24,7 @@ import services.DeliveryService;
 import services.InvoiceService;
 import services.ReturnService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -108,7 +109,7 @@ public class ReturnController extends HttpServlet {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -119,7 +120,7 @@ public class ReturnController extends HttpServlet {
             return returnService.getAllReturn();
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -133,7 +134,7 @@ public class ReturnController extends HttpServlet {
             return resultList;
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -147,7 +148,7 @@ public class ReturnController extends HttpServlet {
              return returnService.getReturnStatus(status);
          } catch (Exception ex) {
              ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
          }
          
         return null;
@@ -158,7 +159,7 @@ public class ReturnController extends HttpServlet {
         int returnID = Integer.parseInt(request.getParameter("returnID"));
         String status = request.getParameter("status");
         String message = returnService.updateReturn(returnID, status);
-          request.setAttribute("MSG",message);
+          request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
     
     public void createReturn(HttpServletRequest request, HttpServletResponse response)
@@ -180,7 +181,7 @@ public class ReturnController extends HttpServlet {
             invoiceService.updateInvoice(invoiceID, userID, "return");
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         
     }
@@ -194,7 +195,7 @@ public class ReturnController extends HttpServlet {
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }

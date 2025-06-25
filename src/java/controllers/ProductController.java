@@ -5,7 +5,7 @@
 
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Url;
 import dtos.User;
 import dtos.ProductViewModel;
@@ -21,6 +21,7 @@ import java.util.List;
 import responses.ServiceResponse;
 import services.ProductService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -97,7 +98,7 @@ public class ProductController extends HttpServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             url = Url.ERROR_PAGE;
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         
         if (action.equals(UPDATE)) {
@@ -117,7 +118,7 @@ public class ProductController extends HttpServlet {
         }
         
         String url = Url.PRODUCT_LIST_PAGE;
-        String message = Message.SYSTEM_ERROR;
+        String message = MessageKey.SYSTEM_ERROR;
         try{
             switch(action){
                 case CREATE:{
@@ -147,7 +148,7 @@ public class ProductController extends HttpServlet {
             ex.printStackTrace();
             url = Url.ERROR_PAGE;
         }
-        request.setAttribute("MSG", message);
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
         request.getRequestDispatcher(url).forward(request, response);
     }
     
@@ -284,7 +285,7 @@ public class ProductController extends HttpServlet {
     //helper
     private <T> T handleServiceResponse(HttpServletRequest request, ServiceResponse<T> rs){
         if(!rs.isSuccess()){
-            request.setAttribute("MSG", rs.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), rs.getMessage()));
         }
         return rs.getData();
     }

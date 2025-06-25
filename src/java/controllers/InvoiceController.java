@@ -4,7 +4,7 @@
  */
 package controllers;
 
-import constants.Message;
+import constants.MessageKey;
 import constants.Url;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import responses.ServiceResponse;
 import services.ReturnService;
 import utils.AuthUtils;
+import utils.Message;
 
 /**
  *
@@ -117,7 +118,7 @@ public class InvoiceController extends HttpServlet {
             
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
@@ -134,7 +135,7 @@ public class InvoiceController extends HttpServlet {
             return invoiceViewModels;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -145,7 +146,7 @@ public class InvoiceController extends HttpServlet {
             User user = AuthUtils.getUserSession(request).getData();
             String _invoiceID = request.getParameter("invoiceID");
             ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, user.getUserID());
-            request.setAttribute("MSG", sr.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
             if(sr.getData().getStatus().trim().equalsIgnoreCase("return")){
                 Return re = returnService.getReturnByInvoiceID(Integer.parseInt(_invoiceID));
                 request.setAttribute("returnStatus", sr.getData().getStatus().toUpperCase() + " " + re.getStatus().toUpperCase());
@@ -154,7 +155,7 @@ public class InvoiceController extends HttpServlet {
             return sr.getData();
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -167,11 +168,11 @@ public class InvoiceController extends HttpServlet {
             String[] quantity = request.getParameterValues("quantity");
             String[] price = request.getParameterValues("price");
             ServiceResponse<InvoiceViewModel> sr = invoiceService.create(user.getUserID(), productID, quantity, price);
-            request.setAttribute("MSG", sr.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
             return sr.getData();
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -187,11 +188,11 @@ public class InvoiceController extends HttpServlet {
             if (sr.isSuccess()) {
                 ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, userID);
             }
-            request.setAttribute("MSG", sr.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
             return invoiceService.getInvoiceByID(invoiceID, userID).getData();
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -206,7 +207,7 @@ public class InvoiceController extends HttpServlet {
             if (sr.isSuccess()) {
                 ServiceResponse<InvoiceViewModel> srs = invoiceService.updateInvoiceTotalAmount(invoiceID, userID);
             }
-            request.setAttribute("MSG", sr.getMessage());
+            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
             InvoiceViewModel invoiceViewModel = invoiceService.getInvoiceByID(invoiceID, userID).getData();
             if(invoiceViewModel.getTotalAmount() == 0){
                 invoiceService.deleteInvoice(invoiceID);
@@ -215,7 +216,7 @@ public class InvoiceController extends HttpServlet {
             return invoiceViewModel;
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }
@@ -229,7 +230,7 @@ public class InvoiceController extends HttpServlet {
             invoiceService.updateInvoice(invoiceID, userID, status);
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("MSG", Message.SYSTEM_ERROR);
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
         }
         return null;
     }

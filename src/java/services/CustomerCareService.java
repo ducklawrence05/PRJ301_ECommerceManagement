@@ -1,6 +1,6 @@
 package services;
 
-import constants.Message;
+import constants.MessageKey;
 import daos.CustomerCareDAO;
 import daos.UserDAO;
 import dtos.CustomerCare;
@@ -17,38 +17,38 @@ public class CustomerCareService {
     //create
     public String create(String userID, String subject, String content) throws SQLException {
         if (!userDAO.checkUserExists(userID)) {
-            return Message.USER_NOT_FOUND;
+            return MessageKey.USER_NOT_FOUND;
         }
         if (isNullOrEmptyString(subject) || isNullOrEmptyString(content)) {
-            return Message.WRONG_FORMAT_CUSTOMERCARE;
+            return MessageKey.INVALID_CUSTOMERCARE_FORMAT;
         }
         if (customerCareDAO.create(userID, subject, content, "waiting", "pending") != 0) {
-            return Message.CREATE_CUSTOMERCARE_SUCCESSFULLY;
+            return MessageKey.CREATE_CUSTOMERCARE_SUCCESS;
         }
-        return Message.CREATE_CUSTOMERCARE_FAILED;
+        return MessageKey.CREATE_CUSTOMERCARE_FAILED;
     }
 
     //delete
     public String deleteByID(int ticketID) throws SQLException {
         if (customerCareDAO.deleteByID(ticketID) == 1) {
-            return Message.DELETE_CUSTOMERCARE_SUCCESSFULLY;
+            return MessageKey.DELETE_CUSTOMERCARE_SUCCESS;
         }
-        return Message.DELETE_CUSTOMERCARE_FAILED;
+        return MessageKey.DELETE_CUSTOMERCARE_FAILED;
     }
 
     //update
     public String update(int id, String userID, String subject, String content, String status, String reply) throws SQLException {
         if (!userDAO.checkUserExists(userID)) {
-            return Message.USER_NOT_FOUND;
+            return MessageKey.USER_NOT_FOUND;
         }
         if (isNullOrEmptyString(subject) || isNullOrEmptyString(content)
                 || isNullOrEmptyString(status) || isNullOrEmptyString(reply)) {
-            return Message.WRONG_FORMAT_CUSTOMERCARE;
+            return MessageKey.INVALID_CUSTOMERCARE_FORMAT;
         }
         if (customerCareDAO.update(id, userID, subject, content, status, reply) == 1) {
-            return Message.CREATE_CUSTOMERCARE_SUCCESSFULLY;
+            return MessageKey.CREATE_CUSTOMERCARE_SUCCESS;
         }
-        return Message.CREATE_CUSTOMERCARE_FAILED;
+        return MessageKey.CREATE_CUSTOMERCARE_FAILED;
     }
 
     //search by id

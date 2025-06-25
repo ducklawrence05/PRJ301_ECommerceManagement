@@ -41,6 +41,10 @@
             .custom-hover:hover::after {
                 width: 100%;
             }
+            .lang-btn {
+                min-width: 50px;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -83,13 +87,23 @@
                     <!-- Right auth buttons -->
                     <div class="d-flex align-items-center">
                         <c:if test="${empty sessionScope.currentUser}">
-                            <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm">Login</a>
+                            <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary btn-sm fw-bold">Login</a>
                         </c:if>
                         <c:if test="${!empty sessionScope.currentUser}">
                             <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="d-inline">
-                                <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm">Logout</button>
+                                <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">Logout</button>
                             </form>
                         </c:if>
+                        <div class="d-inline-block">
+                            <a href="?lang=vi" class="btn btn-sm lang-btn
+                               ${sessionScope.locale.language == 'vi' ? 'btn-danger fw-bold' : 'btn-outline-danger'} ms-3">
+                                vi
+                            </a>
+                            <a href="?lang=en" class="btn btn-sm lang-btn
+                               ${sessionScope.locale.language == 'en' ? 'btn-primary fw-bold' : 'btn-outline-primary'}">
+                                en
+                            </a>
+                        </div>
                     </div>
                 </div>
             </nav>
