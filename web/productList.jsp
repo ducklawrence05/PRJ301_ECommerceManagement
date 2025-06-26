@@ -112,7 +112,7 @@
                                             <form 
                                                 action="${pageContext.request.contextPath}/main/product/delete" 
                                                 method="POST" 
-                                                onsubmit="return confirm('Delete this product?');"
+                                                onsubmit="return confirm('<fmt:message key="confirm.delete.product" />');"
                                                 >
                                                 <button type="submit" name="productID" value="${product.productID}" class="btn btn-sm btn-danger">
                                                     <fmt:message key="delete" />

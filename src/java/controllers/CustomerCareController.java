@@ -107,7 +107,7 @@ public class CustomerCareController extends HttpServlet {
             }
 
             if (!action.equalsIgnoreCase(CREATE)) {
-                request.setAttribute("customerCares", getAllViewModel(request, response));
+                request.setAttribute("customerCareView", getAllViewModel(request, response));
             }
             request.getRequestDispatcher(url).forward(request, response);
         } catch (NumberFormatException | SQLException ex) {
@@ -122,8 +122,6 @@ public class CustomerCareController extends HttpServlet {
         ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
         if (!srUser.isSuccess()) {
             request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
-            request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
-                   .forward(request, response);
             return;
         }
 
@@ -140,8 +138,6 @@ public class CustomerCareController extends HttpServlet {
         }
 
         request.setAttribute("MSG", Message.get(request.getSession(false), message));
-        request.getRequestDispatcher(Url.CREATE_CUSTOMERCARE_PAGE)
-               .forward(request, response);
     }
 
 
@@ -218,10 +214,7 @@ public class CustomerCareController extends HttpServlet {
                 return list;
             }
 
-            CustomerCare customerCare = customerCareService.searchBySubject(subject, currentUser.getUserID());
-            if (customerCare != null) {
-                list.add(customerCare);
-            }
+            list = customerCareService.searchBySubject(subject, currentUser.getUserID());
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));

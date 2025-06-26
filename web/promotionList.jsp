@@ -75,7 +75,8 @@
                                         <input type="hidden" name="keySearch" value="${promotion.promoID}"/>
                                         <button class="btn btn-sm btn-outline-primary"><fmt:message key="update" /></button>
                                     </form>
-                                    <form action="${pageContext.request.contextPath}/main/promotion/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure to delete this promotion?');">
+                                    <form action="${pageContext.request.contextPath}/main/promotion/delete" method="POST" style="display:inline;" 
+                                          onsubmit="return confirm('<fmt:message key="confirm.delete.promotion" />');">
                                         <input type="hidden" name="promoID" value="${promotion.promoID}"/>
                                         <button class="btn btn-sm btn-outline-danger"><fmt:message key="delete" /></button>
                                     </form>
@@ -121,7 +122,7 @@
                                                             <form 
                                                                 action="${pageContext.request.contextPath}/main/product/delete" 
                                                                 method="POST" 
-                                                                onsubmit="return confirm('Delete this product?');"
+                                                                onsubmit="return confirm('<fmt:message key="confirm.delete.product" />');"
                                                                 >
                                                                 <button type="submit" name="productID" value="${product.productID}" class="btn btn-sm btn-danger">
                                                                     <fmt:message key="delete" />

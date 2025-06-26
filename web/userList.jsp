@@ -75,7 +75,7 @@
                                     <form 
                                         action="${pageContext.request.contextPath}/main/user/delete" 
                                         method="POST" 
-                                        onsubmit="return confirm('Delete this user?');"
+                                        onsubmit="return confirm('<fmt:message key="confirm.delete.user" />');"
                                         >
                                         <button type="submit" name="userID" value="${user.userID}" class="btn btn-sm btn-danger">
                                             <fmt:message key="delete" />

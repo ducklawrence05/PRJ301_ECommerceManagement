@@ -21,7 +21,7 @@
             <jsp:include page="navbarReturn.jsp" />
 
             <c:if test="${not empty requestScope.MSG}">
-                <div>${requestScope.MSG} </div>
+                <div class="alert alert-success">${requestScope.MSG} </div>
             </c:if>
 
             <c:if test="${not empty returns}">

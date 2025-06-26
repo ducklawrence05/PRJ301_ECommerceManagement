@@ -27,9 +27,9 @@
 
                 <input type="hidden" name="userID" value="${requestScope.customerCare.userID}" />
                 <div class="mb-3">
-                    <label class="form-label"><fmt:message key="fullname" /></label>
-                    <input type="text" class="form-control" readonly 
-                           value="${sessionScope.currentUser.fullName}" />
+                    <label class="form-label"><fmt:message key="user.id" /></label>
+                    <input type="text" name="userID" class="form-control"
+                           value="${requestScope.customerCare.userID}" readonly/>
                 </div>
 
                 <div class="mb-3">

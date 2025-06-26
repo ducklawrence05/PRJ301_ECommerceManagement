@@ -80,7 +80,7 @@
                                         </form>
                                         <!-- Delete -->
                                         <form action="${pageContext.request.contextPath}/main/category/delete" method="POST" class="d-inline"
-                                              onsubmit="return confirm('Are you sure to delete this category?');">
+                                              onsubmit="return confirm('<fmt:message key="confirm.delete.category" />');">
                                             <input type="hidden" name="categoryID" value="${cat.categoryID}" />
                                             <button type="submit" class="btn btn-sm btn-danger"><fmt:message key="delete" /></button>
                                         </form>

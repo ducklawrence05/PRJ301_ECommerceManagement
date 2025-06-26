@@ -78,9 +78,8 @@
                                             </form>
                                             <form action="${pageContext.request.contextPath}/main/customerCare/delete" 
                                                   method="POST" class="d-inline"
-                                                  onsubmit="return confirm('Are you sure to delete this customer care?');">
-                                                <input type="hidden" name="ticketID" 
-                                                       value="${customerCare.ticketID}" />
+                                                  onsubmit="return confirm('<fmt:message key="confirm.delete.customer.care" />');">
+                                                <input type="hidden" name="ticketID" value="${care.ticketID}" />
                                                 <button type="submit" class="btn btn-sm btn-danger"><fmt:message key="delete" /></button>
                                             </form>
                                         </c:if>

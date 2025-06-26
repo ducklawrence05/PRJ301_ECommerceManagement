@@ -62,7 +62,7 @@ public class CustomerCareService {
     }
 
     //search by subject
-    public CustomerCare searchBySubject(String subject, String userID) throws SQLException {
+    public List<CustomerCare> searchBySubject(String subject, String userID) throws SQLException {
         return customerCareDAO.searchBySubject(subject, userID);
     }
 

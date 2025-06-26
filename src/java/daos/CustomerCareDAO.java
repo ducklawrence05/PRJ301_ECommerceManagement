@@ -25,7 +25,7 @@ public class CustomerCareDAO {
     private final String SEARCH_BY_ID = 
         "SELECT * FROM [dbo].[tblCustomerCares] WHERE ticketID = ? AND userID = ?";
     private final String SEARCH_BY_SUBJECT = 
-        "SELECT * FROM [dbo].[tblCustomerCares] WHERE subject = ? AND userID = ?";
+        "SELECT * FROM [dbo].[tblCustomerCares] WHERE subject LIKE ? AND userID = ?";
     private final String GET_ALL = 
         "SELECT * FROM [dbo].[tblCustomerCares] WHERE userID = ?";
     private final String CHECK_EXIST = 
@@ -87,13 +87,17 @@ public class CustomerCareDAO {
         }
     }
 
-    public CustomerCare searchBySubject(String subject, String userID) throws SQLException {
+    public List<CustomerCare> searchBySubject(String subject, String userID) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_SUBJECT)) {
+            List<CustomerCare> list = new ArrayList<>();
             ps.setString(1,"%" + subject + "%");
             ps.setString(2, userID);
             ResultSet rs = ps.executeQuery();
-            return rs.next() ? mapRow(rs) : null;
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+            return list;
         }
     }
 
