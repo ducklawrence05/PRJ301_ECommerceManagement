@@ -30,7 +30,7 @@ public class CustomerCareService {
 
     //delete
     public String deleteByID(int ticketID) throws SQLException {
-        if (customerCareDAO.deleteByID(ticketID) == 1) {
+        if (customerCareDAO.deleteByID(ticketID) != 0) {
             return MessageKey.DELETE_CUSTOMERCARE_SUCCESS;
         }
         return MessageKey.DELETE_CUSTOMERCARE_FAILED;

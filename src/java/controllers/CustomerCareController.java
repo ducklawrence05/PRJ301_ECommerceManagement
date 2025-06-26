@@ -178,10 +178,17 @@ public class CustomerCareController extends HttpServlet {
     private List<CustomerCare> findByID(HttpServletRequest request, HttpServletResponse response) {
         List<CustomerCare> list = new ArrayList<>();
         try {
-            int ticketID = Integer.parseInt(request.getParameter("keySearch"));
+            String key = request.getParameter("keySearch");
+            if (key == null || key.trim().isEmpty()) {
+                return list;
+            }
+
+            int ticketID = Integer.parseInt(key);
             CustomerCare customerCare = customerCareService.searchByID(ticketID);
             if (customerCare != null) {
                 list.add(customerCare);
+            } else {
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,13 +197,20 @@ public class CustomerCareController extends HttpServlet {
         return list;
     }
 
+
     private List<CustomerCare> findBySubject(HttpServletRequest request, HttpServletResponse response) {
         List<CustomerCare> list = new ArrayList<>();
         try {
             String subject = request.getParameter("keySearch");
+            if (subject == null || subject.trim().isEmpty()) {
+                return list;
+            }
+
             CustomerCare customerCare = customerCareService.searchBySubject(subject);
             if (customerCare != null) {
                 list.add(customerCare);
+            } else {
+                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -204,6 +218,7 @@ public class CustomerCareController extends HttpServlet {
         }
         return list;
     }
+
 
     private List<CustomerCare> getAll(HttpServletRequest request, HttpServletResponse response) {
         List<CustomerCare> list = new ArrayList<>();

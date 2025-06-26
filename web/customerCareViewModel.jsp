@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -11,6 +11,14 @@
             .table td, .table th {
                 white-space: normal !important;
                 word-break: break-word;
+            }
+
+            /* Giữ cho nút Update không bị xuống dòng */
+            .btn-sm {
+                white-space: nowrap;       /* Ngăn chữ xuống dòng */
+                min-width: 70px;           /* Đảm bảo nút đủ rộng */
+                text-align: center;        /* Căn giữa */
+                padding: 0.375rem 0.75rem; /* Giữ cho padding ổn định */
             }
         </style>
     </head>
@@ -58,7 +66,8 @@
                                     <td>${care.status}</td>
                                     <td>${care.reply}</td>
                                     <td>
-                                        <form action="${pageContext.request.contextPath}/main/customerCare/update" method="GET" class="d-inline">
+                                        <form action="${pageContext.request.contextPath}/customerCare" method="GET" class="d-inline">
+                                            <input type="hidden" name="action" value="update" />
                                             <input type="hidden" name="keySearch" value="${care.ticketID}" />
                                             <button type="submit" class="btn btn-sm btn-warning">Update</button>
                                         </form>
