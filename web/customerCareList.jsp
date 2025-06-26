@@ -16,11 +16,6 @@
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
-            <div class="mb-3">
-                <a href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel" 
-                   class="btn btn-info mt-2"><fmt:message key="customercare.view.all" /></a>
-            </div>
-
             <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
                 <form action="${pageContext.request.contextPath}/main/customerCare/create" method="GET" class="mb-3">
                     <button type="submit" class="btn btn-success">
@@ -67,12 +62,10 @@
                         <tr>
                             <th><fmt:message key="no" /></th>
                             <th><fmt:message key="ticket.id" /></th>
-                            <th><fmt:message key="user.id" /></th>
                             <th><fmt:message key="subject" /></th>
                             <th><fmt:message key="content" /></th>
                             <th><fmt:message key="status" /></th>
                             <th><fmt:message key="reply" /></th>
-                            <th><fmt:message key="action" /></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,20 +73,10 @@
                             <tr>
                                 <td>${st.count}</td>
                                 <td>${customerCare.ticketID}</td>
-                                <td>${customerCare.userID}</td>
                                 <td>${customerCare.subject}</td>
                                 <td>${customerCare.content}</td>
                                 <td>${customerCare.status}</td>
                                 <td>${customerCare.reply}</td>
-                                <td>    
-                                    <form action="${pageContext.request.contextPath}/main/customerCare/delete" 
-                                          method="POST" class="d-inline"
-                                          onsubmit="return confirm('Are you sure to delete this customer care?');">
-                                        <input type="hidden" name="ticketID" 
-                                               value="${customerCare.ticketID}" />
-                                        <button type="submit" class="btn btn-sm btn-danger"><fmt:message key="delete" /></button>
-                                    </form>
-                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

@@ -6,7 +6,6 @@ import constants.Url;
 import dtos.User;
 import utils.Message;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -32,6 +31,9 @@ public class AuthFilter implements Filter {
     public static final Map<String, Role[]> prefixUrls = new LinkedHashMap<>(); // Linked để ưu tiên prefix dài hơn
 
     static {
+        // ==== Pass Authen ====
+        exactUrls.put("/main/user/update-profile", Role.values());
+        
         // ==== Buyer ====
         prefixUrls.put("/main/cart", new Role[]{Role.BUYER});
         prefixUrls.put("/main/invoice", new Role[]{Role.BUYER});
@@ -40,6 +42,7 @@ public class AuthFilter implements Filter {
         exactUrls.put("/main/customerCare/create", new Role[]{Role.BUYER});
 
         // ==== Customer Support ====
+        exactUrls.put("/main/customerCare/getAllViewModel", new Role[]{Role.CUSTOMER_SUPPORT});
         exactUrls.put("/main/customerCare/update", new Role[]{Role.CUSTOMER_SUPPORT});
         exactUrls.put("/main/customerCare/delete", new Role[]{Role.CUSTOMER_SUPPORT});
 

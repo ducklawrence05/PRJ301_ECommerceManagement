@@ -22,16 +22,16 @@
 
             <form action="${pageContext.request.contextPath}/main/product/create" method="POST">
                 <label for="name"><fmt:message key="product.name" /></label>
-                <input type="text" id="name" name="name" placeholder="<fmt:message key="product.enter.name" />" required class="form-control" />
+                <input type="text" id="name" name="name" placeholder="<fmt:message key="enter.product.name" />" required class="form-control" />
 
                 <label for="categoryID"><fmt:message key="category.id" /></label>
-                <input type="number" id="categoryID" name="categoryID" placeholder="<fmt:message key="product.enter.category.id" />" required class="form-control" min="1" />
+                <input type="number" id="categoryID" name="categoryID" placeholder="<fmt:message key="enter.category.id" />" required class="form-control" min="1" />
 
                 <label for="price"><fmt:message key="price" /></label>
-                <input type="number" id="price" name="price" placeholder="<fmt:message key="product.enter.price" />" required class="form-control" min="0" step="0.01"/>
+                <input type="number" id="price" name="price" placeholder="<fmt:message key="enter.price" />" required class="form-control" min="0" step="0.01"/>
 
                 <label for="quantity"><fmt:message key="quantity" /></label>
-                <input type="number" id="quantity" name="quantity" placeholder="<fmt:message key="product.enter.quantity" />" required class="form-control" min="1" />
+                <input type="number" id="quantity" name="quantity" placeholder="<fmt:message key="enter.quantity" />" required class="form-control" min="1" />
 
                 <label for="status"><fmt:message key="status" /></label>
                 <select id="status" name="status" required class="form-select">
@@ -40,7 +40,7 @@
                 </select>
 
                 <label for="promoID"><fmt:message key="promotion.id" /></label>
-                <input type="number" id="promoID" name="promoID" placeholder="<fmt:message key="product.enter.promotion.id" />" class="form-control"/>
+                <input type="number" id="promoID" name="promoID" placeholder="<fmt:message key="enter.promotion.id" />" class="form-control"/>
 
                 <button type="submit" class="btn btn-primary w-100"><fmt:message key="create" /></button>
             </form>

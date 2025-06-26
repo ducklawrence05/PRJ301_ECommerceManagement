@@ -51,19 +51,24 @@ public class CustomerCareService {
         return MessageKey.UPDATE_CUSTOMERCARE_FAILED;
     }
 
+    // check exist by id
+    public boolean checkExistByID(int ticketID) throws SQLException {
+        return customerCareDAO.checkExistByID(ticketID);
+    }
+    
     //search by id
-    public CustomerCare searchByID(int ticketID) throws SQLException {
-        return customerCareDAO.searchByID(ticketID);
+    public CustomerCare searchByID(int ticketID, String userID) throws SQLException {
+        return customerCareDAO.searchByID(ticketID, userID);
     }
 
     //search by subject
-    public CustomerCare searchBySubject(String subject) throws SQLException {
-        return customerCareDAO.searchBySubject(subject);
+    public CustomerCare searchBySubject(String subject, String userID) throws SQLException {
+        return customerCareDAO.searchBySubject(subject, userID);
     }
 
     //get all
-    public List<CustomerCare> getAll() throws SQLException {
-        return customerCareDAO.getAll();
+    public List<CustomerCare> getAll(String userID) throws SQLException {
+        return customerCareDAO.getAll(userID);
     }
 
     public List<CustomerCareViewModel> getAllViewModels() throws SQLException {

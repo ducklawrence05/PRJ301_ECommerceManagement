@@ -26,7 +26,7 @@
             <!-- Create Form -->
             <form action="${pageContext.request.contextPath}/main/category/create" method="POST">
                 <div class="mb-3">
-                    <label for="categoryName" class="form-label"><fmt:message key="categoty.name" /></label>
+                    <label for="categoryName" class="form-label"><fmt:message key="category.name" /></label>
                     <input type="text" id="categoryName" name="categoryName"
                            class="form-control" placeholder="<fmt:message key="enter.category.name" />"
                            required value="${param.categoryName}" />

@@ -20,12 +20,14 @@ public class CustomerCareDAO {
         "UPDATE [dbo].[tblCustomerCares] " +
         "SET [userID] = ?, [subject] = ?, [content] = ?, [status] = ?, [reply] = ? " +
         "WHERE ticketID = ?";
-    private final String SEARCH_BY_ID = 
+    private final String CHECK_EXIST_BY_ID = 
         "SELECT * FROM [dbo].[tblCustomerCares] WHERE ticketID = ?";
+    private final String SEARCH_BY_ID = 
+        "SELECT * FROM [dbo].[tblCustomerCares] WHERE ticketID = ? AND userID = ?";
     private final String SEARCH_BY_SUBJECT = 
-        "SELECT * FROM [dbo].[tblCustomerCares] WHERE subject = ?";
+        "SELECT * FROM [dbo].[tblCustomerCares] WHERE subject = ? AND userID = ?";
     private final String GET_ALL = 
-        "SELECT * FROM [dbo].[tblCustomerCares]";
+        "SELECT * FROM [dbo].[tblCustomerCares] WHERE userID = ?";
     private final String CHECK_EXIST = 
         "SELECT 1 FROM [dbo].[tblCustomerCares] WHERE userID = ? AND subject = ?";
     private final String GET_ALL_VIEW_MODEL =
@@ -66,28 +68,40 @@ public class CustomerCareDAO {
         }
     }
 
-    public CustomerCare searchByID(int ticketID) throws SQLException {
+    public boolean checkExistByID(int ticketID) throws SQLException {
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(CHECK_EXIST_BY_ID)) {
+            ps.setInt(1, ticketID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+    }
+    
+    public CustomerCare searchByID(int ticketID, String userID) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_ID)) {
             ps.setInt(1, ticketID);
+            ps.setString(2, userID);
             ResultSet rs = ps.executeQuery();
             return rs.next() ? mapRow(rs) : null;
         }
     }
 
-    public CustomerCare searchBySubject(String subject) throws SQLException {
+    public CustomerCare searchBySubject(String subject, String userID) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(SEARCH_BY_SUBJECT)) {
             ps.setString(1,"%" + subject + "%");
+            ps.setString(2, userID);
             ResultSet rs = ps.executeQuery();
             return rs.next() ? mapRow(rs) : null;
         }
     }
 
-    public List<CustomerCare> getAll() throws SQLException {
+    public List<CustomerCare> getAll(String userID) throws SQLException {
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             List<CustomerCare> list = new ArrayList<>();
+            ps.setString(1, userID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(mapRow(rs));

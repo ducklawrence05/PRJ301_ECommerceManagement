@@ -90,7 +90,7 @@ public class CustomerCareController extends HttpServlet {
             action = "";
         }
 
-        String url = Url.CUSTOMERCARE_LIST_PAGE;
+        String url = Url.VIEW_CUSTOMERCARE_PAGE;
 
         try {
             switch (action) {
@@ -100,15 +100,15 @@ public class CustomerCareController extends HttpServlet {
                     break;
                 case UPDATE:
                     updateCustomerCare(request, response);
-                    url = Url.CUSTOMERCARE_LIST_PAGE;
                     break;
                 case DELETE:
                     deleteCustomerCare(request, response);
                     break;
             }
 
-            request.setAttribute("customerCares", customerCareService.getAll());
-            request.setAttribute("roleList", Role.values());
+            if (!action.equalsIgnoreCase(CREATE)) {
+                request.setAttribute("customerCares", getAllViewModel(request, response));
+            }
             request.getRequestDispatcher(url).forward(request, response);
         } catch (NumberFormatException | SQLException ex) {
             ex.printStackTrace();
@@ -153,9 +153,9 @@ public class CustomerCareController extends HttpServlet {
         String status = request.getParameter("status");
         String reply = request.getParameter("reply");
 
-        CustomerCare customerCare = customerCareService.searchByID(id);
+        boolean isExist = customerCareService.checkExistByID(id);
         String message;
-        if (customerCare == null) {
+        if (!isExist) {
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             return;
         }
@@ -176,6 +176,13 @@ public class CustomerCareController extends HttpServlet {
     }
 
     private List<CustomerCare> findByID(HttpServletRequest request, HttpServletResponse response) {
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if(!srUser.isSuccess()){
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
+            return null;
+        }
+        User currentUser = srUser.getData();
+        
         List<CustomerCare> list = new ArrayList<>();
         try {
             String key = request.getParameter("keySearch");
@@ -184,7 +191,7 @@ public class CustomerCareController extends HttpServlet {
             }
 
             int ticketID = Integer.parseInt(key);
-            CustomerCare customerCare = customerCareService.searchByID(ticketID);
+            CustomerCare customerCare = customerCareService.searchByID(ticketID, currentUser.getUserID());
             if (customerCare != null) {
                 list.add(customerCare);
             }
@@ -197,6 +204,13 @@ public class CustomerCareController extends HttpServlet {
 
 
     private List<CustomerCare> findBySubject(HttpServletRequest request, HttpServletResponse response) {
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if(!srUser.isSuccess()){
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
+            return null;
+        }
+        User currentUser = srUser.getData();
+        
         List<CustomerCare> list = new ArrayList<>();
         try {
             String subject = request.getParameter("keySearch");
@@ -204,7 +218,7 @@ public class CustomerCareController extends HttpServlet {
                 return list;
             }
 
-            CustomerCare customerCare = customerCareService.searchBySubject(subject);
+            CustomerCare customerCare = customerCareService.searchBySubject(subject, currentUser.getUserID());
             if (customerCare != null) {
                 list.add(customerCare);
             }
@@ -217,9 +231,16 @@ public class CustomerCareController extends HttpServlet {
 
 
     private List<CustomerCare> getAll(HttpServletRequest request, HttpServletResponse response) {
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if(!srUser.isSuccess()){
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
+            return null;
+        }
+        User currentUser = srUser.getData();
+        
         List<CustomerCare> list = new ArrayList<>();
         try {
-            list = customerCareService.getAll();
+            list = customerCareService.getAll(currentUser.getUserID());
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));

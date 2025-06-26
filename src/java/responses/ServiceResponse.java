@@ -1,11 +1,15 @@
 package responses;
 
+import constants.MessageKey;
+
 public class ServiceResponse<T> {
     private boolean success;
     private String message;
     private T data;
 
-    public ServiceResponse() {}
+    public ServiceResponse() {
+        this.message = MessageKey.SUCCESS;
+    }
 
     public ServiceResponse(boolean success, String message) {
         this.success = success;

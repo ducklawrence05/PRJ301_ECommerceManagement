@@ -15,7 +15,9 @@ import java.util.List;
 import dtos.User;
 import utils.Message;
 import java.util.ArrayList;
+import responses.ServiceResponse;
 import services.UserService;
+import utils.AuthUtils;
 
 @WebServlet(name = "UserController", urlPatterns = {"/user"})
 public class UserController extends HttpServlet {
@@ -27,6 +29,7 @@ public class UserController extends HttpServlet {
     private final String GET_USERS_BY_ID = "getUsersByID";
     private final String GET_USERS_BY_NAME = "getUsersByName";
     private final String UPDATE = "update";
+    private final String UPDATE_PROFILE = "update-profile";
     private final String DELETE = "delete";
 
     @Override
@@ -44,7 +47,8 @@ public class UserController extends HttpServlet {
                 url = Url.CREATE_USER_PAGE;
                 break;
             }
-            case UPDATE: {
+            case UPDATE:
+            case UPDATE_PROFILE: {
                 users.add(getUserByID(request, response));
                 url = Url.UPDATE_USER_PAGE;
                 break;
@@ -63,7 +67,7 @@ public class UserController extends HttpServlet {
             }
         }
 
-        if (action.equals(UPDATE)) {
+        if (action.equals(UPDATE) || action.equals(UPDATE_PROFILE)) {
             request.setAttribute("user", users.get(0));
         } else {
             request.setAttribute("users", users);
@@ -90,6 +94,13 @@ public class UserController extends HttpServlet {
                 }
                 case UPDATE: {
                     updateUser(request, response);
+                    url = Url.UPDATE_USER_PAGE;
+                    User user = getUserByID(request, response);
+                    request.setAttribute("user", user);
+                    break;
+                }
+                case UPDATE_PROFILE: {
+                    updateProfile(request, response);
                     url = Url.UPDATE_USER_PAGE;
                     User user = getUserByID(request, response);
                     request.setAttribute("user", user);
@@ -197,6 +208,27 @@ public class UserController extends HttpServlet {
         } catch (IllegalArgumentException ex) {
             message = MessageKey.ROLE_ID_NOT_FOUND;
         }
+        request.setAttribute("MSG", Message.get(request.getSession(false), message));
+    }
+    
+    private void updateProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException, NumberFormatException {
+        ServiceResponse<User> srUser = AuthUtils.getUserSession(request);
+        if(!srUser.isSuccess()){
+            request.setAttribute("MSG", Message.get(request.getSession(false), srUser.getMessage()));
+            return ;
+        }
+        User currentUser = srUser.getData();
+        
+        String userID = currentUser.getUserID();
+        String fullName = request.getParameter("fullName");
+        String oldPassword = request.getParameter("oldPassword");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String phone = request.getParameter("phone");
+        String message = userService.updateProfile(userID, fullName, oldPassword, 
+                password, confirmPassword, phone);
+        
         request.setAttribute("MSG", Message.get(request.getSession(false), message));
     }
 
