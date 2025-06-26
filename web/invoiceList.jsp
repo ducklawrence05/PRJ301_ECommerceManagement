@@ -50,7 +50,7 @@
             </c:if>
 
             <c:if test="${empty invoiceViewModels}">
-                <p><fmt:message key="invoice.list.empty" /></p>
+                <div class="alert alert-warning"><fmt:message key="invoice.list.empty" /></div>
             </c:if>
         </div>
         <jsp:include page="/footer.jsp" flush="true" />

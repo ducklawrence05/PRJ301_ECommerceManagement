@@ -32,32 +32,28 @@
                 <input type="hidden" name="userID" value="${user.userID}"/>
 
                 <label for="fullName"><fmt:message key="fullname" /></label>
-                <input type="text" id="fullName" name="fullName" value="${user.fullName}" required class="form-control" />
+                <input type="text" id="fullName" name="fullName" value="${user.fullName}" required class="form-control mb-3" />
 
                 <label for="phone"><fmt:message key="phone" /></label>
-                <input type="text" id="phone" name="phone" value="${user.phone}" required class="form-control" />
+                <input type="text" id="phone" name="phone" value="${user.phone}" required class="form-control mb-3" />
 
                 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                     <label for="roleID"><fmt:message key="role" /></label>
-                    <select id="roleID" name="roleID" required class="form-select">
+                    <select id="roleID" name="roleID" required class="form-select mb-3">
                         <c:forEach var="r" items="${roleList}">
                             <option value="${r.value}" ${r == user.role ? 'selected' : ''}>${r}</option>
                         </c:forEach>
                     </select>
                 </c:if>
 
-                <c:if test="${sessionScope.currentUser.role != 'ADMIN'}">
-                    <input type="hidden" name="roleID" value="${user.role.value}" readonly/>
-                </c:if>
-
                 <label for="oldPassword"><fmt:message key="old.password" /></label>
-                <input type="password" id="oldPassword" name="oldPassword" placeholder="<fmt:message key="enter.old.password" />" class="form-control" />
+                <input type="password" id="oldPassword" name="oldPassword" placeholder="<fmt:message key="enter.old.password" />" class="form-control mb-3" />
 
                 <label for="password"><fmt:message key="password" /></label>
-                <input type="password" id="password" name="password" placeholder="<fmt:message key="enter.new.password" />" class="form-control" />
+                <input type="password" id="password" name="password" placeholder="<fmt:message key="enter.new.password" />" class="form-control mb-3" />
 
                 <label for="confirmPassword"><fmt:message key="confirm.password" /></label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="<fmt:message key="confirm.new.password" />" class="form-control" />
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="<fmt:message key="confirm.new.password" />" class="form-control mb-3" />
 
                 <button type="submit" class="btn btn-primary w-100"><fmt:message key="update" /></button>
             </form>

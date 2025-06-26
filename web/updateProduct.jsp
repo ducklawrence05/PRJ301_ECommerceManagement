@@ -25,22 +25,22 @@
 
                 <label for="name"><fmt:message key="product.name" /></label>
                 <input type="text" id="name" name="name" value="${product.name}" 
-                       placeholder="<fmt:message key="enter.product.name" />" required class="form-control" />
+                       placeholder="<fmt:message key="enter.product.name" />" required class="form-control mb-3" />
 
                 <label for="categoryID"><fmt:message key="category.id" /></label>
                 <input type="number" id="categoryID" name="categoryID" value="${product.categoryID}" 
-                       placeholder="<fmt:message key="enter.category.id" />" required class="form-control" min="1" />
+                       placeholder="<fmt:message key="enter.category.id" />" required class="form-control mb-3" min="1" />
 
                 <label for="price"><fmt:message key="price" /></label>
                 <input type="number" id="price" name="price" value="${product.basePrice}" 
-                       placeholder="<fmt:message key="enter.price" />" required class="form-control" min="0" step="0.01"/>
+                       placeholder="<fmt:message key="enter.price" />" required class="form-control mb-3" min="0" step="0.01"/>
 
                 <label for="quantity"><fmt:message key="quantity" /></label>
                 <input type="number" id="quantity" name="quantity" value="${product.quantity}" 
-                       placeholder="<fmt:message key="enter.quantity" />" required class="form-control" min="0" />
+                       placeholder="<fmt:message key="enter.quantity" />" required class="form-control mb-3" min="0" />
 
                 <label for="status"><fmt:message key="status" /></label>
-                <select id="status" name="status" required class="form-select">
+                <select id="status" name="status" required class="form-select mb-3">
                     <option value="active" ${product.status == 'active' ? 'selected' : ''}>
                         <fmt:message key="active" />
                     </option>
@@ -57,7 +57,7 @@
                        <c:if test="${product.promoID} != 0">
                            value="${product.promoID}"
                        </c:if>
-                       placeholder="<fmt:message key="enter.promotion.id" />" class="form-control"/>
+                       placeholder="<fmt:message key="enter.promotion.id" />" class="form-control mb-3"/>
 
                 <button type="submit" class="btn btn-primary w-100"><fmt:message key="update" /></button>
             </form>

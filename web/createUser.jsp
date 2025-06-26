@@ -22,26 +22,26 @@
 
             <form action="${pageContext.request.contextPath}/main/user/create" method="POST">
                 <label for="userID"><fmt:message key="user.id" /></label>
-                <input type="text" id="userID" name="userID" placeholder="<fmt:message key="user.enter.id" />" required class="form-control" />
+                <input type="text" id="userID" name="userID" placeholder="<fmt:message key="user.enter.id" />" required class="form-control mb-3" />
 
                 <label for="fullName"><fmt:message key="fullname" /></label>
-                <input type="text" id="fullName" name="fullName" placeholder="<fmt:message key="user.enter.fullName" />" required class="form-control" />
+                <input type="text" id="fullName" name="fullName" placeholder="<fmt:message key="user.enter.fullName" />" required class="form-control mb-3" />
 
                 <label for="phone"><fmt:message key="phone" /></label>
-                <input type="text" id="phone" name="phone" placeholder="<fmt:message key="user.enter.phone" />" required class="form-control" />
+                <input type="text" id="phone" name="phone" placeholder="<fmt:message key="user.enter.phone" />" required class="form-control mb-3" />
 
                 <label for="roleID"><fmt:message key="role" /></label>
-                <select id="roleID" name="roleID" required class="form-select">
+                <select id="roleID" name="roleID" required class="form-select mb-3">
                     <c:forEach var="r" items="${roleList}">
                         <option value="${r.value}">${r}</option>
                     </c:forEach>
                 </select>
 
                 <label for="password"><fmt:message key="password" /></label>
-                <input type="password" id="password" name="password" placeholder="<fmt:message key="user.enter.password" />" required class="form-control" />
+                <input type="password" id="password" name="password" placeholder="<fmt:message key="user.enter.password" />" required class="form-control mb-3" />
 
                 <label for="confirmPassword"><fmt:message key="confirm.password" /></label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="<fmt:message key="user.enter.confirmPassword" />" required class="form-control" />
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="<fmt:message key="user.enter.confirmPassword" />" required class="form-control mb-3" />
 
                 <button type="submit" class="btn btn-primary w-100"><fmt:message key="create" /></button>
             </form>

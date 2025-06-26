@@ -77,7 +77,7 @@
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER' or sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
-                    <a class="nav-link custom-hover py-0" 
+                    <a class="nav-link custom-hover py-0" style="min-width: 200px"
                         <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
                            href="${pageContext.request.contextPath}/main/customerCare"
                         </c:if>

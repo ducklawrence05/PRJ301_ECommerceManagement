@@ -93,8 +93,8 @@
                                 <td>${st.count}</td>
                                 <td>${product.name}</td>
                                 <td>${product.categoryName}</td>
-                                <td>${product.salePrice}</td>
-                                <td style="text-decoration: line-through;">${product.basePrice}</td>
+                                <td class="text-success">${product.salePrice}</td>
+                                <td class="text-muted" style="text-decoration: line-through;">${product.basePrice}</td>
                                 <td>${product.quantity}</td>
                                 <td>${product.sellerFullName}</td>
                                 <td>${product.status}</td>
@@ -124,7 +124,7 @@
                                                 action="${pageContext.request.contextPath}/main/cart/addToCart" 
                                                 method="POST"
                                                 class="table-actions gap-2"
-                                            >
+                                                >
                                                 <input type="hidden" name="returnUrl" value="/main/product" readonly />
                                                 <input type="hidden" name="returnMethod" value="GET" readonly />
                                                 <input type="number" name="quantity" class="form-control" 

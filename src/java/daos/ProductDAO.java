@@ -26,7 +26,9 @@ public class ProductDAO {
     private final String GET_ALL_PRODUCTS = "SELECT p.*, c.categoryName, u.fullName AS sellerFullName, " 
             + "ROUND(p.price * (1 - ISNULL(pr.discountPercent, 0)), 2) AS salePrice " 
             + "FROM tblProducts p " 
-            + "LEFT JOIN tblPromotions pr ON p.promoID = pr.promoID " 
+            + "LEFT JOIN "
+            + "(SELECT * FROM tblPromotions WHERE status = 'active') AS pr "
+            + "ON p.promoID = pr.promoID " 
             + "JOIN tblCategories c ON p.categoryID = c.categoryID " 
             + "JOIN tblUsers u ON p.sellerID = u.userID ";
     

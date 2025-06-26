@@ -42,7 +42,7 @@ public class AuthUtils {
     public static void clearUserSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate();
+            session.removeAttribute("currentUser");
         }
     }
     
