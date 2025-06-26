@@ -31,6 +31,7 @@ import utils.Message;
  */
 @WebServlet(name = "InvoiceController", urlPatterns = {"/invoice"})
 public class InvoiceController extends HttpServlet {
+
     private ReturnService returnService = new ReturnService();
     private InvoiceService invoiceService = new InvoiceService();
     private final String GET_INVOICES_BY_USER_ID_AND_STATUS = "getInvoiceByUserIDAndStatus";
@@ -39,7 +40,7 @@ public class InvoiceController extends HttpServlet {
     private final String UPDATE_INVOICE_DETAIL_QUANTITY = "updateInvoiceDetailQuantity";
     private final String UPDATE_INVOICE_STATUS = "updateInvoiceStatus";
     private final String DELETE_INVOICE_DETAIL = "deleteInvoiceDetail";
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,7 +48,7 @@ public class InvoiceController extends HttpServlet {
         if (action == null || action.equals("")) {
             action = GET_INVOICES_BY_USER_ID_AND_STATUS;
         }
-        
+
         List<InvoiceViewModel> invoiceViewModels = new ArrayList<>();
         String url = Url.INVOICE_LIST_PAGE;
         switch (action) {
@@ -55,7 +56,7 @@ public class InvoiceController extends HttpServlet {
                 invoiceViewModels = getInvoiceByUserIDAndStatus(request, response);
                 break;
             }
-            
+
             case GET_INVOICE_INFORMATION: {
                 invoiceViewModels.add(getInvoiceInformation(request, response));
                 url = Url.INVOICE_DETAIL_PAGE;
@@ -69,9 +70,9 @@ public class InvoiceController extends HttpServlet {
             request.setAttribute("invoiceViewModels", invoiceViewModels);
         }
         request.getRequestDispatcher(url).forward(request, response);
-        
+
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -97,9 +98,9 @@ public class InvoiceController extends HttpServlet {
                     updateInvoiceStatus(request, response);
                     break;
                 }
-                case DELETE_INVOICE_DETAIL:{
+                case DELETE_INVOICE_DETAIL: {
                     InvoiceViewModel in = deleteInvoiceDetail(request, response);
-                    if(in != null){
+                    if (in != null) {
                         invoiceViewModels.add(in);
                         url = Url.INVOICE_DETAIL_PAGE;
                     }
@@ -115,20 +116,20 @@ public class InvoiceController extends HttpServlet {
                 request.setAttribute("invoiceViewModel", invoiceViewModels.get(0));
                 request.getRequestDispatcher(url).forward(request, response);
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.SYSTEM_ERROR));
             request.getRequestDispatcher(Url.ERROR_PAGE).forward(request, response);
         }
     }
-    
+
     private List<InvoiceViewModel> getInvoiceByUserIDAndStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String status = request.getParameter("status");
-            if(status == null || status.isEmpty()) {
+            if (status == null || status.isEmpty()) {
                 status = "pending";
             }
             List<InvoiceViewModel> invoiceViewModels = invoiceService.getInvoicesByUserIDAndStatus(user.getUserID(), status);
@@ -139,15 +140,19 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
+
     private InvoiceViewModel getInvoiceInformation(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             User user = AuthUtils.getUserSession(request).getData();
             String _invoiceID = request.getParameter("invoiceID");
+            
             ServiceResponse<InvoiceViewModel> sr = invoiceService.getInvoiceByID(_invoiceID, user.getUserID());
-            request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
-            if(sr.getData().getStatus().trim().equalsIgnoreCase("return")){
+            if (!sr.getMessage().equals(MessageKey.SUCCESS)) {
+                request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
+            }
+            
+            if (sr.getData().getStatus().trim().equalsIgnoreCase("return")) {
                 Return re = returnService.getReturnByInvoiceID(Integer.parseInt(_invoiceID));
                 request.setAttribute("returnStatus", sr.getData().getStatus().toUpperCase() + " " + re.getStatus().toUpperCase());
                 request.setAttribute("reason", re.getReason());
@@ -159,7 +164,7 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
+
     private InvoiceViewModel createInvoiceAndInvoiceDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, NumberFormatException {
         try {
@@ -176,7 +181,7 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
+
     private InvoiceViewModel updateInvoiceDetailQuantity(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, NumberFormatException {
         try {
@@ -196,7 +201,7 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
+
     private InvoiceViewModel deleteInvoiceDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, NumberFormatException {
         try {
@@ -209,7 +214,7 @@ public class InvoiceController extends HttpServlet {
             }
             request.setAttribute("MSG", Message.get(request.getSession(false), sr.getMessage()));
             InvoiceViewModel invoiceViewModel = invoiceService.getInvoiceByID(invoiceID, userID).getData();
-            if(invoiceViewModel.getTotalAmount() == 0){
+            if (invoiceViewModel.getTotalAmount() == 0) {
                 invoiceService.deleteInvoice(invoiceID);
                 return null;
             }
@@ -220,7 +225,7 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
+
     private InvoiceViewModel updateInvoiceStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, NumberFormatException {
         try {
@@ -234,6 +239,5 @@ public class InvoiceController extends HttpServlet {
         }
         return null;
     }
-    
-    
+
 }

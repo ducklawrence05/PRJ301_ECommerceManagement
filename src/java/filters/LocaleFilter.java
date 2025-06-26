@@ -69,6 +69,10 @@ public class LocaleFilter implements Filter {
                         controller = "invoice";
                     }
 
+                    if (action.equals("update-profile")){
+                        controller = "product";
+                    }
+                    
                     action = "";
                     StringBuilder urlResult = new StringBuilder(redirectURL);
                     urlResult.append("/").append(controller);

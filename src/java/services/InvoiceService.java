@@ -309,7 +309,6 @@ public class InvoiceService {
         invoiceDetailViewModels = invoiceDao.getInvoiceDetailsByInvoiceID(invoiceID);
         sr.setData(invoiceDetailViewModels);
         sr.setSuccess(true);
-        sr.setMessage(MessageKey.SUCCESS);
         return sr;
     }
 
@@ -328,7 +327,6 @@ public class InvoiceService {
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(MessageKey.SUCCESS);
         return sr;
     }
 
@@ -350,7 +348,6 @@ public class InvoiceService {
             return sr;
         }
         sr.setSuccess(true);
-        sr.setMessage(MessageKey.SUCCESS);
         return sr;
     }
 

@@ -105,7 +105,7 @@
                         <input type="hidden" name="invoiceID" value="${invoiceViewModel.invoiceID}" />
                         <input type="hidden" name="createdDate" value="${invoiceViewModel.createdDate}" />
                         <input type="text" name="address" placeholder="<fmt:message key="enter.address" />" class="form-control" required>
-                        <button type="submit" class="btn btn-primary" style="width: 80px" id="paid"><fmt:message key="paid" /></button>
+                        <button type="submit" class="btn btn-primary" style="width: 200px" id="paid"><fmt:message key="paid" /></button>
                     </form>
                     <form action="${pageContext.request.contextPath}/main/invoice/updateInvoiceStatus" method="POST">
                         <input type="hidden" name="status" value="cancel" />
