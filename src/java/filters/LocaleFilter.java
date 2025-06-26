@@ -53,9 +53,31 @@ public class LocaleFilter implements Filter {
 
                 // Xoá lang=... khỏi query string
                 String cleanedQuery = removeLangParam(queryString);
-                String redirectURL = (cleanedQuery == null || cleanedQuery.isEmpty())
+                requestURI = (cleanedQuery == null || cleanedQuery.isEmpty())
                         ? requestURI
                         : requestURI + "?" + cleanedQuery;
+
+                // /myapp/main/controller/action
+                String redirectURL = httpRequest.getContextPath() + "/main";
+                String[] parts = requestURI.split("/");
+                if (parts.length >= 4) {
+                    String controller = parts[3]; // controller
+                    String action = parts.length >= 5 ? parts[4] : ""; // action
+
+                    if ((controller.equals("return") || controller.equals("delivery"))
+                            && action.equals("create")) {
+                        controller = "invoice";
+                    }
+
+                    action = "";
+                    StringBuilder urlResult = new StringBuilder(redirectURL);
+                    urlResult.append("/").append(controller);
+                    if (!action.isEmpty()) {
+                        urlResult.append("/").append(action);
+                    }
+
+                    redirectURL = urlResult.toString();
+                }
 
                 httpResponse.sendRedirect(redirectURL);
                 return; // Dừng filter tại đây
