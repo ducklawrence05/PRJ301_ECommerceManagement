@@ -77,7 +77,14 @@
                 </c:if>
 
                 <c:if test="${sessionScope.currentUser.role == 'BUYER' or sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
-                    <a class="nav-link custom-hover py-0" href="${pageContext.request.contextPath}/main/customerCare">
+                    <a class="nav-link custom-hover py-0" 
+                        <c:if test="${sessionScope.currentUser.role == 'BUYER'}">
+                           href="${pageContext.request.contextPath}/main/customerCare"
+                        </c:if>
+                        <c:if test="${sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
+                           href="${pageContext.request.contextPath}/main/customerCare/getAllViewModel"
+                        </c:if>
+                    >
                         <fmt:message key="customer.care" />
                     </a>
                 </c:if>
@@ -109,6 +116,15 @@
                     <form action="${pageContext.request.contextPath}/main/auth/logout" method="POST" class="m-0">
                         <button type="submit" name="action" value="Logout" class="btn btn-danger btn-sm fw-bold">
                             <fmt:message key="logout" />
+                        </button>
+                    </form>
+                    <form 
+                        action="${pageContext.request.contextPath}/main/user/update-profile" 
+                        method="GET"
+                        class="ms-3 mb-0"
+                        >
+                        <button type="submit" name="userID" value="${sessionScope.currentUser.userID}" class="btn btn-sm btn-warning fw-bold">
+                            <fmt:message key="update.profile" />
                         </button>
                     </form>
                 </c:if>

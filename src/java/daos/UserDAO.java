@@ -21,6 +21,8 @@ public class UserDAO {
             + "VALUES (?, ?, ?, ?, ?)";
     private final String UPDATE_USER = "UPDATE tblUsers SET fullName = ?, roleID = ?, password = ?, phone = ? "
             + "WHERE userID LIKE ?";
+    private final String UPDATE_PROFILE = "UPDATE tblUsers SET fullName = ?, password = ?, phone = ? "
+            + "WHERE userID LIKE ?";
     private final String DELETE_USER = "DELETE FROM tblUsers WHERE userID LIKE ?";
 
     public User getUserByID(String userID, boolean isHidePassword) throws SQLException {
@@ -112,6 +114,19 @@ public class UserDAO {
             stm.setString(3, password);
             stm.setString(4, phone);
             stm.setString(5, userID);
+            int res = stm.executeUpdate();
+            return res;
+        }
+    }
+    
+    public int updateProfile(String userID, String fullName, 
+            String password, String phone) throws SQLException {
+        try ( Connection conn = DBContext.getConnection();  
+                PreparedStatement stm = conn.prepareStatement(UPDATE_PROFILE)) {
+            stm.setString(1, fullName);
+            stm.setString(2, password);
+            stm.setString(3, phone);
+            stm.setString(4, userID);
             int res = stm.executeUpdate();
             return res;
         }

@@ -167,6 +167,56 @@ public class UserService {
         return MessageKey.UPDATE_USER_SUCCESS;
     }
     
+    public String updateProfile(String userID, String fullName,
+            String oldPassword, String password, String confirmPassword, String phone) 
+            throws SQLException{
+        if(!userDAO.checkUserExists(userID)){
+            return MessageKey.USER_NOT_FOUND;
+        }
+        
+        User user = userDAO.getUserByID(userID, false);
+        
+        if(!isNullOrEmptyString(oldPassword) 
+            && (isNullOrEmptyString(password) 
+                || isNullOrEmptyString(confirmPassword))){
+            return MessageKey.PASSWORD_AND_CONFIRM_REQUIRED;
+        }
+        
+        if(isNullOrEmptyString(oldPassword)
+            && (!isNullOrEmptyString(password)
+                || !isNullOrEmptyString(confirmPassword))){
+            return MessageKey.OLD_PASSWORD_REQUIRED;
+        }
+        
+        if(!isNullOrEmptyString(password)
+            && !isNullOrEmptyString(confirmPassword)
+            && !checkConfirmPassword(password, confirmPassword)){
+            return MessageKey.PASSWORD_NOT_MATCH;
+        }
+        
+        if(isNullOrEmptyString(fullName)){
+            fullName = user.getFullName();
+        }
+        
+        if(isNullOrEmptyString(password)){
+            password = user.getPassword();
+        } else {
+            password = BCrypt.hashpw(password, BCrypt.gensalt());
+        }
+        
+        if(isNullOrEmptyString(phone)){
+            phone = user.getPhone();
+        } else if (!checkPhone(phone)){
+            return MessageKey.INVALID_PHONE_FORMAT;
+        }
+        
+        if(userDAO.updateProfile(userID, fullName, password, phone) == 0){
+            return MessageKey.UPDATE_USER_FAILED;
+        }
+        
+        return MessageKey.UPDATE_USER_SUCCESS;
+    }
+    
     public String deleteUser(String userID) throws SQLException{
         if(userDAO.deleteUser(userID) == 0){
             return MessageKey.USER_NOT_FOUND;

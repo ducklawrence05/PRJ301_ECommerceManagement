@@ -58,8 +58,8 @@
                     <thead class="table-light">
                         <tr>
                             <th><fmt:message key="no" /></th>
-                            <th><fmt:message key="categoty.id" /></th>
-                            <th><fmt:message key="categoty.name" /></th>
+                            <th><fmt:message key="category.id" /></th>
+                            <th><fmt:message key="category.name" /></th>
                             <th><fmt:message key="description" /></th>
                             <th><fmt:message key="action" /></th>
                         </tr>

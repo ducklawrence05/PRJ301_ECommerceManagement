@@ -1,10 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="i18n.label" />
+
 <html>
 
     <head>
         <meta charset="UTF-8">
-        <title>Delivery</title>
+        <title><fmt:message key="delivery.title" /></title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     </head>
@@ -12,18 +17,18 @@
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
-            <h2>Delivery list</h2>
+            <h2><fmt:message key="delivery.list" /></h2>
 
             <form action="${pageContext.request.contextPath}/main/delivery/getDeliveryByStatus" method="GET" class="row g-2 mb-4">
                 <div class="col-md-4">
                     <select name="status" class="form-select">
-                        <option value="pending">Pending</option>
-                        <option value="delivering">Delivering</option>
-                        <option value="delivered">Delivered</option>
+                        <option value="pending"><fmt:message key="pending" /></option>
+                        <option value="delivering"><fmt:message key="delivering" /></option>
+                        <option value="delivered"><fmt:message key="delivered" /></option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                    <button type="submit" class="btn btn-primary w-100"><fmt:message key="search" /></button>
                 </div>
             </form>
 
@@ -32,19 +37,19 @@
             </c:if>
 
             <c:if test="${empty delivery}">
-                <div>No matching delivery found!</div>
+                <div><fmt:message key="delivery.not.found" /></div>
             </c:if>        
 
             <c:if test="${not empty delivery}">
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>Delivery ID</th>
-                            <th>Invoice ID</th>
-                            <th>Address</th>
-                            <th>Delivery date</th>
-                            <th>Status</th> 
-                            <th>Action</th>
+                            <th><fmt:message key="delivery.id" /></th>
+                            <th><fmt:message key="invoice.id" /></th>
+                            <th><fmt:message key="address" /></th>
+                            <th><fmt:message key="delivery.date" /></th>
+                            <th><fmt:message key="status" /></th> 
+                            <th><fmt:message key="action" /></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,13 +68,13 @@
                                         <c:if test="${delivery.status == 'pending'}">
                                             <button type="submit" class="btn btn-sm btn-warning w-100"
                                                     name="status" value="delivering">
-                                                Delivering
+                                                <fmt:message key="delivering" />
                                             </button>
                                         </c:if>
                                         <c:if test="${delivery.status == 'delivering'}">
                                             <button type="submit" class="btn btn-sm btn-warning w-100"
                                                     name="status" value="delivered">
-                                                Delivered
+                                                <fmt:message key="delivered" />
                                             </button>
                                         </c:if>
                                     </form>     

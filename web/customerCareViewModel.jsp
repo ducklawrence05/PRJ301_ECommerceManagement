@@ -1,10 +1,15 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.locale}" />
+<fmt:setBundle basename="i18n.label" />
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Customer Care View Model</title>
+        <title><fmt:message key="customercare.view.title" /></title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
         <style>
@@ -12,12 +17,20 @@
                 white-space: normal !important;
                 word-break: break-word;
             }
+
+            /* Giữ cho nút Update không bị xuống dòng */
+            .btn-sm {
+                white-space: nowrap;       /* Ngăn chữ xuống dòng */
+                min-width: 70px;           /* Đảm bảo nút đủ rộng */
+                text-align: center;        /* Căn giữa */
+                padding: 0.375rem 0.75rem; /* Giữ cho padding ổn định */
+            }
         </style>
     </head>
     <body>
         <jsp:include page="/header.jsp" flush="true" />
         <div class="container bg-white p-4 shadow-sm" style="min-height: 80vh">
-            <h2>Customer Care Full Info</h2>
+            <h2><fmt:message key="customercare.full.info" /></h2>
 
             <!-- Notification -->
             <c:if test="${not empty requestScope.MSG}">
@@ -26,7 +39,7 @@
 
             <!-- No result -->
             <c:if test="${empty customerCareView}">
-                <div class="alert alert-warning">No detailed customer care found!</div>
+                <div class="alert alert-warning"><fmt:message key="customercare.detail.not.found" /></div>
             </c:if>
 
             <!-- Table Responsive for long text -->
@@ -35,15 +48,15 @@
                     <table class="table table-bordered table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>No</th>
-                                <th>Ticket ID</th>
-                                <th>User ID</th>
-                                <th>User Full Name</th>
-                                <th>Subject</th>
-                                <th>Content</th>
-                                <th>Status</th>
-                                <th>Reply</th>
-                                <th>Action</th>
+                                <th><fmt:message key="no" /></th>
+                                <th><fmt:message key="ticket.id" /></th>
+                                <th><fmt:message key="user.id" /></th>
+                                <th><fmt:message key="fullname" /></th>
+                                <th><fmt:message key="subject" /></th>
+                                <th><fmt:message key="content" /></th>
+                                <th><fmt:message key="status" /></th>
+                                <th><fmt:message key="reply" /></th>
+                                <th><fmt:message key="action" /></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,21 +71,25 @@
                                     <td>${care.status}</td>
                                     <td>${care.reply}</td>
                                     <td>
-                                        <form action="${pageContext.request.contextPath}/main/customerCare/update" method="GET" class="d-inline">
-                                            <input type="hidden" name="keySearch" value="${care.ticketID}" />
-                                            <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                                        </form>
+                                        <c:if test="${sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
+                                            <form action="${pageContext.request.contextPath}/main/customerCare/update" method="GET" class="d-inline">
+                                                <input type="hidden" name="keySearch" value="${care.ticketID}" />
+                                                <button type="submit" class="btn btn-sm btn-warning"><fmt:message key="update" /></button>
+                                            </form>
+                                            <form action="${pageContext.request.contextPath}/main/customerCare/delete" 
+                                                  method="POST" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure to delete this customer care?');">
+                                                <input type="hidden" name="ticketID" 
+                                                       value="${customerCare.ticketID}" />
+                                                <button type="submit" class="btn btn-sm btn-danger"><fmt:message key="delete" /></button>
+                                            </form>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-            </c:if>
-
-            <!-- Back to home -->
-            <c:if test="${sessionScope.currentUser.role.name() == 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/admin.jsp" class="btn btn-outline-primary mt-3">Back to admin page</a>
             </c:if>
         </div>
         <jsp:include page="/footer.jsp" flush="true" />

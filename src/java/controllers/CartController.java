@@ -130,7 +130,8 @@ public class CartController extends HttpServlet {
         request.setAttribute("cart", cart);
         request.setAttribute("MSG", Message.get(request.getSession(false), message));
         if(isSendRedirect){
-            response.sendRedirect(request.getContextPath() + url + "?msg=" + message);
+            response.sendRedirect(request.getContextPath() + url + "?msg=" + 
+                    Message.get(request.getSession(false), message));
         } else {
             request.getRequestDispatcher(url).forward(request, response);
         }
