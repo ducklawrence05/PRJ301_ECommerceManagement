@@ -187,12 +187,10 @@ public class CustomerCareController extends HttpServlet {
             CustomerCare customerCare = customerCareService.searchByID(ticketID);
             if (customerCare != null) {
                 list.add(customerCare);
-            } else {
-                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException | SQLException e) {
             e.printStackTrace();
-            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
+            request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.INPUT_POSITIVE_NUMBER));
         }
         return list;
     }
@@ -209,8 +207,6 @@ public class CustomerCareController extends HttpServlet {
             CustomerCare customerCare = customerCareService.searchBySubject(subject);
             if (customerCare != null) {
                 list.add(customerCare);
-            } else {
-                request.setAttribute("MSG", Message.get(request.getSession(false), MessageKey.CUSTOMERCARE_NOT_FOUND));
             }
         } catch (Exception e) {
             e.printStackTrace();

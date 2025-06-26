@@ -47,7 +47,11 @@
                 <div class="alert alert-info">${requestScope.MSG}</div>
             </c:if>
 
-           
+            <!-- No result -->
+            <c:if test="${empty requestScope.categories}">
+                <div class="alert alert-warning"><fmt:message key="no.match.categoty" /></div>
+            </c:if>
+
             <!-- Table -->
             <c:if test="${not empty requestScope.categories}">
                 <table class="table table-bordered table-hover">

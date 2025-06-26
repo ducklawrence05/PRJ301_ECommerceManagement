@@ -66,11 +66,12 @@
                                     <td>${care.status}</td>
                                     <td>${care.reply}</td>
                                     <td>
-                                        <form action="${pageContext.request.contextPath}/customerCare" method="GET" class="d-inline">
-                                            <input type="hidden" name="action" value="update" />
-                                            <input type="hidden" name="keySearch" value="${care.ticketID}" />
-                                            <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                                        </form>
+                                        <c:if test="${sessionScope.currentUser.role == 'CUSTOMER_SUPPORT'}">
+                                            <form action="${pageContext.request.contextPath}/main/customerCare/update" method="GET" class="d-inline">
+                                                <input type="hidden" name="keySearch" value="${care.ticketID}" />
+                                                <button type="submit" class="btn btn-sm btn-warning">Update</button>
+                                            </form>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
